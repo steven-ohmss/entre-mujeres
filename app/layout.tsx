@@ -1,0 +1,43 @@
+import type { Metadata } from "next";
+import { Playfair_Display, DM_Sans, Caveat } from "next/font/google";
+import "./globals.css";
+
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  weight: ["500", "600", "700", "800"],
+});
+
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
+export const metadata: Metadata = {
+  title: "Entre mujeres · Plataforma comunitaria",
+  description:
+    "Entre mujeres es una plataforma comunitaria para descubrir, conectar y fortalecer comunidades, organizaciones y emprendimientos de mujeres en Bogotá y Cundinamarca. Una iniciativa de Red Mujer.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html
+      lang="es"
+      className={`${playfair.variable} ${dmSans.variable} ${caveat.variable}`}
+    >
+      <body className="min-h-screen bg-crema font-sans text-texto antialiased">
+        {children}
+      </body>
+    </html>
+  );
+}
