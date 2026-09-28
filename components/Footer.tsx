@@ -28,7 +28,6 @@ export default function Footer() {
         <div className="container-page relative flex flex-col items-center gap-2 text-center">
           <Leaf size={22} aria-hidden="true" />
           <p className="font-titulos text-2xl italic">Territorios que nos unen</p>
-          <p className="text-sm font-semibold uppercase tracking-widest">Red Mujer</p>
         </div>
       </div>
 

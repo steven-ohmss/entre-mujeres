@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Users, Sprout, Heart, Play } from "lucide-react";
+import { Users, Sprout, Heart } from "lucide-react";
 
 const SIDE_WORDS = ["BOGOTÁ", "CUNDINAMARCA", "MUJERES", "TERRITORIO", "OPORTUNIDADES"];
 
@@ -81,18 +81,6 @@ export default function Hero() {
           ))}
         </ul>
 
-        <a
-          href="#noticias"
-          className="absolute bottom-6 right-6 hidden items-center gap-3 rounded-2xl bg-blanco/95 px-4 py-3 shadow-lg transition hover:bg-blanco sm:flex"
-        >
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-verde-bosque text-blanco">
-            <Play size={16} fill="currentColor" aria-hidden="true" />
-          </span>
-          <span className="text-left">
-            <span className="block text-xs text-texto-suave">Conoce sus historias</span>
-            <span className="block text-sm font-semibold text-texto">Historias que inspiran</span>
-          </span>
-        </a>
       </div>
     </section>
   );

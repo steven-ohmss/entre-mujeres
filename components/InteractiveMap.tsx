@@ -1,21 +1,33 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
+import dynamic from "next/dynamic";
 import MapFilters from "./MapFilters";
 import CommunityMapCard from "./CommunityMapCard";
 import CommunityModal from "./CommunityModal";
-import { communities, products, calendarEvents, mapMarkers, MAP_IMAGE } from "@/data/data";
+import type { MapMarkerWithCommunity } from "./CommunityLeafletMap";
+import { communities, products, calendarEvents, mapMarkers } from "@/data/data";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 import type { CommunityCategory, ProductType, Localidad } from "@/types";
 
+// Leaflet solo funciona en el navegador.
+const CommunityLeafletMap = dynamic(() => import("./CommunityLeafletMap"), {
+  ssr: false,
+  loading: () => <div className="h-full w-full bg-rosa-palido/40" />,
+});
+
+const markersWithCommunity: MapMarkerWithCommunity[] = mapMarkers.flatMap((marker) => {
+  const community = communities.find((c) => c.id === marker.communityId);
+  return community ? [{ marker, community }] : [];
+});
+
 export default function InteractiveMap() {
+  const isDesktop = useMediaQuery("(min-width: 1280px)");
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState<CommunityCategory | "Todas">("Todas");
   const [productType, setProductType] = useState<ProductType | "Todas">("Todas");
   const [localidad, setLocalidad] = useState<Localidad | "Todas">("Todas");
-  const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(
-    mapMarkers[0]?.id ?? null
-  );
+  const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
   const [modalState, setModalState] = useState<{
     communityId: string;
     section: "info" | "productos";
@@ -23,10 +35,7 @@ export default function InteractiveMap() {
 
   const filteredMarkers = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
-    return mapMarkers.filter((marker) => {
-      const community = communities.find((c) => c.id === marker.communityId);
-      if (!community) return false;
-
+    return markersWithCommunity.filter(({ community }) => {
       const matchesCategory = category === "Todas" || community.category === category;
       const matchesLocalidad = localidad === "Todas" || community.localidad === localidad;
       const matchesProductType =
@@ -41,14 +50,17 @@ export default function InteractiveMap() {
     });
   }, [category, localidad, productType, searchTerm]);
 
-  const effectiveSelectedId = filteredMarkers.some((marker) => marker.id === selectedMarkerId)
+  // En escritorio la ficha es un popup que solo se abre al elegir un marcador; en pantallas
+  // pequeñas la ficha va debajo del mapa y muestra la primera comunidad visible por defecto.
+  const effectiveSelectedId = filteredMarkers.some(({ marker }) => marker.id === selectedMarkerId)
     ? selectedMarkerId
-    : filteredMarkers[0]?.id ?? null;
+    : isDesktop
+      ? null
+      : filteredMarkers[0]?.marker.id ?? null;
 
-  const selectedMarker = mapMarkers.find((marker) => marker.id === effectiveSelectedId);
-  const selectedCommunity = selectedMarker
-    ? communities.find((c) => c.id === selectedMarker.communityId)
-    : undefined;
+  const selectedCommunity = filteredMarkers.find(
+    ({ marker }) => marker.id === effectiveSelectedId
+  )?.community;
 
   const modalCommunity = modalState
     ? communities.find((c) => c.id === modalState.communityId) ?? null
@@ -61,103 +73,101 @@ export default function InteractiveMap() {
     setLocalidad("Todas");
   };
 
+  const openCommunity = (communityId: string) =>
+    setModalState({ communityId, section: "info" });
+  const openProducts = (communityId: string) =>
+    setModalState({ communityId, section: "productos" });
+
   return (
     <section id="mapa" className="bg-blanco py-20 sm:py-24">
-      <div className="container-page">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_2.3fr]">
-          <MapFilters
-            searchTerm={searchTerm}
-            onSearchTermChange={setSearchTerm}
-            category={category}
-            onCategoryChange={setCategory}
-            productType={productType}
-            onProductTypeChange={setProductType}
-            localidad={localidad}
-            onLocalidadChange={setLocalidad}
-            onClear={clearFilters}
-          />
+      <div className="container-page mb-6">
+        <h3 className="font-sans text-2xl font-extrabold uppercase tracking-tight text-texto">
+          Comunidades de mujeres
+        </h3>
+        <p className="text-sm font-semibold uppercase tracking-widest text-texto-suave">
+          Cundinamarca – Bogotá
+        </p>
+      </div>
 
-          <div>
-            <div className="mb-4">
-              <h3 className="font-sans text-2xl font-extrabold uppercase tracking-tight text-texto">
-                Comunidades de mujeres
-              </h3>
-              <p className="text-sm font-semibold uppercase tracking-widest text-texto-suave">
-                Cundinamarca – Bogotá
-              </p>
-            </div>
-
-            <div className="relative">
-              <div
-                className="relative w-full overflow-hidden rounded-2xl bg-rosa-palido/40"
-                style={{ aspectRatio: `${MAP_IMAGE.width} / ${MAP_IMAGE.height}` }}
-              >
-                <Image
-                  src="/images/mapa-cundinamarca.jpg"
-                  alt="Mapa de Bogotá y Cundinamarca con las localidades de la ciudad resaltadas en tonos rosa"
-                  fill
-                  sizes="(min-width: 1024px) 60vw, 100vw"
-                />
-
-                {filteredMarkers.map((marker) => {
-                  const community = communities.find((c) => c.id === marker.communityId);
-                  if (!community) return null;
-                  const isSelected = marker.id === effectiveSelectedId;
-
-                  return (
-                    <button
-                      key={marker.id}
-                      type="button"
-                      onClick={() => setSelectedMarkerId(marker.id)}
-                      aria-label={community.name}
-                      aria-pressed={isSelected}
-                      style={{ left: `${marker.x}%`, top: `${marker.y}%` }}
-                      className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-blanco bg-amarillo shadow transition-all ${
-                        isSelected ? "z-10 h-6 w-6 ring-2 ring-verde-bosque" : "h-3.5 w-3.5"
-                      }`}
-                    />
-                  );
-                })}
-              </div>
-
-              {filteredMarkers.length === 0 ? (
-                <div className="mt-4 rounded-2xl border border-dashed border-texto/20 p-8 text-center">
-                  <p className="text-sm text-texto-suave">
-                    No encontramos iniciativas con esos filtros
-                  </p>
-                  <button type="button" onClick={clearFilters} className="btn-secondary mt-4">
-                    Limpiar filtros
-                  </button>
-                </div>
-              ) : null}
-
-              <div className="mt-4 flex items-center gap-5 text-sm text-texto">
-                <span className="flex items-center gap-2">
-                  <span className="h-3 w-3 rounded-sm bg-rosa" aria-hidden="true" />
-                  Bogotá
-                </span>
-                <span className="flex items-center gap-2">
-                  <span className="h-3 w-3 rounded-sm bg-verde-hoja" aria-hidden="true" />
-                  Cundinamarca
-                </span>
-              </div>
-
-              {selectedCommunity ? (
-                <div className="mt-6 lg:absolute lg:left-4 lg:top-4 lg:z-20 lg:mt-0">
-                  <CommunityMapCard
-                    community={selectedCommunity}
-                    onViewMore={() =>
-                      setModalState({ communityId: selectedCommunity.id, section: "info" })
-                    }
-                    onViewProducts={() =>
-                      setModalState({ communityId: selectedCommunity.id, section: "productos" })
-                    }
-                  />
-                </div>
-              ) : null}
-            </div>
+      <div className="relative isolate">
+        <div className="mx-auto mb-6 w-full max-w-[1280px] px-5 md:px-8 xl:absolute xl:left-6 xl:top-6 xl:z-[1000] xl:mb-0 xl:max-h-[calc(100%-48px)] xl:m-0 xl:w-[310px] xl:overflow-y-auto xl:rounded-[20px] xl:bg-crema xl:px-0 xl:shadow-[0_10px_30px_rgba(30,35,30,0.15)]">
+          <div className="rounded-[20px] bg-crema xl:rounded-none">
+            <MapFilters
+              searchTerm={searchTerm}
+              onSearchTermChange={setSearchTerm}
+              category={category}
+              onCategoryChange={setCategory}
+              productType={productType}
+              onProductTypeChange={setProductType}
+              localidad={localidad}
+              onLocalidadChange={setLocalidad}
+              onClear={clearFilters}
+              alwaysOpen={isDesktop}
+            />
           </div>
         </div>
+
+        <div
+          role="region"
+          aria-label="Mapa interactivo de Bogotá y Cundinamarca con las comunidades de mujeres"
+          className="relative h-[420px] w-full xl:h-[min(88vh,900px)] xl:min-h-[640px]"
+        >
+          <CommunityLeafletMap
+            markers={filteredMarkers}
+            selectedMarkerId={effectiveSelectedId}
+            onSelectMarker={setSelectedMarkerId}
+            onClosePopup={(markerId) =>
+              setSelectedMarkerId((current) => (current === markerId ? null : current))
+            }
+            localidad={localidad}
+            isDesktop={isDesktop}
+            onViewMore={openCommunity}
+            onViewProducts={openProducts}
+          />
+
+          <div className="pointer-events-none absolute bottom-7 right-2 z-[1000] flex items-center gap-4 rounded-lg bg-crema/95 px-3 py-2 text-xs text-texto shadow-sm">
+            <span className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded-sm bg-rosa" aria-hidden="true" />
+              Bogotá
+            </span>
+            <span className="flex items-center gap-2">
+              <span
+                className="h-3 w-3 rounded-full border-2 border-blanco bg-[#FFE600] shadow-sm"
+                aria-hidden="true"
+              />
+              Comunidad
+            </span>
+          </div>
+        </div>
+
+        {filteredMarkers.length === 0 ? (
+          <div className="mx-auto mt-4 w-full max-w-[1280px] px-5 md:px-8 xl:absolute xl:bottom-8 xl:left-1/2 xl:z-[1000] xl:mt-0 xl:w-auto xl:-translate-x-1/2 xl:px-0">
+            <div className="rounded-2xl border border-dashed border-texto/20 bg-crema p-8 text-center xl:shadow-lg">
+              <p className="text-sm text-texto-suave">
+                No encontramos iniciativas con esos filtros
+              </p>
+              <button type="button" onClick={clearFilters} className="btn-secondary mt-4">
+                Limpiar filtros
+              </button>
+            </div>
+          </div>
+        ) : null}
+      </div>
+
+      <div className="container-page">
+        <p className="mt-3 text-xs text-texto-suave">
+          Límites de localidades: Datos Abiertos Bogotá (CC BY 4.0)
+        </p>
+
+        {!isDesktop && selectedCommunity ? (
+          <div className="mt-6">
+            <CommunityMapCard
+              community={selectedCommunity}
+              onViewMore={() => openCommunity(selectedCommunity.id)}
+              onViewProducts={() => openProducts(selectedCommunity.id)}
+            />
+          </div>
+        ) : null}
       </div>
 
       <CommunityModal

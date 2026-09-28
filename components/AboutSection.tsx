@@ -58,9 +58,9 @@ export default function AboutSection() {
           </div>
 
           <p className="mt-6 text-sm leading-relaxed text-texto-suave">
-            Red Mujer busca que la red siga creciendo y se relacione con otras iniciativas del
-            territorio, como Mujer y Tierra, para fortalecer juntas el trabajo de las mujeres de
-            Bogotá y Cundinamarca.
+            Red Mujer busca que se siga fortaleciendo la red y se relacione con otras iniciativas
+            del territorio, para fortalecer juntas el trabajo de las mujeres en Bogotá y
+            Cundinamarca.
           </p>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { CalendarDays, MapPin, ShoppingBasket, Newspaper, ArrowRight } from "lucide-react";
+import { CalendarDays, MapPin, ShoppingBasket, Newspaper } from "lucide-react";
 
 const QUICK_LINKS = [
   {
@@ -70,24 +70,15 @@ export default function QuickAccess() {
             Cundinamarca para construir un futuro más justo, sostenible e inclusivo.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-6">
-            <div className="flex -space-x-4">
-              {CIRCLE_IMAGES.map((image) => (
-                <span
-                  key={image.src}
-                  className="relative h-16 w-16 overflow-hidden rounded-full border-4 border-crema bg-rosa-palido sm:h-20 sm:w-20"
-                >
-                  <Image src={image.src} alt={image.alt} fill className="object-cover" sizes="80px" />
-                </span>
-              ))}
-            </div>
-            <a
-              href="#noticias"
-              className="script-text flex items-center gap-2 text-verde-bosque transition hover:text-verde-bosque-oscuro"
-            >
-              Conoce sus historias
-              <ArrowRight size={20} aria-hidden="true" />
-            </a>
+          <div className="mt-8 flex -space-x-4">
+            {CIRCLE_IMAGES.map((image) => (
+              <span
+                key={image.src}
+                className="relative h-16 w-16 overflow-hidden rounded-full border-4 border-crema bg-rosa-palido sm:h-20 sm:w-20"
+              >
+                <Image src={image.src} alt={image.alt} fill className="object-cover" sizes="80px" />
+              </span>
+            ))}
           </div>
         </div>
       </div>

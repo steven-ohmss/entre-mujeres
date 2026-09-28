@@ -227,3 +227,137 @@ div[id] {
 .animate-fade-in {
   animation: fade-in 0.2s ease;
 }
+
+/* Mapa de comunidades (Leaflet). Los selectores llevan #mapa para ganarle a leaflet.css,
+   que se carga después. */
+.map-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  min-height: 44px;
+  border-radius: 8px;
+  border: 1px solid var(--color-texto);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  text-align: left;
+  color: var(--color-texto);
+  background-color: var(--color-crema);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.map-filter:hover {
+  background-color: var(--color-blanco);
+}
+
+.map-filter[data-active="true"] {
+  background-color: var(--color-verde-bosque);
+  border-color: var(--color-verde-bosque);
+  color: var(--color-blanco);
+}
+
+@media (min-width: 1280px) {
+  .map-filter {
+    min-height: 38px;
+  }
+}
+
+#mapa .leaflet-container {
+  background: var(--color-crema);
+  font-family: var(--font-sans);
+}
+
+#mapa .leaflet-control-attribution {
+  font-size: 0.65rem;
+}
+
+#mapa .map-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+}
+
+#mapa .map-marker__dot {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background-color: #ffe600;
+  border: 3px solid var(--color-blanco);
+  box-shadow: 0 1px 4px rgba(30, 35, 30, 0.45);
+  transition: transform 0.15s ease;
+}
+
+#mapa .map-marker:hover .map-marker__dot {
+  transform: scale(1.2);
+}
+
+#mapa .map-marker--selected {
+  border-radius: 0;
+  filter: drop-shadow(0 2px 3px rgba(30, 35, 30, 0.35));
+}
+
+#mapa .map-marker:focus-visible {
+  outline: 3px solid var(--color-verde-bosque);
+  outline-offset: 3px;
+}
+
+#mapa .localidad-label {
+  pointer-events: none;
+}
+
+#mapa .localidad-label__text {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+#mapa .localidad-label__text--blanco {
+  color: var(--color-blanco);
+  text-shadow: 0 1px 2px rgba(120, 20, 55, 0.6);
+}
+
+#mapa .localidad-label__text--rosa {
+  color: var(--color-rosa-oscuro);
+}
+
+#mapa .community-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--color-crema);
+  box-shadow: 0 10px 30px rgba(30, 35, 30, 0.2);
+}
+
+#mapa .community-popup .leaflet-popup-content {
+  margin: 0;
+  width: 280px !important;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+#mapa .community-popup .leaflet-popup-tip-container {
+  display: none;
+}
+
+#mapa .community-popup a.leaflet-popup-close-button {
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background: var(--color-blanco);
+  color: var(--color-texto);
+  font: 20px/28px var(--font-sans);
+}
+
+#mapa .community-popup .leaflet-popup-content p {
+  margin: revert-layer;
+}

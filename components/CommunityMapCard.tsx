@@ -5,22 +5,30 @@ interface CommunityMapCardProps {
   community: Community;
   onViewMore: () => void;
   onViewProducts: () => void;
+  variant?: "card" | "popup";
 }
 
 export default function CommunityMapCard({
   community,
   onViewMore,
   onViewProducts,
+  variant = "card",
 }: CommunityMapCardProps) {
   return (
-    <div className="card w-full max-w-sm overflow-hidden shadow-lg">
+    <div
+      className={
+        variant === "popup"
+          ? "w-[280px] overflow-hidden"
+          : "card w-full max-w-sm overflow-hidden shadow-lg"
+      }
+    >
       <div className="relative h-36 w-full bg-rosa-palido">
         <Image
           src={community.image}
           alt={`Foto de la comunidad ${community.name}`}
           fill
           className="object-cover"
-          sizes="360px"
+          sizes={variant === "popup" ? "280px" : "360px"}
         />
       </div>
       <div className="p-5">
@@ -31,18 +39,18 @@ export default function CommunityMapCard({
         <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-texto-suave">
           {community.shortDescription}
         </p>
-        <div className="mt-3 flex items-center gap-4">
+        <div className="mt-3 flex items-center justify-between gap-4">
           <button
             type="button"
             onClick={onViewMore}
-            className="text-sm font-semibold text-rosa transition hover:text-rosa-oscuro"
+            className="min-h-11 text-sm font-semibold text-rosa transition hover:text-rosa-oscuro xl:min-h-0"
           >
             ver más
           </button>
           <button
             type="button"
             onClick={onViewProducts}
-            className="text-sm font-semibold text-rosa transition hover:text-rosa-oscuro"
+            className="min-h-11 text-sm font-semibold text-rosa transition hover:text-rosa-oscuro xl:min-h-0"
           >
             productos
           </button>

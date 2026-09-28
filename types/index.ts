@@ -98,10 +98,8 @@ export interface NewsItem {
 export interface MapMarker {
   id: string;
   communityId: string;
-  x: number;
-  y: number;
-  lat?: number;
-  lng?: number;
+  lat: number;
+  lng: number;
 }
 
 export interface ContactInfo {

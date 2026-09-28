@@ -65,8 +65,6 @@ export const eventTypes: EventTypeInfo[] = [
 
 export const organizers: Organizer[] = ["Red Mujer", "Otras comunidades", "Aliados"];
 
-export const MAP_IMAGE = { width: 920, height: 1180 };
-
 export const communities: Community[] = [
   {
     id: "red-mujer",
@@ -394,32 +392,22 @@ export const newsItems: NewsItem[] = [
 ];
 
 export const mapMarkers: MapMarker[] = [
-  { id: "marker-red-mujer", communityId: "red-mujer", x: 43, y: 63, lat: 4.348, lng: -74.115 },
-  { id: "marker-manos-de-usme", communityId: "manos-de-usme", x: 46, y: 58, lat: 4.39, lng: -74.12 },
-  {
-    id: "marker-telar-y-tierra",
-    communityId: "telar-y-tierra",
-    x: 38,
-    y: 60,
-    lat: 4.35,
-    lng: -74.19,
-  },
-  {
-    id: "marker-raices-de-sumapaz",
-    communityId: "raices-de-sumapaz",
-    x: 41,
-    y: 78,
-    lat: 4.03,
-    lng: -74.22,
-  },
-  { id: "marker-semillas-de-bosa", communityId: "semillas-de-bosa", x: 34, y: 52, lat: 4.62, lng: -74.2 },
+  // TODO: reemplazar por coordenadas reales
+  { id: "marker-red-mujer", communityId: "red-mujer", lat: 4.405, lng: -74.125 },
+  // TODO: reemplazar por coordenadas reales
+  { id: "marker-manos-de-usme", communityId: "manos-de-usme", lat: 4.527, lng: -74.113 },
+  // TODO: reemplazar por coordenadas reales
+  { id: "marker-telar-y-tierra", communityId: "telar-y-tierra", lat: 4.535, lng: -74.172 },
+  // TODO: reemplazar por coordenadas reales
+  { id: "marker-raices-de-sumapaz", communityId: "raices-de-sumapaz", lat: 4.12, lng: -74.23 },
+  // TODO: reemplazar por coordenadas reales
+  { id: "marker-semillas-de-bosa", communityId: "semillas-de-bosa", lat: 4.628, lng: -74.205 },
+  // TODO: reemplazar por coordenadas reales
   {
     id: "marker-sabores-de-la-concordia",
     communityId: "sabores-de-la-concordia",
-    x: 45,
-    y: 38,
     lat: 4.6,
-    lng: -74.07,
+    lng: -74.06,
   },
 ];
 
