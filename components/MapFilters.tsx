@@ -63,7 +63,7 @@ export default function MapFilters({
 }: MapFiltersProps) {
   return (
     <div className="card p-6">
-      <h3 className="font-serif text-2xl text-texto">Explora el territorio</h3>
+      <h3 className="font-titulos text-2xl text-texto">Explora el territorio</h3>
       <p className="mt-2 text-sm leading-relaxed text-texto-suave">
         Descubre iniciativas, productos y comunidades de mujeres que transforman Bogotá y
         Cundinamarca.

@@ -24,7 +24,7 @@ export default function CommunityMapCard({
         />
       </div>
       <div className="p-5">
-        <h4 className="font-serif text-lg font-bold uppercase text-texto">{community.name}</h4>
+        <h4 className="font-titulos text-lg font-bold uppercase text-texto">{community.name}</h4>
         <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-texto-suave">
           {community.ubicacion}
         </p>

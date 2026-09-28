@@ -21,7 +21,7 @@ export default function NewsCard({ item, onOpen }: NewsCardProps) {
       </div>
       <div className="flex flex-1 flex-col gap-2 p-5">
         <span className="pill-tag w-fit bg-verde-hoja/15 text-verde-bosque">{item.type}</span>
-        <h3 className="font-serif text-xl text-texto">{item.title}</h3>
+        <h3 className="font-titulos text-xl text-texto">{item.title}</h3>
         <p className="text-xs font-semibold uppercase tracking-wide text-texto-suave">
           {formatEventDate(item.date)}
         </p>

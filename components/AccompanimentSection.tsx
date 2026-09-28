@@ -21,7 +21,7 @@ export default function AccompanimentSection() {
         <div className="mx-auto mt-12 flex max-w-4xl flex-col gap-8 sm:flex-row sm:justify-between">
           {STEPS.map((step) => (
             <div key={step.number} className="flex flex-1 flex-col items-center gap-3 text-center">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-verde-bosque font-serif text-lg text-blanco">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-verde-bosque font-titulos text-lg text-blanco">
                 {step.number}
               </span>
               <span className="text-sm font-semibold text-texto">{step.label}</span>

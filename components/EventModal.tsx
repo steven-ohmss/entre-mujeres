@@ -32,7 +32,7 @@ export default function EventModal({ event, isOpen, onClose }: EventModalProps) 
 
       <div className="mt-5">
         <span className="pill-tag bg-rosa-palido text-rosa-oscuro">{event.type}</span>
-        <h3 className="mt-3 font-serif text-2xl text-texto sm:text-3xl">{event.title}</h3>
+        <h3 className="mt-3 font-titulos text-2xl text-texto sm:text-3xl">{event.title}</h3>
       </div>
 
       <ul className="mt-5 space-y-2.5 text-sm text-texto">

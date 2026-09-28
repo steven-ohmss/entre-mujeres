@@ -22,7 +22,7 @@ export default function ProductCard({ product, community, onOpen }: ProductCardP
       </div>
       <div className="flex flex-1 flex-col gap-2 p-5">
         <span className="pill-tag w-fit bg-verde-hoja/15 text-verde-bosque">{product.type}</span>
-        <h3 className="font-serif text-xl text-texto">{product.name}</h3>
+        <h3 className="font-titulos text-xl text-texto">{product.name}</h3>
         {community ? (
           <p className="text-sm font-medium text-texto">{community.name}</p>
         ) : null}

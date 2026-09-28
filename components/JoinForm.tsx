@@ -98,7 +98,7 @@ export default function JoinForm() {
   if (isSubmitted) {
     return (
       <div className="card p-8 text-center sm:p-10">
-        <h3 className="font-serif text-2xl text-texto">¡Gracias!</h3>
+        <h3 className="font-titulos text-2xl text-texto">¡Gracias!</h3>
         <p className="mt-3 text-sm leading-relaxed text-texto-suave">
           Recibimos tu información. Revisaremos tu iniciativa para incorporarla a la red.
         </p>

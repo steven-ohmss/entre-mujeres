@@ -23,7 +23,7 @@ export default function EventListRow({ event, onOpen }: EventListRowProps) {
         <span className="text-[10px] font-bold uppercase text-texto-suave">
           {dateParts.dayAbbrev}
         </span>
-        <span className="font-serif text-lg leading-none text-texto">{dateParts.dayNumber}</span>
+        <span className="font-titulos text-lg leading-none text-texto">{dateParts.dayNumber}</span>
         <span className="text-[10px] font-bold uppercase text-texto-suave">
           {dateParts.monthAbbrev}
         </span>
@@ -35,7 +35,7 @@ export default function EventListRow({ event, onOpen }: EventListRowProps) {
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <h5 className="truncate font-serif text-base text-texto sm:text-lg">{event.title}</h5>
+          <h5 className="truncate font-titulos text-base text-texto sm:text-lg">{event.title}</h5>
           {typeInfo ? (
             <span
               className="pill-tag shrink-0"

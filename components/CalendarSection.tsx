@@ -174,7 +174,7 @@ export default function CalendarSection() {
 
               <div className="card p-5 sm:p-6">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-serif text-lg text-texto">Eventos destacados</h4>
+                  <h4 className="font-titulos text-lg text-texto">Eventos destacados</h4>
                   <div className="flex items-center gap-1">
                     <button
                       type="button"
@@ -212,7 +212,7 @@ export default function CalendarSection() {
 
             <div className="mt-10">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <h4 className="font-serif text-xl text-texto">Próximos eventos</h4>
+                <h4 className="font-titulos text-xl text-texto">Próximos eventos</h4>
                 <label className="flex items-center gap-2 text-sm text-texto-suave">
                   Ordenar por:
                   <select

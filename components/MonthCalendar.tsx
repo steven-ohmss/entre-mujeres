@@ -87,7 +87,7 @@ export default function MonthCalendar({
   return (
     <div className="card p-5 sm:p-6">
       <div className="flex items-center justify-between">
-        <h4 className="font-serif text-lg text-texto">{getMonthLabel(year, month)}</h4>
+        <h4 className="font-titulos text-lg text-texto">{getMonthLabel(year, month)}</h4>
         <div className="flex items-center gap-1">
           <button
             type="button"

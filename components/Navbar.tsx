@@ -52,7 +52,7 @@ export default function Navbar() {
       <nav className="container-page flex h-[72px] items-center justify-between gap-4">
         <a
           href="#inicio"
-          className="flex shrink-0 items-center gap-1.5 font-serif text-xl italic text-texto"
+          className="flex shrink-0 items-center gap-1.5 font-titulos text-xl italic text-texto"
         >
           <Venus size={20} className="text-rosa" strokeWidth={2.5} aria-hidden="true" />
           Entre mujeres

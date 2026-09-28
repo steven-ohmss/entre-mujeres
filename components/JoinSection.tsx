@@ -11,7 +11,7 @@ export default function JoinSection() {
 
           <div className="relative grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-start">
             <div>
-              <h2 className="font-serif text-3xl leading-tight text-texto sm:text-4xl">
+              <h2 className="font-titulos text-3xl leading-tight text-texto sm:text-4xl">
                 Quiero ser parte
               </h2>
               <p className="mt-4 max-w-md text-base leading-relaxed text-texto">

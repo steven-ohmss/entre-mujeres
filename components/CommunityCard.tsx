@@ -21,7 +21,7 @@ export default function CommunityCard({ community, onOpen }: CommunityCardProps)
       </div>
       <div className="flex flex-1 flex-col gap-2 p-5">
         <span className="pill-tag w-fit bg-rosa-palido text-rosa-oscuro">{community.category}</span>
-        <h3 className="font-serif text-xl text-texto">{community.name}</h3>
+        <h3 className="font-titulos text-xl text-texto">{community.name}</h3>
         <p className="flex items-center gap-1.5 text-sm text-texto-suave">
           <MapPin size={14} className="shrink-0" aria-hidden="true" />
           {community.ubicacion}

@@ -51,7 +51,7 @@ export default function CommunityModal({
 
       <div className="mt-5">
         <span className="pill-tag bg-rosa-palido text-rosa-oscuro">{community.category}</span>
-        <h3 className="mt-3 font-serif text-2xl text-texto sm:text-3xl">{community.name}</h3>
+        <h3 className="mt-3 font-titulos text-2xl text-texto sm:text-3xl">{community.name}</h3>
         <p className="mt-1 flex items-center gap-1.5 text-sm text-texto-suave">
           <MapPin size={14} aria-hidden="true" />
           {community.ubicacion}

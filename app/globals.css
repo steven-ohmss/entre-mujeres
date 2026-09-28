@@ -15,7 +15,7 @@
   --color-texto: #1e231e;
   --color-texto-suave: #5c625c;
 
-  --font-serif: var(--font-playfair), Georgia, serif;
+  --font-titulos: var(--font-poppins), Arial, Helvetica, sans-serif;
   --font-sans: var(--font-dm-sans), Arial, Helvetica, sans-serif;
   --font-script: var(--font-caveat), cursive;
 }

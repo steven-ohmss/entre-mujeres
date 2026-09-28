@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Playfair_Display, DM_Sans, Caveat } from "next/font/google";
+import { Poppins, DM_Sans, Caveat } from "next/font/google";
 import "./globals.css";
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
   style: ["normal", "italic"],
-  weight: ["500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const dmSans = DM_Sans({
@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${playfair.variable} ${dmSans.variable} ${caveat.variable}`}
+      className={`${poppins.variable} ${dmSans.variable} ${caveat.variable}`}
     >
       <body className="min-h-screen bg-crema font-sans text-texto antialiased">
         {children}

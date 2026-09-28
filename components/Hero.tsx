@@ -30,7 +30,7 @@ export default function Hero() {
           <div className="container-page py-16 sm:py-20">
             <div className="max-w-xl">
               <span className="eyebrow">Mujeres que transforman territorios</span>
-              <h1 className="mt-3 font-serif text-4xl leading-tight text-texto sm:text-5xl">
+              <h1 className="mt-3 font-titulos text-4xl leading-tight text-texto sm:text-5xl">
                 ¿Quieres ser parte de esta comunidad?
               </h1>
               <p className="mt-5 max-w-lg text-base leading-relaxed text-texto-suave sm:text-lg">

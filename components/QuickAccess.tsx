@@ -62,7 +62,7 @@ export default function QuickAccess() {
 
         <div className="mt-16 sm:mt-20">
           <span className="eyebrow">Un territorio lleno de vida</span>
-          <h2 className="mt-3 max-w-2xl font-serif text-3xl leading-tight text-texto sm:text-4xl">
+          <h2 className="mt-3 max-w-2xl font-titulos text-3xl leading-tight text-texto sm:text-4xl">
             Mujeres que hacen la diferencia
           </h2>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-texto-suave">

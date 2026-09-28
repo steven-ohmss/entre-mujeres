@@ -32,7 +32,7 @@ export default function EventFilters({
 }: EventFiltersProps) {
   return (
     <div className="card relative overflow-hidden p-6">
-      <h3 className="font-serif text-xl text-texto">Filtrar eventos</h3>
+      <h3 className="font-titulos text-xl text-texto">Filtrar eventos</h3>
 
       <div className="mt-5">
         <label htmlFor="event-keyword" className="field-label">

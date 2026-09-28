@@ -39,7 +39,7 @@ export default function ProductModal({ product, community, isOpen, onClose }: Pr
 
       <div className="mt-6">
         <span className="pill-tag bg-verde-hoja/15 text-verde-bosque">{product.type}</span>
-        <h3 className="mt-3 font-serif text-2xl text-texto sm:text-3xl">{product.name}</h3>
+        <h3 className="mt-3 font-titulos text-2xl text-texto sm:text-3xl">{product.name}</h3>
       </div>
 
       <div className="mt-5 space-y-4">

@@ -21,7 +21,7 @@ export default function SectionHeading({
     <div className={`flex flex-col gap-3 ${alignClass}`}>
       {eyebrow ? <span className="eyebrow">{eyebrow}</span> : null}
       <h2
-        className={`font-serif text-3xl sm:text-4xl md:text-[2.75rem] leading-tight ${
+        className={`font-titulos text-3xl sm:text-4xl md:text-[2.75rem] leading-tight ${
           light ? "text-blanco" : "text-texto"
         }`}
       >

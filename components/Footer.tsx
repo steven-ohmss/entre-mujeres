@@ -27,7 +27,7 @@ export default function Footer() {
         />
         <div className="container-page relative flex flex-col items-center gap-2 text-center">
           <Leaf size={22} aria-hidden="true" />
-          <p className="font-serif text-2xl italic">Territorios que nos unen</p>
+          <p className="font-titulos text-2xl italic">Territorios que nos unen</p>
           <p className="text-sm font-semibold uppercase tracking-widest">Red Mujer</p>
         </div>
       </div>
@@ -35,7 +35,7 @@ export default function Footer() {
       <div className="bg-texto py-14 text-blanco/90">
         <div className="container-page grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
           <div>
-            <p className="flex items-center gap-1.5 font-serif text-xl italic text-blanco">
+            <p className="flex items-center gap-1.5 font-titulos text-xl italic text-blanco">
               <Venus size={18} className="text-rosa" aria-hidden="true" />
               Entre mujeres
             </p>

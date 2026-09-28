@@ -27,7 +27,7 @@ export default function EventCard({ event, onOpen }: EventCardProps) {
           <span className="text-[10px] font-bold uppercase text-texto-suave">
             {dateParts.dayAbbrev}
           </span>
-          <span className="font-serif text-xl leading-none text-texto">{dateParts.dayNumber}</span>
+          <span className="font-titulos text-xl leading-none text-texto">{dateParts.dayNumber}</span>
           <span className="text-[10px] font-bold uppercase text-texto-suave">
             {dateParts.monthAbbrev}
           </span>
@@ -42,7 +42,7 @@ export default function EventCard({ event, onOpen }: EventCardProps) {
             {event.type}
           </span>
         ) : null}
-        <h4 className="font-serif text-lg text-texto">{event.title}</h4>
+        <h4 className="font-titulos text-lg text-texto">{event.title}</h4>
         <p className="flex items-center gap-1.5 text-sm text-texto-suave">
           <MapPin size={14} className="shrink-0" aria-hidden="true" />
           {event.location}
