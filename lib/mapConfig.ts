@@ -9,15 +9,19 @@ export const MAP_TILE_ATTRIBUTION =
   process.env.NEXT_PUBLIC_MAP_TILE_ATTRIBUTION ||
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
-export const MAP_CENTER: LatLngTuple = [4.6, -74.1];
-export const MAP_ZOOM = 10;
+// Vista de respaldo mientras carga el GeoJSON de localidades (ya muestra Bogotá completa,
+// incluido Sumapaz). Al cargar, el mapa se ajusta con fitBounds a los límites de Bogotá.
+export const MAP_CENTER: LatLngTuple = [4.3, -74.15];
+export const MAP_ZOOM = 9;
+export const MAP_ZOOM_SNAP = 0.25;
 export const MAP_MIN_ZOOM = 8;
 export const MAP_MAX_ZOOM = 18;
 
-// Límites aproximados de Cundinamarca, para que no se pierdan navegando.
+// Límites de navegación con margen generoso alrededor de Cundinamarca, para que no se
+// pierdan navegando sin empujar la vista inicial.
 export const MAP_MAX_BOUNDS: LatLngBoundsExpression = [
-  [3.6, -75.0],
-  [5.95, -72.9],
+  [2.3, -76.5],
+  [6.8, -71.8],
 ];
 
 export const LOCALIDADES_GEOJSON_URL = "/data/localidades-bogota.geojson";

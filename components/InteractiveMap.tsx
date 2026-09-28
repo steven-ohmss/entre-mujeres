@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import MapFilters from "./MapFilters";
 import CommunityMapCard from "./CommunityMapCard";
@@ -23,6 +23,7 @@ const markersWithCommunity: MapMarkerWithCommunity[] = mapMarkers.flatMap((marke
 
 export default function InteractiveMap() {
   const isDesktop = useMediaQuery("(min-width: 1280px)");
+  const filtersPanelRef = useRef<HTMLDivElement>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState<CommunityCategory | "Todas">("Todas");
   const [productType, setProductType] = useState<ProductType | "Todas">("Todas");
@@ -89,9 +90,13 @@ export default function InteractiveMap() {
         </p>
       </div>
 
-      <div className="relative isolate">
-        <div className="mx-auto mb-6 w-full max-w-[1280px] px-5 md:px-8 xl:absolute xl:left-6 xl:top-6 xl:z-[1000] xl:mb-0 xl:max-h-[calc(100%-48px)] xl:m-0 xl:w-[310px] xl:overflow-y-auto xl:rounded-[20px] xl:bg-crema xl:px-0 xl:shadow-[0_10px_30px_rgba(30,35,30,0.15)]">
-          <div className="rounded-[20px] bg-crema xl:rounded-none">
+      <div className="container-page">
+        {/* Contexto de apilamiento propio: nada de Leaflet queda sobre el navbar ni los modales. */}
+        <div className="relative isolate z-0">
+          <div
+            ref={filtersPanelRef}
+            className="mb-6 rounded-[20px] bg-crema xl:absolute xl:left-4 xl:top-4 xl:z-[1000] xl:mb-0 xl:max-h-[calc(100%-32px)] xl:w-[300px] xl:overflow-y-auto xl:shadow-[0_10px_30px_rgba(30,35,30,0.15)]"
+          >
             <MapFilters
               searchTerm={searchTerm}
               onSearchTermChange={setSearchTerm}
@@ -105,56 +110,55 @@ export default function InteractiveMap() {
               alwaysOpen={isDesktop}
             />
           </div>
-        </div>
 
-        <div
-          role="region"
-          aria-label="Mapa interactivo de Bogotá y Cundinamarca con las comunidades de mujeres"
-          className="relative h-[420px] w-full xl:h-[min(88vh,900px)] xl:min-h-[640px]"
-        >
-          <CommunityLeafletMap
-            markers={filteredMarkers}
-            selectedMarkerId={effectiveSelectedId}
-            onSelectMarker={setSelectedMarkerId}
-            onClosePopup={(markerId) =>
-              setSelectedMarkerId((current) => (current === markerId ? null : current))
-            }
-            localidad={localidad}
-            isDesktop={isDesktop}
-            onViewMore={openCommunity}
-            onViewProducts={openProducts}
-          />
+          <div
+            role="region"
+            aria-label="Mapa interactivo de Bogotá y Cundinamarca con las comunidades de mujeres"
+            className="relative h-[420px] w-full overflow-hidden rounded-3xl border border-texto/10 xl:h-[clamp(560px,80vh,720px)]"
+          >
+            <CommunityLeafletMap
+              markers={filteredMarkers}
+              selectedMarkerId={effectiveSelectedId}
+              onSelectMarker={setSelectedMarkerId}
+              onClosePopup={(markerId) =>
+                setSelectedMarkerId((current) => (current === markerId ? null : current))
+              }
+              localidad={localidad}
+              isDesktop={isDesktop}
+              onViewMore={openCommunity}
+              onViewProducts={openProducts}
+              panelRef={filtersPanelRef}
+            />
 
-          <div className="pointer-events-none absolute bottom-7 right-2 z-[1000] flex items-center gap-4 rounded-lg bg-crema/95 px-3 py-2 text-xs text-texto shadow-sm">
-            <span className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-sm bg-rosa" aria-hidden="true" />
-              Bogotá
-            </span>
-            <span className="flex items-center gap-2">
-              <span
-                className="h-3 w-3 rounded-full border-2 border-blanco bg-[#FFE600] shadow-sm"
-                aria-hidden="true"
-              />
-              Comunidad
-            </span>
-          </div>
-        </div>
-
-        {filteredMarkers.length === 0 ? (
-          <div className="mx-auto mt-4 w-full max-w-[1280px] px-5 md:px-8 xl:absolute xl:bottom-8 xl:left-1/2 xl:z-[1000] xl:mt-0 xl:w-auto xl:-translate-x-1/2 xl:px-0">
-            <div className="rounded-2xl border border-dashed border-texto/20 bg-crema p-8 text-center xl:shadow-lg">
-              <p className="text-sm text-texto-suave">
-                No encontramos iniciativas con esos filtros
-              </p>
-              <button type="button" onClick={clearFilters} className="btn-secondary mt-4">
-                Limpiar filtros
-              </button>
+            <div className="pointer-events-none absolute bottom-7 right-2 z-[1000] flex items-center gap-4 rounded-lg bg-crema/95 px-3 py-2 text-xs text-texto shadow-sm">
+              <span className="flex items-center gap-2">
+                <span className="h-3 w-3 rounded-sm bg-rosa" aria-hidden="true" />
+                Bogotá
+              </span>
+              <span className="flex items-center gap-2">
+                <span
+                  className="h-3 w-3 rounded-full border-2 border-blanco bg-[#FFE600] shadow-sm"
+                  aria-hidden="true"
+                />
+                Comunidad
+              </span>
             </div>
           </div>
-        ) : null}
-      </div>
 
-      <div className="container-page">
+          {filteredMarkers.length === 0 ? (
+            <div className="mt-4 xl:absolute xl:bottom-8 xl:left-[calc(50%+158px)] xl:z-[1000] xl:mt-0 xl:-translate-x-1/2">
+              <div className="rounded-2xl border border-dashed border-texto/20 bg-crema p-8 text-center xl:shadow-lg">
+                <p className="text-sm text-texto-suave">
+                  No encontramos iniciativas con esos filtros
+                </p>
+                <button type="button" onClick={clearFilters} className="btn-secondary mt-4">
+                  Limpiar filtros
+                </button>
+              </div>
+            </div>
+          ) : null}
+        </div>
+
         <p className="mt-3 text-xs text-texto-suave">
           Límites de localidades: Datos Abiertos Bogotá (CC BY 4.0)
         </p>

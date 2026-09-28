@@ -39,6 +39,12 @@ div[id] {
   outline-color: var(--color-rosa);
 }
 
+/* Mientras faltan fotos reales, el texto alternativo de una imagen rota no se muestra
+   encima de los fondos (el alt se conserva para lectores de pantalla). */
+img {
+  color: transparent;
+}
+
 ::selection {
   background: var(--color-rosa-palido);
   color: var(--color-texto);
@@ -159,6 +165,11 @@ div[id] {
   font-family: var(--font-script);
   font-size: 1.5rem;
   line-height: 1.3;
+}
+
+.script-text--sm {
+  font-size: 1.15rem;
+  line-height: 1.2;
 }
 
 .field-label {

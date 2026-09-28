@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
 import SectionHeading from "./SectionHeading";
 import EventFilters from "./EventFilters";
 import MonthCalendar from "./MonthCalendar";
@@ -11,6 +11,7 @@ import EventModal from "./EventModal";
 import LeafDecoration from "./LeafDecoration";
 import { calendarEvents } from "@/data/data";
 import { compareISODates, parseISODate } from "@/lib/date";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 import type { CalendarEvent, EventType, Localidad, Organizer } from "@/types";
 
 const sortedByDateAsc = [...calendarEvents].sort((a, b) => compareISODates(a.date, b.date));
@@ -18,6 +19,7 @@ const nearestEvent = sortedByDateAsc[0];
 const initialMonth = nearestEvent ? parseISODate(nearestEvent.date) : parseISODate("2026-01-01");
 
 export default function CalendarSection() {
+  const isXl = useMediaQuery("(min-width: 1280px)");
   const [keyword, setKeyword] = useState("");
   const [localidad, setLocalidad] = useState<Localidad | "Todas">("Todas");
   const [selectedTypes, setSelectedTypes] = useState<EventType[]>([]);
@@ -54,7 +56,14 @@ export default function CalendarSection() {
     );
   }, [filteredEvents, selectedDate, sortOrder]);
 
-  const featuredPair = sortedByDateAsc.slice(featuredIndex, featuredIndex + 2);
+  // Desde xl se ven 2 tarjetas destacadas; por debajo, 1.
+  const featuredVisible = isXl ? 2 : 1;
+  const maxFeaturedIndex = Math.max(0, sortedByDateAsc.length - featuredVisible);
+  const currentFeaturedIndex = Math.min(featuredIndex, maxFeaturedIndex);
+  const featuredEvents = sortedByDateAsc.slice(
+    currentFeaturedIndex,
+    currentFeaturedIndex + featuredVisible
+  );
   const selectedEvent: CalendarEvent | null =
     calendarEvents.find((event) => event.id === selectedEventId) ?? null;
 
@@ -125,128 +134,146 @@ export default function CalendarSection() {
   );
 
   return (
-    <section id="calendario" className="relative overflow-hidden bg-crema py-20 sm:py-24">
-      <LeafDecoration className="pointer-events-none absolute -left-6 top-10 h-24 w-24 -rotate-12 opacity-60" />
-      <LeafDecoration className="pointer-events-none absolute -right-8 bottom-10 h-28 w-28 rotate-90 opacity-50" />
-
+    <section id="calendario" className="bg-crema py-20 sm:py-24">
       <div className="container-page">
-        <div className="mb-6 lg:hidden">
-          <button
-            type="button"
-            onClick={() => setIsMobileFiltersOpen((v) => !v)}
-            className="btn-secondary w-full justify-between"
-            aria-expanded={isMobileFiltersOpen}
-          >
-            <span className="flex items-center gap-2">
-              <SlidersHorizontal size={16} aria-hidden="true" />
-              Filtros
-            </span>
-          </button>
-          {isMobileFiltersOpen ? <div className="mt-4">{filtersPanel}</div> : null}
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <SectionHeading
+            title="Calendario"
+            subtitle="Próximas ferias, eventos y actividades"
+            description="Conoce y participa en los eventos, ferias, encuentros y actividades de Red Mujer y otras iniciativas de mujeres en Bogotá y Cundinamarca."
+          />
+          <p className="script-text flex items-center gap-2 text-verde-bosque">
+            Nos encontramos en el territorio
+            <LeafDecoration className="h-8 w-8" />
+          </p>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_3fr]">
-          <div className="hidden lg:block">{filtersPanel}</div>
+      <div className="container-page mt-8">
+        <div className="relative isolate overflow-hidden rounded-3xl border border-texto/10 bg-blanco p-6 xl:p-8">
+          <LeafDecoration className="pointer-events-none absolute -left-6 -top-6 -z-10 h-24 w-24 -rotate-12 opacity-40" />
+          <LeafDecoration className="pointer-events-none absolute -bottom-8 -right-8 -z-10 h-28 w-28 rotate-90 opacity-40" />
 
-          <div>
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <SectionHeading
-                title="Calendario"
-                subtitle="Próximas ferias, eventos y actividades"
-                description="Conoce y participa en los eventos, ferias, encuentros y actividades de Red Mujer y otras iniciativas de mujeres en Bogotá y Cundinamarca."
-              />
-              <p className="script-text flex items-center gap-2 text-verde-bosque">
-                Nos encontramos en el territorio
-                <LeafDecoration className="h-8 w-8" />
-              </p>
-            </div>
-
-            <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-              <MonthCalendar
-                year={year}
-                month={month}
-                onPrevMonth={goToPrevMonth}
-                onNextMonth={goToNextMonth}
-                selectedDate={selectedDate}
-                onSelectDate={handleSelectDate}
-                events={filteredEvents}
-              />
-
-              <div className="card p-5 sm:p-6">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-titulos text-lg text-texto">Eventos destacados</h4>
-                  <div className="flex items-center gap-1">
-                    <button
-                      type="button"
-                      onClick={() => setFeaturedIndex((prev) => Math.max(0, prev - 1))}
-                      disabled={featuredIndex === 0}
-                      aria-label="Eventos destacados anteriores"
-                      className="flex h-9 w-9 items-center justify-center rounded-full text-texto transition hover:bg-crema disabled:opacity-30"
-                    >
-                      <ChevronLeft size={18} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setFeaturedIndex((prev) =>
-                          Math.min(sortedByDateAsc.length - 2, prev + 1)
-                        )
-                      }
-                      disabled={featuredIndex >= sortedByDateAsc.length - 2}
-                      aria-label="Siguientes eventos destacados"
-                      className="flex h-9 w-9 items-center justify-center rounded-full text-texto transition hover:bg-crema disabled:opacity-30"
-                    >
-                      <ChevronRight size={18} />
-                    </button>
-                  </div>
-                </div>
-                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {featuredPair.map((event, index) => (
-                    <div key={event.id} className={index === 1 ? "hidden sm:block" : ""}>
-                      <EventCard event={event} onOpen={() => setSelectedEventId(event.id)} />
-                    </div>
-                  ))}
-                </div>
+          <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-[340px_minmax(0,1fr)] xl:grid-cols-[260px_340px_minmax(0,1fr)]">
+            <div className="lg:col-span-2 xl:col-span-1">
+              <button
+                type="button"
+                onClick={() => setIsMobileFiltersOpen((v) => !v)}
+                className="btn-secondary w-full justify-between lg:hidden"
+                aria-expanded={isMobileFiltersOpen}
+                aria-controls="calendario-filtros"
+              >
+                <span className="flex items-center gap-2">
+                  <SlidersHorizontal size={16} aria-hidden="true" />
+                  Filtros
+                </span>
+                <ChevronDown
+                  size={18}
+                  className={`transition-transform ${isMobileFiltersOpen ? "rotate-180" : ""}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                id="calendario-filtros"
+                className={`h-full ${isMobileFiltersOpen ? "mt-4 lg:mt-0" : "hidden"} lg:block`}
+              >
+                {filtersPanel}
               </div>
             </div>
 
-            <div className="mt-10">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <h4 className="font-titulos text-xl text-texto">Próximos eventos</h4>
-                <label className="flex items-center gap-2 text-sm text-texto-suave">
-                  Ordenar por:
-                  <select
-                    value={sortOrder}
-                    onChange={(event) => setSortOrder(event.target.value as "asc" | "desc")}
-                    className="rounded-full border border-texto/15 bg-blanco px-3 py-2 text-sm text-texto focus:outline-none"
+            <MonthCalendar
+              year={year}
+              month={month}
+              onPrevMonth={goToPrevMonth}
+              onNextMonth={goToNextMonth}
+              selectedDate={selectedDate}
+              onSelectDate={handleSelectDate}
+              events={filteredEvents}
+            />
+
+            <div className="flex h-full min-w-0 flex-col rounded-2xl bg-crema p-4">
+              <div className="flex items-center justify-between">
+                <h4 className="font-titulos text-lg text-texto">Eventos destacados</h4>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setFeaturedIndex(Math.max(0, currentFeaturedIndex - 1))}
+                    disabled={currentFeaturedIndex === 0}
+                    aria-label="Eventos destacados anteriores"
+                    className="flex h-9 w-9 items-center justify-center rounded-full text-texto transition hover:bg-blanco disabled:opacity-30"
                   >
-                    <option value="asc">Fecha (más próximos)</option>
-                    <option value="desc">Fecha (más lejanos)</option>
-                  </select>
-                </label>
+                    <ChevronLeft size={18} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFeaturedIndex(Math.min(maxFeaturedIndex, currentFeaturedIndex + 1))
+                    }
+                    disabled={currentFeaturedIndex >= maxFeaturedIndex}
+                    aria-label="Siguientes eventos destacados"
+                    className="flex h-9 w-9 items-center justify-center rounded-full text-texto transition hover:bg-blanco disabled:opacity-30"
+                  >
+                    <ChevronRight size={18} />
+                  </button>
+                </div>
               </div>
-
-              <div className="mt-4 space-y-3">
-                {listEvents.map((event) => (
-                  <EventListRow
+              <div className="mt-4 grid flex-1 grid-cols-1 gap-3 xl:grid-cols-2">
+                {featuredEvents.map((event) => (
+                  <EventCard
                     key={event.id}
                     event={event}
                     onOpen={() => setSelectedEventId(event.id)}
                   />
                 ))}
               </div>
-
-              {listEvents.length === 0 ? (
-                <div className="mt-6 rounded-2xl border border-dashed border-texto/20 p-8 text-center">
-                  <p className="text-sm text-texto-suave">No hay actividades con estos filtros</p>
-                  {hasActiveFilters ? (
-                    <button type="button" onClick={clearFilters} className="btn-secondary mt-4">
-                      Limpiar filtros
-                    </button>
-                  ) : null}
-                </div>
-              ) : null}
             </div>
+          </div>
+
+          <div className="mt-8 border-t border-texto/10 pt-8">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h4 className="font-titulos text-xl text-texto">Próximos eventos</h4>
+              <label className="flex items-center gap-2 text-sm text-texto-suave">
+                Ordenar por:
+                <select
+                  value={sortOrder}
+                  onChange={(event) => setSortOrder(event.target.value as "asc" | "desc")}
+                  className="rounded-full border border-texto/15 bg-blanco px-3 py-2 text-sm text-texto focus:outline-none"
+                >
+                  <option value="asc">Fecha (más próximos)</option>
+                  <option value="desc">Fecha (más lejanos)</option>
+                </select>
+              </label>
+            </div>
+
+            {listEvents.length > 0 ? (
+              <ul className="mt-4 divide-y divide-texto/10">
+                {listEvents.map((event) => (
+                  <li key={event.id}>
+                    <EventListRow event={event} onOpen={() => setSelectedEventId(event.id)} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="mt-6 rounded-2xl border border-dashed border-texto/20 p-8 text-center">
+                <p className="text-sm text-texto-suave">No hay actividades con estos filtros</p>
+                {hasActiveFilters ? (
+                  <button type="button" onClick={clearFilters} className="btn-secondary mt-4">
+                    Limpiar filtros
+                  </button>
+                ) : null}
+              </div>
+            )}
+          </div>
+
+          <div className="mt-6 flex items-end justify-end gap-2">
+            <p className="script-text script-text--sm text-right text-verde-bosque">
+              Más mujeres
+              <br />
+              Más territorio
+              <br />
+              Más oportunidades
+            </p>
+            <LeafDecoration className="h-10 w-10 shrink-0 opacity-80" />
           </div>
         </div>
       </div>

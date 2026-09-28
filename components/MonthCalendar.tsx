@@ -85,7 +85,7 @@ export default function MonthCalendar({
   });
 
   return (
-    <div className="card p-5 sm:p-6">
+    <div className="flex h-full flex-col rounded-2xl bg-crema p-5">
       <div className="flex items-center justify-between">
         <h4 className="font-titulos text-lg text-texto">{getMonthLabel(year, month)}</h4>
         <div className="flex items-center gap-1">
@@ -93,7 +93,7 @@ export default function MonthCalendar({
             type="button"
             onClick={onPrevMonth}
             aria-label="Mes anterior"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-texto transition hover:bg-crema"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-texto transition hover:bg-blanco"
           >
             <ChevronLeft size={18} />
           </button>
@@ -101,7 +101,7 @@ export default function MonthCalendar({
             type="button"
             onClick={onNextMonth}
             aria-label="Mes siguiente"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-texto transition hover:bg-crema"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-texto transition hover:bg-blanco"
           >
             <ChevronRight size={18} />
           </button>
@@ -114,7 +114,7 @@ export default function MonthCalendar({
         ))}
       </div>
 
-      <div className="mt-1 grid grid-cols-7 gap-1">
+      <div className="mb-5 mt-1 grid grid-cols-7 gap-1">
         {cells.map((cell) => {
           const colors = Array.from(eventsByDate.get(cell.iso) ?? []);
           const isSelected = selectedDate === cell.iso;
@@ -125,7 +125,7 @@ export default function MonthCalendar({
               disabled={!cell.inCurrentMonth}
               onClick={() => onSelectDate(cell.iso)}
               className={`flex h-11 flex-col items-center justify-center gap-0.5 rounded-full text-sm transition ${
-                cell.inCurrentMonth ? "text-texto hover:bg-crema" : "text-texto-suave/40"
+                cell.inCurrentMonth ? "text-texto hover:bg-blanco" : "text-texto-suave/40"
               } ${isSelected ? "bg-verde-bosque text-blanco hover:bg-verde-bosque" : ""}`}
             >
               {cell.dayNumber}
@@ -143,7 +143,7 @@ export default function MonthCalendar({
         })}
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 border-t border-texto/10 pt-4">
+      <div className="mt-auto flex flex-wrap gap-x-4 gap-y-2 border-t border-texto/10 pt-4">
         {eventTypes.map((type) => (
           <span key={type.value} className="flex items-center gap-1.5 text-xs text-texto-suave">
             <span

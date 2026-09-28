@@ -17,9 +17,9 @@ export default function EventListRow({ event, onOpen }: EventListRowProps) {
     <button
       type="button"
       onClick={onOpen}
-      className="flex w-full items-center gap-4 rounded-2xl border border-texto/10 bg-blanco p-3 text-left transition hover:border-verde-hoja/40 hover:bg-crema sm:p-4"
+      className="group flex w-full items-center gap-4 px-2 py-4 text-left transition hover:bg-crema sm:px-4"
     >
-      <div className="flex w-12 shrink-0 flex-col items-center rounded-xl bg-crema px-2 py-1.5">
+      <div className="flex w-12 shrink-0 flex-col items-center rounded-xl bg-crema px-2 py-1.5 transition group-hover:bg-blanco">
         <span className="text-[10px] font-bold uppercase text-texto-suave">
           {dateParts.dayAbbrev}
         </span>
@@ -55,7 +55,7 @@ export default function EventListRow({ event, onOpen }: EventListRowProps) {
             {event.startTime} – {event.endTime}
           </span>
         </div>
-        <p className="mt-1 hidden truncate text-sm text-texto-suave sm:block">{event.description}</p>
+        <p className="mt-1 line-clamp-1 text-sm text-texto-suave">{event.description}</p>
       </div>
 
       <ChevronRight size={20} className="shrink-0 text-texto-suave" aria-hidden="true" />

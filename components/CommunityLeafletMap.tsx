@@ -27,6 +27,7 @@ import {
   MAP_TILE_ATTRIBUTION,
   MAP_TILE_URL,
   MAP_ZOOM,
+  MAP_ZOOM_SNAP,
 } from "@/lib/mapConfig";
 import type { Community, Localidad, MapMarker } from "@/types";
 
@@ -54,10 +55,24 @@ interface CommunityLeafletMapProps {
   isDesktop: boolean;
   onViewMore: (communityId: string) => void;
   onViewProducts: (communityId: string) => void;
+  panelRef: React.RefObject<HTMLDivElement | null>;
 }
 
-// Espacio que ocupa el panel de filtros flotante (24px de margen + 310px de ancho + 24px).
-const PANEL_PADDING: [number, number] = [358, 24];
+// Espacio que ocupa el panel de filtros flotante en xl (16px de margen + 300px + 16px).
+const PANEL_PADDING: [number, number] = [332, 24];
+
+const fitOptions = (isDesktop: boolean): L.FitBoundsOptions =>
+  isDesktop
+    ? { paddingTopLeft: PANEL_PADDING, paddingBottomRight: [24, 24] }
+    : { padding: [24, 24] };
+
+// Un dedo no mueve el mapa en pantallas táctiles. iPadOS se presenta como Mac, por eso
+// además de L.Browser.mobile se revisa si el puntero principal es táctil.
+const isTouchDevice = () =>
+  L.Browser.mobile || window.matchMedia("(pointer: coarse)").matches;
+
+const HINT_WHEEL = "Haz clic en el mapa para hacer zoom con la rueda";
+const HINT_TOUCH = "Usa dos dedos para mover el mapa";
 
 const dotIcon = L.divIcon({
   className: "map-marker",
@@ -185,23 +200,42 @@ function PopupContent({
 function MapBehavior({
   isDesktop,
   onMapClick,
+  onHint,
 }: {
   isDesktop: boolean;
   onMapClick: () => void;
+  onHint: (message: string) => void;
 }) {
   const map = useMap();
   // Clic en una zona vacía del mapa (no en un marcador) cierra la ficha.
   useMapEvents({ click: onMapClick });
 
-  // En pantallas pequeñas el mapa no atrapa el scroll: se mueve con dos dedos o con los botones.
+  // La rueda del mouse mueve la página hasta que se hace clic en el mapa, y vuelve a
+  // desactivarse al sacar el cursor. En pantallas táctiles un dedo tampoco mueve el mapa.
   useEffect(() => {
-    if (isDesktop) {
-      map.dragging.enable();
-      map.scrollWheelZoom.enable();
-    } else {
-      map.dragging.disable();
-      map.scrollWheelZoom.disable();
-    }
+    const container = map.getContainer();
+    const enableWheel = () => map.scrollWheelZoom.enable();
+    const disableWheel = () => map.scrollWheelZoom.disable();
+    const onWheel = () => {
+      if (!map.scrollWheelZoom.enabled()) onHint(HINT_WHEEL);
+    };
+    const onTouchMove = (event: TouchEvent) => {
+      if (event.touches.length === 1 && !map.dragging.enabled()) onHint(HINT_TOUCH);
+    };
+    container.addEventListener("click", enableWheel);
+    container.addEventListener("mouseleave", disableWheel);
+    container.addEventListener("wheel", onWheel, { passive: true });
+    container.addEventListener("touchmove", onTouchMove, { passive: true });
+    return () => {
+      container.removeEventListener("click", enableWheel);
+      container.removeEventListener("mouseleave", disableWheel);
+      container.removeEventListener("wheel", onWheel);
+      container.removeEventListener("touchmove", onTouchMove);
+    };
+  }, [map, onHint]);
+
+  // El alto de la caja cambia entre breakpoints.
+  useEffect(() => {
     map.invalidateSize();
   }, [isDesktop, map]);
 
@@ -258,7 +292,7 @@ function Localidades({
   const map = useMap();
   const geoRef = useRef<L.GeoJSON>(null);
   const localidadRef = useRef(localidad);
-  const previousLocalidad = useRef(localidad);
+  const previousLocalidad = useRef<Localidad | "Todas" | null>(null);
 
   const style = useCallback((feature?: Feature<Geometry, LocalidadProps>): L.PathOptions => {
     const selected = localidadRef.current;
@@ -297,13 +331,11 @@ function Localidades({
         ) as L.Polygon | undefined;
       if (layer) {
         layer.bringToFront();
-        map.fitBounds(layer.getBounds(), {
-          paddingTopLeft: isDesktop ? PANEL_PADDING : [16, 16],
-          paddingBottomRight: [24, 24],
-        });
+        map.fitBounds(layer.getBounds(), fitOptions(isDesktop));
       }
     } else if (previousLocalidad.current !== "Todas") {
-      map.setView(MAP_CENTER, MAP_ZOOM);
+      // Al cargar (y al volver a "Todas") se encuadra Bogotá completa.
+      map.fitBounds(geo.getBounds(), fitOptions(isDesktop));
     }
     previousLocalidad.current = localidad;
   }, [localidad, isDesktop, map, style]);
@@ -327,8 +359,32 @@ export default function CommunityLeafletMap({
   isDesktop,
   onViewMore,
   onViewProducts,
+  panelRef,
 }: CommunityLeafletMapProps) {
   const [localidades, setLocalidades] = useState<LocalidadesData | null>(null);
+  const [hint, setHint] = useState<string | null>(null);
+  const hintTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showHint = useCallback((message: string) => {
+    setHint(message);
+    if (hintTimer.current) clearTimeout(hintTimer.current);
+    hintTimer.current = setTimeout(() => setHint(null), 1500);
+  }, []);
+
+  useEffect(
+    () => () => {
+      if (hintTimer.current) clearTimeout(hintTimer.current);
+    },
+    []
+  );
+
+  // El panel de filtros flota sobre el mapa: sus clics y la rueda no deben llegar al mapa.
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    L.DomEvent.disableClickPropagation(panel);
+    L.DomEvent.disableScrollPropagation(panel);
+  }, [panelRef]);
 
   useEffect(() => {
     let cancelled = false;
@@ -348,53 +404,66 @@ export default function CommunityLeafletMap({
   const selected = markers.find((item) => item.marker.id === selectedMarkerId);
 
   return (
-    <MapContainer
-      center={MAP_CENTER}
-      zoom={MAP_ZOOM}
-      minZoom={MAP_MIN_ZOOM}
-      maxZoom={MAP_MAX_ZOOM}
-      maxBounds={MAP_MAX_BOUNDS}
-      maxBoundsViscosity={0.8}
-      zoomControl={false}
-      dragging={isDesktop}
-      scrollWheelZoom={isDesktop}
-      touchZoom
-      className="h-full w-full"
-    >
-      <TileLayer url={MAP_TILE_URL} attribution={MAP_TILE_ATTRIBUTION} />
-      <ZoomControl position="topright" />
-      <MapBehavior
-        isDesktop={isDesktop}
-        onMapClick={() => {
-          if (isDesktop && selectedMarkerId) onClosePopup(selectedMarkerId);
-        }}
-      />
-
-      {localidades ? (
-        <>
-          <Localidades data={localidades} localidad={localidad} isDesktop={isDesktop} />
-          <LocalidadLabels data={localidades} />
-        </>
-      ) : null}
-
-      {markers.map((item) => (
-        <CommunityMarker
-          key={item.marker.id}
-          item={item}
-          isSelected={item.marker.id === selectedMarkerId}
-          onSelect={onSelectMarker}
+    <>
+      <MapContainer
+        center={MAP_CENTER}
+        zoom={MAP_ZOOM}
+        zoomSnap={MAP_ZOOM_SNAP}
+        minZoom={MAP_MIN_ZOOM}
+        maxZoom={MAP_MAX_ZOOM}
+        maxBounds={MAP_MAX_BOUNDS}
+        maxBoundsViscosity={0.5}
+        zoomControl={false}
+        dragging={!isTouchDevice()}
+        scrollWheelZoom={false}
+        touchZoom
+        className="h-full w-full"
+      >
+        <TileLayer url={MAP_TILE_URL} attribution={MAP_TILE_ATTRIBUTION} />
+        <ZoomControl position="topright" />
+        <MapBehavior
+          isDesktop={isDesktop}
+          onHint={showHint}
+          onMapClick={() => {
+            if (isDesktop && selectedMarkerId) onClosePopup(selectedMarkerId);
+          }}
         />
-      ))}
 
-      {isDesktop && selected ? (
-        <SelectedPopup
-          key={selected.marker.id}
-          item={selected}
-          onClose={onClosePopup}
-          onViewMore={onViewMore}
-          onViewProducts={onViewProducts}
-        />
+        {localidades ? (
+          <>
+            <Localidades data={localidades} localidad={localidad} isDesktop={isDesktop} />
+            <LocalidadLabels data={localidades} />
+          </>
+        ) : null}
+
+        {markers.map((item) => (
+          <CommunityMarker
+            key={item.marker.id}
+            item={item}
+            isSelected={item.marker.id === selectedMarkerId}
+            onSelect={onSelectMarker}
+          />
+        ))}
+
+        {isDesktop && selected ? (
+          <SelectedPopup
+            key={selected.marker.id}
+            item={selected}
+            onClose={onClosePopup}
+            onViewMore={onViewMore}
+            onViewProducts={onViewProducts}
+          />
+        ) : null}
+      </MapContainer>
+
+      {hint ? (
+        <div
+          role="status"
+          className="pointer-events-none absolute bottom-16 left-1/2 z-[1000] w-max max-w-[calc(100%-32px)] -translate-x-1/2 rounded-full text-center bg-texto/85 px-4 py-2 text-xs font-medium text-blanco shadow"
+        >
+          {hint}
+        </div>
       ) : null}
-    </MapContainer>
+    </>
   );
 }
