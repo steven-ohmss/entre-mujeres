@@ -2,8 +2,6 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import CarruselInicio from "@/components/CarruselInicio";
 import QuickAccess from "@/components/QuickAccess";
-import CommunitySection from "@/components/CommunitySection";
-import ProductSection from "@/components/ProductSection";
 import CalendarSection from "@/components/CalendarSection";
 import InteractiveMap from "@/components/InteractiveMap";
 import NewsSection from "@/components/NewsSection";
@@ -20,8 +18,6 @@ export default function Home() {
         <Hero />
         <CarruselInicio />
         <QuickAccess />
-        <CommunitySection />
-        <ProductSection />
         <CalendarSection />
         <InteractiveMap />
         <NewsSection />

@@ -4,14 +4,14 @@ import { contactInfo } from "@/data/data";
 
 // Mismo orden que el menú del header, para que el sitio se lea igual en los dos lados.
 const FOOTER_LINKS = [
-  { href: "#inicio", label: "Inicio" },
-  { href: "#productos", label: "Productos" },
-  { href: "#mapa", label: "Mapa" },
-  { href: "#calendario", label: "Calendario" },
-  { href: "#noticias", label: "Noticias" },
-  { href: "#nosotras", label: "Nosotras" },
-  { href: "#contacto", label: "Contacto" },
-  { href: "#quiero-ser-parte", label: "Quiero ser parte" },
+  { href: "/#inicio", label: "Inicio" },
+  { href: "/productos", label: "Productos" },
+  { href: "/#mapa", label: "Mapa" },
+  { href: "/#calendario", label: "Calendario" },
+  { href: "/#noticias", label: "Noticias" },
+  { href: "/#nosotras", label: "Nosotras" },
+  { href: "/#contacto", label: "Contacto" },
+  { href: "/#quiero-ser-parte", label: "Quiero ser parte" },
 ];
 
 export default function Footer() {
