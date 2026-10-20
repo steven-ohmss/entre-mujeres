@@ -15,9 +15,12 @@ interface MonthCalendarProps {
   month: number;
   onPrevMonth: () => void;
   onNextMonth: () => void;
+  onToday: () => void;
   selectedDate: string | null;
   onSelectDate: (date: string) => void;
   events: CalendarEvent[];
+  /** Fecha de hoy, o null mientras no se conoce en el navegador. */
+  hoy: string | null;
 }
 
 interface DayCell {
@@ -69,72 +72,96 @@ export default function MonthCalendar({
   month,
   onPrevMonth,
   onNextMonth,
+  onToday,
   selectedDate,
   onSelectDate,
   events,
+  hoy,
 }: MonthCalendarProps) {
   const cells = buildCalendarGrid(year, month);
   const weekdays = getWeekdayHeaders();
 
-  const eventsByDate = new Map<string, Set<string>>();
+  // Los días con eventos llevan un punto del color de su tipo.
+  const coloresPorDia = new Map<string, Set<string>>();
   events.forEach((event) => {
-    const colors = eventsByDate.get(event.date) ?? new Set<string>();
-    const typeInfo = eventTypes.find((t) => t.value === event.type);
-    if (typeInfo) colors.add(typeInfo.color);
-    eventsByDate.set(event.date, colors);
+    const colores = coloresPorDia.get(event.date) ?? new Set<string>();
+    const info = eventTypes.find((t) => t.value === event.type);
+    if (info) colores.add(info.color);
+    coloresPorDia.set(event.date, colores);
   });
 
   return (
-    <div className="flex h-full flex-col rounded-2xl bg-crema p-5">
-      <div className="flex items-center justify-between">
-        <h4 className="font-titulos text-lg text-texto">{getMonthLabel(year, month)}</h4>
-        <div className="flex items-center gap-1">
+    <div className="rounded-3xl bg-blanco p-5 sm:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h4 className="font-titulos text-xl font-semibold text-texto">
+          {getMonthLabel(year, month)}
+        </h4>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onToday}
+            className="min-h-12 rounded-full border border-texto/20 px-5 text-base font-semibold text-texto transition hover:bg-crema"
+          >
+            Hoy
+          </button>
           <button
             type="button"
             onClick={onPrevMonth}
             aria-label="Mes anterior"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-texto transition hover:bg-blanco"
+            className="flex h-12 w-12 items-center justify-center rounded-full border border-texto/20 text-texto transition hover:bg-crema"
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft size={24} />
           </button>
           <button
             type="button"
             onClick={onNextMonth}
             aria-label="Mes siguiente"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-texto transition hover:bg-blanco"
+            className="flex h-12 w-12 items-center justify-center rounded-full border border-texto/20 text-texto transition hover:bg-crema"
           >
-            <ChevronRight size={18} />
+            <ChevronRight size={24} />
           </button>
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-7 gap-1 text-center text-xs font-semibold text-texto-suave">
+      <div className="mt-5 grid grid-cols-7 gap-1 text-center text-sm font-semibold text-texto-suave">
         {weekdays.map((day) => (
           <span key={day}>{day}</span>
         ))}
       </div>
 
-      <div className="mb-5 mt-1 grid grid-cols-7 gap-1">
+      <div className="mt-2 grid grid-cols-7 gap-1">
         {cells.map((cell) => {
-          const colors = Array.from(eventsByDate.get(cell.iso) ?? []);
-          const isSelected = selectedDate === cell.iso;
+          const colores = Array.from(coloresPorDia.get(cell.iso) ?? []);
+          const elegido = selectedDate === cell.iso;
+          const esHoy = hoy === cell.iso;
+          const tieneEventos = colores.length > 0;
+
           return (
             <button
               key={cell.iso}
               type="button"
               disabled={!cell.inCurrentMonth}
               onClick={() => onSelectDate(cell.iso)}
-              className={`flex h-11 flex-col items-center justify-center gap-0.5 rounded-full text-sm transition ${
-                cell.inCurrentMonth ? "text-texto hover:bg-blanco" : "text-texto-suave/40"
-              } ${isSelected ? "bg-verde-bosque text-blanco hover:bg-verde-bosque" : ""}`}
+              aria-pressed={elegido}
+              aria-label={
+                tieneEventos
+                  ? `${cell.dayNumber}, con eventos`
+                  : `${cell.dayNumber}, sin eventos`
+              }
+              className={`flex h-12 flex-col items-center justify-center gap-0.5 rounded-full text-base transition ${
+                cell.inCurrentMonth ? "text-texto hover:bg-crema" : "text-texto-suave/35"
+              } ${elegido ? "bg-verde-bosque text-blanco hover:bg-verde-bosque" : ""} ${
+                esHoy && !elegido ? "ring-2 ring-rosa ring-inset font-bold" : ""
+              }`}
             >
               {cell.dayNumber}
               <span className="flex h-1.5 gap-0.5">
-                {colors.slice(0, 3).map((color) => (
+                {colores.slice(0, 3).map((color) => (
                   <span
                     key={color}
                     className="h-1.5 w-1.5 rounded-full"
-                    style={{ backgroundColor: isSelected ? "#FFFFFF" : color }}
+                    style={{ backgroundColor: elegido ? "#FFFFFF" : color }}
                   />
                 ))}
               </span>
@@ -143,9 +170,9 @@ export default function MonthCalendar({
         })}
       </div>
 
-      <div className="mt-auto flex flex-wrap gap-x-4 gap-y-2 border-t border-texto/10 pt-4">
+      <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 border-t border-texto/10 pt-4">
         {eventTypes.map((type) => (
-          <span key={type.value} className="flex items-center gap-1.5 text-xs text-texto-suave">
+          <span key={type.value} className="flex items-center gap-1.5 text-sm text-texto-suave">
             <span
               className="h-2.5 w-2.5 rounded-full"
               style={{ backgroundColor: type.color }}

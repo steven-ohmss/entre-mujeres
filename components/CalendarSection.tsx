@@ -1,135 +1,129 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronDown, ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { CalendarCheck, ChevronDown, SlidersHorizontal, X } from "lucide-react";
 import SectionHeading from "./SectionHeading";
 import EventFilters from "./EventFilters";
 import MonthCalendar from "./MonthCalendar";
-import EventCard from "./EventCard";
 import EventListRow from "./EventListRow";
 import EventModal from "./EventModal";
 import LeafDecoration from "./LeafDecoration";
 import { calendarEvents } from "@/data/data";
-import { compareISODates, parseISODate } from "@/lib/date";
-import { useMediaQuery } from "@/lib/useMediaQuery";
+import { compareISODates, formatEventDate, parseISODate } from "@/lib/date";
+import { useHoy } from "@/lib/hoy";
 import type { CalendarEvent, EventType, Localidad, Organizer } from "@/types";
 
-const sortedByDateAsc = [...calendarEvents].sort((a, b) => compareISODates(a.date, b.date));
-const nearestEvent = sortedByDateAsc[0];
-const initialMonth = nearestEvent ? parseISODate(nearestEvent.date) : parseISODate("2026-01-01");
+const ordenadosPorFecha = [...calendarEvents].sort((a, b) => compareISODates(a.date, b.date));
 
+/**
+ * Calendario (4.6).
+ *
+ * Fuera "Eventos destacados", que repetía lo mismo que la lista de abajo. En su lugar
+ * manda lo que la gente viene a averiguar: cuál es el próximo evento, calculado desde hoy.
+ * Los que ya pasaron no se muestran.
+ */
 export default function CalendarSection() {
-  const isXl = useMediaQuery("(min-width: 1280px)");
-  const [keyword, setKeyword] = useState("");
+  const hoy = useHoy();
+
   const [localidad, setLocalidad] = useState<Localidad | "Todas">("Todas");
+  const [keyword, setKeyword] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<EventType[]>([]);
   const [selectedOrganizers, setSelectedOrganizers] = useState<Organizer[]>([]);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [year, setYear] = useState(initialMonth.year);
-  const [month, setMonth] = useState(initialMonth.month);
-  const [featuredIndex, setFeaturedIndex] = useState(0);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [diaElegido, setDiaElegido] = useState<string | null>(null);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
-  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [filtrosAbiertos, setFiltrosAbiertos] = useState(false);
 
-  const filteredEvents = useMemo(() => {
-    const term = keyword.trim().toLowerCase();
-    return calendarEvents.filter((event) => {
-      const matchesKeyword =
-        term.length === 0 ||
-        event.title.toLowerCase().includes(term) ||
-        event.description.toLowerCase().includes(term);
-      const matchesLocalidad = localidad === "Todas" || event.localidad === localidad;
-      const matchesType = selectedTypes.length === 0 || selectedTypes.includes(event.type);
-      const matchesOrganizer =
-        selectedOrganizers.length === 0 || selectedOrganizers.includes(event.organizer);
-      return matchesKeyword && matchesLocalidad && matchesType && matchesOrganizer;
-    });
-  }, [keyword, localidad, selectedTypes, selectedOrganizers]);
+  // Mientras no se conoce la fecha se encuadra el mes del primer evento; al resolverse,
+  // el mes actual.
+  const mesInicial = parseISODate(hoy ?? ordenadosPorFecha[0]?.date ?? "2026-01-01");
+  const [mesManual, setMesManual] = useState<{ year: number; month: number } | null>(null);
+  const mesVisible = mesManual ?? { year: mesInicial.year, month: mesInicial.month };
 
-  const listEvents = useMemo(() => {
-    const withDate = selectedDate
-      ? filteredEvents.filter((event) => event.date === selectedDate)
-      : filteredEvents;
-    return [...withDate].sort((a, b) =>
-      sortOrder === "asc" ? compareISODates(a.date, b.date) : compareISODates(b.date, a.date)
-    );
-  }, [filteredEvents, selectedDate, sortOrder]);
-
-  // Desde xl se ven 2 tarjetas destacadas; por debajo, 1.
-  const featuredVisible = isXl ? 2 : 1;
-  const maxFeaturedIndex = Math.max(0, sortedByDateAsc.length - featuredVisible);
-  const currentFeaturedIndex = Math.min(featuredIndex, maxFeaturedIndex);
-  const featuredEvents = sortedByDateAsc.slice(
-    currentFeaturedIndex,
-    currentFeaturedIndex + featuredVisible
+  /** Eventos que todavía no han pasado. Antes de montar se muestran todos. */
+  const proximos = useMemo(
+    () => ordenadosPorFecha.filter((e) => (hoy ? compareISODates(e.date, hoy) >= 0 : true)),
+    [hoy]
   );
-  const selectedEvent: CalendarEvent | null =
-    calendarEvents.find((event) => event.id === selectedEventId) ?? null;
 
-  const hasActiveFilters =
+  const filtrados = useMemo(() => {
+    const termino = keyword.trim().toLowerCase();
+    return proximos.filter((event) => {
+      const coincideTexto =
+        termino.length === 0 ||
+        event.title.toLowerCase().includes(termino) ||
+        event.description.toLowerCase().includes(termino);
+      const coincideLocalidad = localidad === "Todas" || event.localidad === localidad;
+      const coincideTipo = selectedTypes.length === 0 || selectedTypes.includes(event.type);
+      const coincideOrganiza =
+        selectedOrganizers.length === 0 || selectedOrganizers.includes(event.organizer);
+      return coincideTexto && coincideLocalidad && coincideTipo && coincideOrganiza;
+    });
+  }, [keyword, localidad, proximos, selectedOrganizers, selectedTypes]);
+
+  // Al tocar un día, la lista muestra solo los eventos de ese día.
+  const lista = useMemo(
+    () => (diaElegido ? filtrados.filter((e) => e.date === diaElegido) : filtrados),
+    [diaElegido, filtrados]
+  );
+
+  const proximoEvento = filtrados[0] ?? null;
+  const eventoAbierto: CalendarEvent | null =
+    calendarEvents.find((e) => e.id === selectedEventId) ?? null;
+
+  const hayFiltros =
     keyword.trim().length > 0 ||
     localidad !== "Todas" ||
     selectedTypes.length > 0 ||
     selectedOrganizers.length > 0 ||
-    selectedDate !== null;
+    diaElegido !== null;
 
-  const clearFilters = () => {
+  const limpiarFiltros = () => {
     setKeyword("");
     setLocalidad("Todas");
     setSelectedTypes([]);
     setSelectedOrganizers([]);
-    setSelectedDate(null);
+    setDiaElegido(null);
   };
 
-  const toggleType = (type: EventType) => {
-    setSelectedTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    );
-  };
-
-  const toggleOrganizer = (organizer: Organizer) => {
-    setSelectedOrganizers((prev) =>
-      prev.includes(organizer) ? prev.filter((o) => o !== organizer) : [...prev, organizer]
-    );
-  };
-
-  const handleSelectDate = (date: string) => {
-    setSelectedDate((prev) => (prev === date ? null : date));
-  };
-
-  const goToPrevMonth = () => {
-    setMonth((prev) => {
-      if (prev === 1) {
-        setYear((y) => y - 1);
-        return 12;
-      }
-      return prev - 1;
+  // El mes puede no haberse tocado todavía (mesManual en null); ahí se parte del visible.
+  const irAlMesAnterior = () =>
+    setMesManual((prev) => {
+      const { year, month } = prev ?? mesVisible;
+      return month === 1 ? { year: year - 1, month: 12 } : { year, month: month - 1 };
     });
-  };
 
-  const goToNextMonth = () => {
-    setMonth((prev) => {
-      if (prev === 12) {
-        setYear((y) => y + 1);
-        return 1;
-      }
-      return prev + 1;
+  const irAlMesSiguiente = () =>
+    setMesManual((prev) => {
+      const { year, month } = prev ?? mesVisible;
+      return month === 12 ? { year: year + 1, month: 1 } : { year, month: month + 1 };
     });
+
+  const irAHoy = () => {
+    const referencia = parseISODate(hoy ?? ordenadosPorFecha[0]?.date ?? "2026-01-01");
+    setMesManual({ year: referencia.year, month: referencia.month });
+    setDiaElegido(null);
   };
 
-  const filtersPanel = (
+  const panelFiltros = (
     <EventFilters
       keyword={keyword}
       onKeywordChange={setKeyword}
       localidad={localidad}
       onLocalidadChange={setLocalidad}
       selectedTypes={selectedTypes}
-      onToggleType={toggleType}
+      onToggleType={(tipo) =>
+        setSelectedTypes((prev) =>
+          prev.includes(tipo) ? prev.filter((t) => t !== tipo) : [...prev, tipo]
+        )
+      }
       selectedOrganizers={selectedOrganizers}
-      onToggleOrganizer={toggleOrganizer}
+      onToggleOrganizer={(quien) =>
+        setSelectedOrganizers((prev) =>
+          prev.includes(quien) ? prev.filter((o) => o !== quien) : [...prev, quien]
+        )
+      }
       onSelectAllOrganizers={() => setSelectedOrganizers([])}
-      onClear={clearFilters}
+      onClear={limpiarFiltros}
     />
   );
 
@@ -147,117 +141,97 @@ export default function CalendarSection() {
             <LeafDecoration className="h-8 w-8" />
           </p>
         </div>
-      </div>
 
-      <div className="container-page mt-8">
-        <div className="relative isolate overflow-hidden rounded-3xl border border-texto/10 bg-blanco p-6 xl:p-8">
-          <LeafDecoration className="pointer-events-none absolute -left-6 -top-6 -z-10 h-24 w-24 -rotate-12 opacity-40" />
-          <LeafDecoration className="pointer-events-none absolute -bottom-8 -right-8 -z-10 h-28 w-28 rotate-90 opacity-40" />
+        {/* Lo primero que se ve, y en celular va antes que la grilla: cuál es el próximo. */}
+        {proximoEvento ? (
+          <button
+            type="button"
+            onClick={() => setSelectedEventId(proximoEvento.id)}
+            className="mt-8 flex w-full flex-wrap items-center gap-x-5 gap-y-2 rounded-3xl bg-verde-bosque p-6 text-left text-crema transition hover:bg-verde-bosque-oscuro sm:p-7"
+          >
+            <CalendarCheck size={34} className="shrink-0 text-rosa-claro" aria-hidden="true" />
+            <span className="min-w-0 flex-1">
+              <span className="block text-base uppercase tracking-widest text-crema/75">
+                El próximo evento
+              </span>
+              <span className="mt-1 block font-titulos text-2xl font-semibold sm:text-3xl">
+                {proximoEvento.title}
+              </span>
+              <span className="mt-1 block text-lg text-crema/90">
+                {formatEventDate(proximoEvento.date)} · {proximoEvento.startTime} ·{" "}
+                {proximoEvento.location}
+              </span>
+            </span>
+            <span className="text-lg font-semibold text-rosa-claro">Ver →</span>
+          </button>
+        ) : null}
 
-          <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-[340px_minmax(0,1fr)] xl:grid-cols-[260px_340px_minmax(0,1fr)]">
-            <div className="lg:col-span-2 xl:col-span-1">
-              <button
-                type="button"
-                onClick={() => setIsMobileFiltersOpen((v) => !v)}
-                className="btn-secondary w-full justify-between lg:hidden"
-                aria-expanded={isMobileFiltersOpen}
-                aria-controls="calendario-filtros"
-              >
-                <span className="flex items-center gap-2">
-                  <SlidersHorizontal size={16} aria-hidden="true" />
-                  Filtros
-                </span>
-                <ChevronDown
-                  size={18}
-                  className={`transition-transform ${isMobileFiltersOpen ? "rotate-180" : ""}`}
-                  aria-hidden="true"
-                />
-              </button>
-              <div
-                id="calendario-filtros"
-                className={`h-full ${isMobileFiltersOpen ? "mt-4 lg:mt-0" : "hidden"} lg:block`}
-              >
-                {filtersPanel}
-              </div>
-            </div>
-
-            <MonthCalendar
-              year={year}
-              month={month}
-              onPrevMonth={goToPrevMonth}
-              onNextMonth={goToNextMonth}
-              selectedDate={selectedDate}
-              onSelectDate={handleSelectDate}
-              events={filteredEvents}
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setFiltrosAbiertos((v) => !v)}
+            className="btn-secondary"
+            aria-expanded={filtrosAbiertos}
+            aria-controls="calendario-filtros"
+          >
+            <SlidersHorizontal size={19} aria-hidden="true" />
+            Filtros
+            <ChevronDown
+              size={19}
+              className={`transition-transform ${filtrosAbiertos ? "rotate-180" : ""}`}
+              aria-hidden="true"
             />
+          </button>
 
-            <div className="flex h-full min-w-0 flex-col rounded-2xl bg-crema p-4">
-              <div className="flex items-center justify-between">
-                <h4 className="font-titulos text-lg text-texto">Eventos destacados</h4>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => setFeaturedIndex(Math.max(0, currentFeaturedIndex - 1))}
-                    disabled={currentFeaturedIndex === 0}
-                    aria-label="Eventos destacados anteriores"
-                    className="flex h-9 w-9 items-center justify-center rounded-full text-texto transition hover:bg-blanco disabled:opacity-30"
-                  >
-                    <ChevronLeft size={18} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setFeaturedIndex(Math.min(maxFeaturedIndex, currentFeaturedIndex + 1))
-                    }
-                    disabled={currentFeaturedIndex >= maxFeaturedIndex}
-                    aria-label="Siguientes eventos destacados"
-                    className="flex h-9 w-9 items-center justify-center rounded-full text-texto transition hover:bg-blanco disabled:opacity-30"
-                  >
-                    <ChevronRight size={18} />
-                  </button>
-                </div>
-              </div>
-              <div className="mt-4 grid flex-1 grid-cols-1 gap-3 xl:grid-cols-2">
-                {featuredEvents.map((event) => (
-                  <EventCard
-                    key={event.id}
-                    event={event}
-                    onOpen={() => setSelectedEventId(event.id)}
-                  />
-                ))}
-              </div>
-            </div>
+          {hayFiltros ? (
+            <button type="button" onClick={limpiarFiltros} className="btn-secondary">
+              <X size={19} aria-hidden="true" />
+              Limpiar filtros
+            </button>
+          ) : null}
+        </div>
+
+        {filtrosAbiertos ? (
+          <div id="calendario-filtros" className="mt-5 rounded-3xl bg-blanco p-5 sm:p-6">
+            {panelFiltros}
           </div>
+        ) : null}
 
-          <div className="mt-8 border-t border-texto/10 pt-8">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <h4 className="font-titulos text-xl text-texto">Próximos eventos</h4>
-              <label className="flex items-center gap-2 text-sm text-texto-suave">
-                Ordenar por:
-                <select
-                  value={sortOrder}
-                  onChange={(event) => setSortOrder(event.target.value as "asc" | "desc")}
-                  className="rounded-full border border-texto/15 bg-blanco px-3 py-2 text-sm text-texto focus:outline-none"
+        {/* En celular la lista va primero; desde lg la grilla se pone al lado. */}
+        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <div className="order-2 lg:order-1">
+            <div className="flex flex-wrap items-baseline justify-between gap-3">
+              <h3 className="font-titulos text-2xl font-semibold text-texto">
+                {diaElegido ? `Eventos del ${formatEventDate(diaElegido)}` : "Próximos eventos"}
+              </h3>
+              {diaElegido ? (
+                <button
+                  type="button"
+                  onClick={() => setDiaElegido(null)}
+                  className="min-h-12 text-base font-semibold text-rosa-oscuro hover:underline"
                 >
-                  <option value="asc">Fecha (más próximos)</option>
-                  <option value="desc">Fecha (más lejanos)</option>
-                </select>
-              </label>
+                  Ver todos
+                </button>
+              ) : null}
             </div>
 
-            {listEvents.length > 0 ? (
+            {lista.length > 0 ? (
               <ul className="mt-4 divide-y divide-texto/10">
-                {listEvents.map((event) => (
+                {lista.map((event) => (
                   <li key={event.id}>
                     <EventListRow event={event} onOpen={() => setSelectedEventId(event.id)} />
                   </li>
                 ))}
               </ul>
             ) : (
-              <div className="mt-6 rounded-2xl border border-dashed border-texto/20 p-8 text-center">
-                <p className="text-sm text-texto-suave">No hay actividades con estos filtros</p>
-                {hasActiveFilters ? (
-                  <button type="button" onClick={clearFilters} className="btn-secondary mt-4">
+              <div className="mt-5 rounded-2xl border border-dashed border-texto/25 p-8 text-center">
+                <p className="text-base text-texto-suave">
+                  {diaElegido
+                    ? "Ese día no hay nada programado."
+                    : "No hay eventos próximos con estos filtros."}
+                </p>
+                {hayFiltros ? (
+                  <button type="button" onClick={limpiarFiltros} className="btn-secondary mt-4">
                     Limpiar filtros
                   </button>
                 ) : null}
@@ -265,22 +239,25 @@ export default function CalendarSection() {
             )}
           </div>
 
-          <div className="mt-6 flex items-end justify-end gap-2">
-            <p className="script-text script-text--sm text-right text-verde-bosque">
-              Más mujeres
-              <br />
-              Más territorio
-              <br />
-              Más oportunidades
-            </p>
-            <LeafDecoration className="h-10 w-10 shrink-0 opacity-80" />
+          <div className="order-1 lg:order-2">
+            <MonthCalendar
+              year={mesVisible.year}
+              month={mesVisible.month}
+              onPrevMonth={irAlMesAnterior}
+              onNextMonth={irAlMesSiguiente}
+              onToday={irAHoy}
+              selectedDate={diaElegido}
+              onSelectDate={(fecha) => setDiaElegido((prev) => (prev === fecha ? null : fecha))}
+              events={filtrados}
+              hoy={hoy}
+            />
           </div>
         </div>
       </div>
 
       <EventModal
-        event={selectedEvent}
-        isOpen={Boolean(selectedEvent)}
+        event={eventoAbierto}
+        isOpen={Boolean(eventoAbierto)}
         onClose={() => setSelectedEventId(null)}
       />
     </section>
