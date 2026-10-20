@@ -26,7 +26,16 @@ export default function Hero() {
 
         <div className="absolute inset-0 bg-gradient-to-r from-crema via-crema/85 to-crema/10 sm:from-crema sm:via-crema/70 sm:to-transparent" />
 
-        <div className="relative z-10 flex h-full min-h-[640px] flex-col justify-center sm:min-h-[600px]">
+        {/* Penumbra bajo el header translúcido: sin algo oscuro detrás, el verde al 65 %
+            no alcanza el contraste mínimo. Es transitoria — en el paso del video la
+            reemplaza la capa oscura propia del video (4.3.1). */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-texto/55 via-texto/20 to-transparent"
+          aria-hidden="true"
+        />
+
+        {/* pt-[72px] despeja la barra fija, que ahora se superpone al inicio. */}
+        <div className="relative z-10 flex h-full min-h-[640px] flex-col justify-center pt-[72px] sm:min-h-[600px]">
           <div className="container-page py-16 sm:py-20">
             <div className="max-w-xl">
               <span className="eyebrow">Mujeres que transforman territorios</span>
@@ -62,8 +71,9 @@ export default function Hero() {
           </div>
         </div>
 
+        {/* top-24 y no top-8: la barra fija ocupa los primeros 72 px. */}
         <p
-          className="script-text absolute right-6 top-8 hidden max-w-[220px] text-right text-blanco drop-shadow-sm sm:right-10 sm:top-10 md:block"
+          className="script-text absolute right-6 top-24 hidden max-w-[220px] text-right text-blanco drop-shadow-sm sm:right-10 sm:top-28 md:block"
           aria-hidden="true"
         >
           Del territorio nacen grandes historias

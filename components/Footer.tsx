@@ -2,14 +2,15 @@ import { Venus, Phone, Mail, AtSign, Leaf } from "lucide-react";
 import LeafDecoration from "./LeafDecoration";
 import { contactInfo } from "@/data/data";
 
+// Mismo orden que el menú del header, para que el sitio se lea igual en los dos lados.
 const FOOTER_LINKS = [
   { href: "#inicio", label: "Inicio" },
-  { href: "#calendario", label: "Calendario" },
-  { href: "#nosotras", label: "Nosotras" },
   { href: "#productos", label: "Productos" },
   { href: "#mapa", label: "Mapa" },
-  { href: "#comunidades", label: "Comunidades" },
+  { href: "#calendario", label: "Calendario" },
   { href: "#noticias", label: "Noticias" },
+  { href: "#nosotras", label: "Nosotras" },
+  { href: "#contacto", label: "Contacto" },
   { href: "#quiero-ser-parte", label: "Quiero ser parte" },
 ];
 

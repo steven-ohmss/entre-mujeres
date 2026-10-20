@@ -14,6 +14,8 @@ interface SearchBarProps {
   autoFocus?: boolean;
   className?: string;
   onNavigate?: () => void;
+  /** "oscuro" para cuando va dentro del header verde; el desplegable siempre es claro. */
+  tono?: "claro" | "oscuro";
 }
 
 export default function SearchBar({
@@ -21,6 +23,7 @@ export default function SearchBar({
   autoFocus = false,
   className = "",
   onNavigate,
+  tono = "claro",
 }: SearchBarProps) {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -64,6 +67,7 @@ export default function SearchBar({
 
   const hasQuery = query.trim().length >= 2;
   const hasResults = groups.length > 0;
+  const esOscuro = tono === "oscuro";
 
   const handleSelect = (href: string) => {
     setQuery("");
@@ -75,8 +79,18 @@ export default function SearchBar({
 
   return (
     <div ref={containerRef} className={`relative w-full ${className}`}>
-      <div className="flex items-center gap-2 rounded-full border border-texto/15 bg-blanco px-4 py-2.5">
-        <Search size={18} className="shrink-0 text-texto-suave" aria-hidden="true" />
+      <div
+        className={`flex min-h-12 items-center gap-2 rounded-full border px-4 py-2.5 ${
+          esOscuro
+            ? "border-crema/35 bg-crema/15 text-crema"
+            : "border-texto/15 bg-blanco text-texto"
+        }`}
+      >
+        <Search
+          size={18}
+          className={`shrink-0 ${esOscuro ? "text-crema/80" : "text-texto-suave"}`}
+          aria-hidden="true"
+        />
         <input
           type="search"
           value={query}
@@ -88,7 +102,11 @@ export default function SearchBar({
           onFocus={() => setIsOpen(true)}
           placeholder={placeholder}
           aria-label={placeholder}
-          className="w-full min-w-0 bg-transparent text-sm text-texto placeholder:text-texto-suave focus:outline-none"
+          className={`w-full min-w-0 bg-transparent text-sm focus:outline-none ${
+            esOscuro
+              ? "text-crema placeholder:text-crema/75"
+              : "text-texto placeholder:text-texto-suave"
+          }`}
         />
       </div>
 

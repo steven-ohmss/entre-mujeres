@@ -243,16 +243,58 @@ img {
   margin-top: 0.3rem;
 }
 
+/* --- Header translúcido (4.1) ---------------------------------------------
+   Verde bosque con desenfoque. Dos estados, y el segundo no es decorativo:
+   al 65 % sobre el crema del contenido el texto claro queda en 3,6:1 y no
+   alcanza el mínimo AA, mientras que al 93 % llega a 5,9:1. Por eso la barra
+   va translúcida solo mientras tiene el inicio oscuro detrás y se vuelve
+   sólida apenas el contenido claro empieza a pasar por debajo. */
+.header-glass {
+  background-color: rgba(47, 74, 48, 0.65);
+  backdrop-filter: blur(12px) saturate(1.1);
+  -webkit-backdrop-filter: blur(12px) saturate(1.1);
+  color: var(--color-crema);
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.header-glass[data-solido="true"] {
+  background-color: rgba(47, 74, 48, 0.93);
+  box-shadow: 0 2px 16px rgba(20, 24, 16, 0.28);
+}
+
+/* Sin soporte de desenfoque, el fondo sube de una vez para no perder contraste. */
+@supports not ((backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px))) {
+  .header-glass {
+    background-color: rgba(47, 74, 48, 0.95);
+  }
+}
+
 .nav-link {
   position: relative;
-  font-size: 1.125rem;
-  color: var(--color-texto);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  /* 17 px y no 18: con siete opciones, iconos, buscador y el botón "Sé parte",
+     18 px desborda la barra en 1280 px. En celular el menú se abre a 20 px. */
+  font-size: 1.0625rem;
+  color: inherit;
   padding-bottom: 4px;
-  transition: color 0.2s ease;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+@media (min-width: 1536px) {
+  .nav-link {
+    font-size: 1.125rem;
+  }
+}
+
+.nav-link:hover {
+  opacity: 0.8;
 }
 
 .nav-link[data-active="true"] {
-  color: var(--color-texto);
+  font-weight: 700;
 }
 
 .nav-link[data-active="true"]::after {
@@ -261,9 +303,33 @@ img {
   left: 0;
   right: 0;
   bottom: -2px;
-  height: 2px;
+  height: 2.5px;
   background-color: var(--color-rosa);
   border-radius: 9999px;
+}
+
+/* Opción del menú en celular: grande, con icono y área táctil amplia (4.1). */
+.nav-movil {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  min-height: 56px;
+  padding: 0.5rem 0.9rem;
+  border-radius: 14px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--color-crema);
+  transition: background-color 0.2s ease;
+}
+
+.nav-movil:hover,
+.nav-movil[data-active="true"] {
+  background-color: rgba(247, 243, 235, 0.14);
+}
+
+.nav-movil[data-active="true"] {
+  font-weight: 700;
 }
 
 @keyframes fade-in {
