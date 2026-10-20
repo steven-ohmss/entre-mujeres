@@ -1,20 +1,19 @@
+import Link from "next/link";
 import Foto from "./Foto";
 import { ICONO_COMUNIDAD } from "@/lib/categorias";
 import type { Community } from "@/types";
 
 interface CommunityMapCardProps {
   community: Community;
-  onViewMore: () => void;
-  onViewProducts: () => void;
   variant?: "card" | "popup";
 }
 
-export default function CommunityMapCard({
-  community,
-  onViewMore,
-  onViewProducts,
-  variant = "card",
-}: CommunityMapCardProps) {
+/**
+ * Ficha que se abre al tocar una comunidad en el mapa (4.5): foto, nombre, lo que hace y
+ * el botón para ir a su página. Antes abría un modal encima del mapa; ahora lleva al
+ * perfil, que es donde están sus productos y su WhatsApp.
+ */
+export default function CommunityMapCard({ community, variant = "card" }: CommunityMapCardProps) {
   return (
     <div
       className={
@@ -31,6 +30,7 @@ export default function CommunityMapCard({
           sizes={variant === "popup" ? "280px" : "360px"}
         />
       </div>
+
       <div className="p-5">
         <h4 className="font-titulos text-lg font-bold uppercase text-texto">{community.name}</h4>
         <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-texto-suave">
@@ -39,22 +39,13 @@ export default function CommunityMapCard({
         <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-texto-suave">
           {community.shortDescription}
         </p>
-        <div className="mt-3 flex items-center justify-between gap-4">
-          <button
-            type="button"
-            onClick={onViewMore}
-            className="min-h-11 text-sm font-semibold text-rosa transition hover:text-rosa-oscuro xl:min-h-0"
-          >
-            ver más
-          </button>
-          <button
-            type="button"
-            onClick={onViewProducts}
-            className="min-h-11 text-sm font-semibold text-rosa transition hover:text-rosa-oscuro xl:min-h-0"
-          >
-            productos
-          </button>
-        </div>
+
+        <Link
+          href={`/comunidades/${community.slug}`}
+          className="btn-primary mt-4 w-full text-base"
+        >
+          Ver comunidad
+        </Link>
       </div>
     </div>
   );

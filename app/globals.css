@@ -419,8 +419,8 @@ img {
 
 #mapa .map-marker__dot {
   display: block;
-  width: 18px;
-  height: 18px;
+  width: 26px;
+  height: 26px;
   border-radius: 9999px;
   background-color: #ffe600;
   border: 3px solid var(--color-blanco);

@@ -31,3 +31,43 @@ export const LOCALIDADES_GEOJSON_URL = "/data/localidades-bogota.geojson";
 export const LOCALIDAD_TONOS = ["#e2507f", "#f29bb5", "#f9d6e0"] as const;
 export const LOCALIDAD_BORDE = "#c93d6a";
 export const LOCALIDAD_BORDE_SELECCIONADA = "#1e231e";
+
+/**
+ * Opacidad del relleno rosado de las localidades (4.5).
+ *
+ * El rosado estaba tan cargado que al acercar el zoom tapaba las calles y los nombres de
+ * las veredas, que es justo lo que la gente necesita leer cuando se acerca. Ahora el
+ * relleno es suave y además se va retirando a medida que se entra: lejos sirve para
+ * distinguir una localidad de otra, de cerca estorba.
+ */
+export const LOCALIDAD_RELLENO = 0.28;
+
+/** Al pasar el mouse o tocar, la localidad se resalta un poco. */
+export const LOCALIDAD_RELLENO_RESALTADA = 0.45;
+
+/** La localidad elegida en el filtro se mantiene visible. */
+export const LOCALIDAD_RELLENO_ELEGIDA = 0.5;
+
+/** Las demás, cuando hay una elegida, se apagan para que resalte la escogida. */
+export const LOCALIDAD_RELLENO_APAGADA = 0.16;
+
+/** Desde este zoom el relleno empieza a desvanecerse para dejar ver el mapa base. */
+export const ZOOM_DESVANECER_DESDE = 12;
+
+/** A partir de este zoom el relleno queda en su mínimo. */
+export const ZOOM_DESVANECER_HASTA = 15;
+
+/** Qué proporción del relleno queda con el zoom más alto. */
+export const RELLENO_MINIMO_PROPORCION = 0.25;
+
+/**
+ * Factor por el que se multiplica el relleno según el zoom: 1 mientras se ve la ciudad
+ * completa, y bajando hasta RELLENO_MINIMO_PROPORCION cuando ya se ven las calles.
+ */
+export function factorPorZoom(zoom: number): number {
+  if (zoom <= ZOOM_DESVANECER_DESDE) return 1;
+  if (zoom >= ZOOM_DESVANECER_HASTA) return RELLENO_MINIMO_PROPORCION;
+  const avance =
+    (zoom - ZOOM_DESVANECER_DESDE) / (ZOOM_DESVANECER_HASTA - ZOOM_DESVANECER_DESDE);
+  return 1 - avance * (1 - RELLENO_MINIMO_PROPORCION);
+}

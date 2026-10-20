@@ -19,7 +19,12 @@ import {
   LOCALIDADES_GEOJSON_URL,
   LOCALIDAD_BORDE,
   LOCALIDAD_BORDE_SELECCIONADA,
+  LOCALIDAD_RELLENO,
+  LOCALIDAD_RELLENO_APAGADA,
+  LOCALIDAD_RELLENO_ELEGIDA,
+  LOCALIDAD_RELLENO_RESALTADA,
   LOCALIDAD_TONOS,
+  factorPorZoom,
   MAP_CENTER,
   MAP_MAX_BOUNDS,
   MAP_MAX_ZOOM,
@@ -53,8 +58,6 @@ interface CommunityLeafletMapProps {
   onClosePopup: (markerId: string) => void;
   localidad: Localidad | "Todas";
   isDesktop: boolean;
-  onViewMore: (communityId: string) => void;
-  onViewProducts: (communityId: string) => void;
   panelRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -77,8 +80,8 @@ const HINT_TOUCH = "Usa dos dedos para mover el mapa";
 const dotIcon = L.divIcon({
   className: "map-marker",
   html: '<span class="map-marker__dot"></span>',
-  iconSize: [18, 18],
-  iconAnchor: [9, 9],
+  iconSize: [28, 28],
+  iconAnchor: [14, 14],
 });
 
 const pinIcon = L.divIcon({
@@ -133,13 +136,9 @@ function CommunityMarker({
 function SelectedPopup({
   item,
   onClose,
-  onViewMore,
-  onViewProducts,
 }: {
   item: MapMarkerWithCommunity;
   onClose: (markerId: string) => void;
-  onViewMore: (communityId: string) => void;
-  onViewProducts: (communityId: string) => void;
 }) {
   const popupRef = useRef<L.Popup>(null);
   const { marker, community } = item;
@@ -162,8 +161,6 @@ function SelectedPopup({
         <CommunityMapCard
           community={community}
           variant="popup"
-          onViewMore={() => onViewMore(community.id)}
-          onViewProducts={() => onViewProducts(community.id)}
         />
       </PopupContent>
     </Popup>
@@ -293,29 +290,53 @@ function Localidades({
   const geoRef = useRef<L.GeoJSON>(null);
   const localidadRef = useRef(localidad);
   const previousLocalidad = useRef<Localidad | "Todas" | null>(null);
+  const zoomRef = useRef(map.getZoom());
 
   const style = useCallback((feature?: Feature<Geometry, LocalidadProps>): L.PathOptions => {
-    const selected = localidadRef.current;
-    const isSelected = feature?.properties.nombre === selected;
-    const someSelected = selected !== "Todas";
+    const elegida = localidadRef.current;
+    const esLaElegida = feature?.properties.nombre === elegida;
+    const hayElegida = elegida !== "Todas";
+
+    // El relleno se atenúa al acercar: de lejos ayuda a distinguir localidades, de cerca
+    // tapaba las calles y los nombres de las veredas.
+    const base = esLaElegida
+      ? LOCALIDAD_RELLENO_ELEGIDA
+      : hayElegida
+        ? LOCALIDAD_RELLENO_APAGADA
+        : LOCALIDAD_RELLENO;
+
     return {
       fillColor: LOCALIDAD_TONOS[feature?.properties.tono ?? 0],
-      fillOpacity: isSelected ? 0.9 : someSelected ? 0.5 : 0.75,
-      color: isSelected ? LOCALIDAD_BORDE_SELECCIONADA : LOCALIDAD_BORDE,
-      weight: isSelected ? 3 : 1,
+      fillOpacity: base * factorPorZoom(zoomRef.current),
+      color: esLaElegida ? LOCALIDAD_BORDE_SELECCIONADA : LOCALIDAD_BORDE,
+      weight: esLaElegida ? 3 : 1,
     };
   }, []);
 
+  // Al pasar el mouse o tocar, la localidad se resalta: sube un poco el relleno además
+  // de engrosar el borde.
   const onEachFeature = useCallback(
     (feature: Feature<Geometry, LocalidadProps>, layer: L.Layer) => {
       const path = layer as L.Path;
       path.on({
-        mouseover: () => path.setStyle({ weight: 3 }),
+        mouseover: () =>
+          path.setStyle({
+            weight: 3,
+            fillOpacity: LOCALIDAD_RELLENO_RESALTADA * factorPorZoom(zoomRef.current),
+          }),
         mouseout: () => geoRef.current?.resetStyle(path),
       });
     },
     []
   );
+
+  // Al cambiar el zoom se repinta con la nueva opacidad.
+  useMapEvents({
+    zoomend: () => {
+      zoomRef.current = map.getZoom();
+      geoRef.current?.setStyle(style as L.StyleFunction);
+    },
+  });
 
   useEffect(() => {
     localidadRef.current = localidad;
@@ -357,8 +378,6 @@ export default function CommunityLeafletMap({
   onClosePopup,
   localidad,
   isDesktop,
-  onViewMore,
-  onViewProducts,
   panelRef,
 }: CommunityLeafletMapProps) {
   const [localidades, setLocalidades] = useState<LocalidadesData | null>(null);
@@ -450,8 +469,6 @@ export default function CommunityLeafletMap({
             key={selected.marker.id}
             item={selected}
             onClose={onClosePopup}
-            onViewMore={onViewMore}
-            onViewProducts={onViewProducts}
           />
         ) : null}
       </MapContainer>

@@ -4,9 +4,8 @@ import { useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import MapFilters from "./MapFilters";
 import CommunityMapCard from "./CommunityMapCard";
-import CommunityModal from "./CommunityModal";
 import type { MapMarkerWithCommunity } from "./CommunityLeafletMap";
-import { communities, products, calendarEvents, mapMarkers } from "@/data/data";
+import { communities, mapMarkers, products } from "@/data/data";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import type { CommunityCategory, ProductType, Localidad } from "@/types";
 
@@ -29,10 +28,6 @@ export default function InteractiveMap() {
   const [productType, setProductType] = useState<ProductType | "Todas">("Todas");
   const [localidad, setLocalidad] = useState<Localidad | "Todas">("Todas");
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
-  const [modalState, setModalState] = useState<{
-    communityId: string;
-    section: "info" | "productos";
-  } | null>(null);
 
   const filteredMarkers = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
@@ -63,10 +58,6 @@ export default function InteractiveMap() {
     ({ marker }) => marker.id === effectiveSelectedId
   )?.community;
 
-  const modalCommunity = modalState
-    ? communities.find((c) => c.id === modalState.communityId) ?? null
-    : null;
-
   const clearFilters = () => {
     setSearchTerm("");
     setCategory("Todas");
@@ -74,24 +65,19 @@ export default function InteractiveMap() {
     setLocalidad("Todas");
   };
 
-  const openCommunity = (communityId: string) =>
-    setModalState({ communityId, section: "info" });
-  const openProducts = (communityId: string) =>
-    setModalState({ communityId, section: "productos" });
-
   return (
     <section id="mapa" className="bg-blanco py-20 sm:py-24">
       <div className="container-page mb-6">
-        <h3 className="font-sans text-2xl font-extrabold uppercase tracking-tight text-texto">
+        <h2 className="font-titulos text-3xl font-semibold text-texto sm:text-4xl">
           Comunidades de mujeres
-        </h3>
-        <p className="text-sm font-semibold uppercase tracking-widest text-texto-suave">
-          Cundinamarca – Bogotá
+        </h2>
+        <p className="mt-2 text-lg text-texto-suave">
+          Toca un punto para ver quién está ahí y qué hace.
         </p>
       </div>
 
       <div className="container-page">
-        {/* Contexto de apilamiento propio: nada de Leaflet queda sobre el navbar ni los modales. */}
+        {/* Contexto de apilamiento propio: nada de Leaflet queda sobre el navbar. */}
         <div className="relative isolate z-0">
           <div
             ref={filtersPanelRef}
@@ -125,8 +111,6 @@ export default function InteractiveMap() {
               }
               localidad={localidad}
               isDesktop={isDesktop}
-              onViewMore={openCommunity}
-              onViewProducts={openProducts}
               panelRef={filtersPanelRef}
             />
 
@@ -148,7 +132,7 @@ export default function InteractiveMap() {
           {filteredMarkers.length === 0 ? (
             <div className="mt-4 xl:absolute xl:bottom-8 xl:left-[calc(50%+158px)] xl:z-[1000] xl:mt-0 xl:-translate-x-1/2">
               <div className="rounded-2xl border border-dashed border-texto/20 bg-crema p-8 text-center xl:shadow-lg">
-                <p className="text-sm text-texto-suave">
+                <p className="text-base text-texto-suave">
                   No encontramos iniciativas con esos filtros
                 </p>
                 <button type="button" onClick={clearFilters} className="btn-secondary mt-4">
@@ -165,23 +149,10 @@ export default function InteractiveMap() {
 
         {!isDesktop && selectedCommunity ? (
           <div className="mt-6">
-            <CommunityMapCard
-              community={selectedCommunity}
-              onViewMore={() => openCommunity(selectedCommunity.id)}
-              onViewProducts={() => openProducts(selectedCommunity.id)}
-            />
+            <CommunityMapCard community={selectedCommunity} />
           </div>
         ) : null}
       </div>
-
-      <CommunityModal
-        community={modalCommunity}
-        products={products.filter((p) => p.communityId === modalCommunity?.id)}
-        events={calendarEvents.filter((e) => e.communityId === modalCommunity?.id)}
-        isOpen={Boolean(modalCommunity)}
-        initialSection={modalState?.section}
-        onClose={() => setModalState(null)}
-      />
     </section>
   );
 }
