@@ -158,14 +158,17 @@ export default function CarruselInicio() {
           className="carrusel-pista flex snap-x snap-mandatory gap-5 overflow-x-auto pb-3"
         >
           {diapositivas.map((slide, indice) => (
-            <a
+            <div
               key={slide.id}
+              role="group"
+              aria-roledescription="diapositiva"
+              aria-label={`${indice + 1} de ${total}`}
+              className="flex w-[86%] shrink-0 snap-center sm:w-[48%] lg:w-[32%]"
+            >
+            <a
               href={slide.href}
               aria-label={`${slide.etiqueta}: ${slide.titulo}`}
-              aria-roledescription="diapositiva"
-              aria-posinset={indice + 1}
-              aria-setsize={total}
-              className="group card flex w-[86%] shrink-0 snap-center flex-col overflow-hidden transition hover:shadow-md sm:w-[48%] lg:w-[32%]"
+              className="group card flex w-full flex-col overflow-hidden transition hover:shadow-md"
             >
               <div className="relative h-48 w-full bg-rosa-palido">
                 <Foto
@@ -199,6 +202,7 @@ export default function CarruselInicio() {
                 </span>
               </div>
             </a>
+            </div>
           ))}
         </div>
 

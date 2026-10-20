@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -13,6 +13,20 @@ import { useMediaQuery } from "@/lib/useMediaQuery";
 
 const SIDE_WORDS = ["BOGOTÁ", "CUNDINAMARCA", "MUJERES", "TERRITORIO", "OPORTUNIDADES"];
 
+/** La calidad de la conexión no cambia a mitad de visita: no hay a qué suscribirse. */
+const sinSuscripcion = () => () => {};
+
+/** navigator.connection no existe en todos los navegadores; si no está, se asume buena. */
+function conexionEsLenta(): boolean {
+  const conexion = (
+    navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }
+  ).connection;
+  if (!conexion) return false;
+  return Boolean(conexion.saveData) || /(^|-)2g$/.test(conexion.effectiveType ?? "");
+}
+
+const conexionBuenaAlGenerar = () => false;
+
 /**
  * Inicio con video de fondo (4.3).
  *
@@ -23,20 +37,11 @@ const SIDE_WORDS = ["BOGOTÁ", "CUNDINAMARCA", "MUJERES", "TERRITORIO", "OPORTUN
  */
 export default function Hero() {
   const prefiereMenosMovimiento = useMediaQuery("(prefers-reduced-motion: reduce)");
-  const [conexionLenta, setConexionLenta] = useState(false);
-
-  useEffect(() => {
-    // navigator.connection no existe en todos los navegadores; si no está, se asume buena.
-    const conexion = (
-      navigator as Navigator & {
-        connection?: { saveData?: boolean; effectiveType?: string };
-      }
-    ).connection;
-    if (!conexion) return;
-    const lenta =
-      Boolean(conexion.saveData) || /(^|-)2g$/.test(conexion.effectiveType ?? "");
-    setConexionLenta(lenta);
-  }, []);
+  const conexionLenta = useSyncExternalStore(
+    sinSuscripcion,
+    conexionEsLenta,
+    conexionBuenaAlGenerar
+  );
 
   const hayVideo =
     !esPendiente(HERO_VIDEO_URL) && !prefiereMenosMovimiento && !conexionLenta;

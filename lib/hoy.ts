@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 /** Fecha de hoy en el mismo formato que usan los datos: AAAA-MM-DD. */
 export function hoyISO(): string {
@@ -10,16 +10,20 @@ export function hoyISO(): string {
   return `${d.getFullYear()}-${mes}-${dia}`;
 }
 
+/** La fecha no cambia mientras alguien mira la página: no hay a qué suscribirse. */
+const sinSuscripcion = () => () => {};
+
+const sinFecha = () => null;
+
 /**
- * Fecha de hoy, o null mientras el componente no se ha montado en el navegador.
+ * Fecha de hoy, o null mientras no se ha montado en el navegador.
  *
  * El sitio se genera estático: si la fecha se calculara al construir, "próximos eventos"
- * quedaría congelado en el día del despliegue. Por eso se resuelve en el navegador. El
- * null inicial no es un descuido: es lo que mantiene igual lo que se genera y lo que
- * aparece al cargar, y cada pantalla decide qué mostrar mientras tanto.
+ * quedaría congelado en el día del despliegue, así que se resuelve en el navegador. El
+ * null del tercer argumento es lo que se usa al generar, y es lo que mantiene igual el
+ * HTML generado y el primer render en el navegador; cada pantalla decide qué mostrar
+ * mientras tanto.
  */
 export function useHoy(): string | null {
-  const [hoy, setHoy] = useState<string | null>(null);
-  useEffect(() => setHoy(hoyISO()), []);
-  return hoy;
+  return useSyncExternalStore(sinSuscripcion, hoyISO, sinFecha);
 }
