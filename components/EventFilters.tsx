@@ -19,7 +19,7 @@ interface EventFiltersProps {
 
 // Filas compactas: en xl cada columna mide ~110px, así que el texto puede partirse.
 const CHECKBOX_ROW =
-  "flex min-h-11 items-center gap-1.5 rounded-lg bg-blanco px-1.5 py-1 text-xs leading-tight text-texto hyphens-auto [overflow-wrap:anywhere] xl:min-h-10";
+  "flex min-h-12 items-center gap-1.5 rounded-lg bg-blanco px-1.5 py-1 text-xs leading-tight text-texto hyphens-auto [overflow-wrap:anywhere] xl:min-h-10";
 
 // En xl es una columna angosta; entre lg y xl se reparte en 3 columnas a todo el ancho.
 export default function EventFilters({
@@ -43,7 +43,7 @@ export default function EventFilters({
           <label htmlFor="event-keyword" className="field-label">
             Buscar por palabra clave
           </label>
-          <div className="flex min-h-11 items-center gap-2 rounded-full border border-texto/15 bg-blanco px-4 py-2 xl:min-h-10">
+          <div className="flex min-h-12 items-center gap-2 rounded-full border border-texto/15 bg-blanco px-4 py-2 xl:min-h-10">
             <Search size={16} className="shrink-0 text-texto-suave" aria-hidden="true" />
             <input
               id="event-keyword"
@@ -60,7 +60,7 @@ export default function EventFilters({
           <label htmlFor="event-localidad" className="field-label">
             Filtrar por localidad
           </label>
-          <div className="flex min-h-11 items-center gap-2 rounded-full border border-texto/15 bg-blanco px-4 py-2 xl:min-h-10">
+          <div className="flex min-h-12 items-center gap-2 rounded-full border border-texto/15 bg-blanco px-4 py-2 xl:min-h-10">
             <MapPin size={16} className="shrink-0 text-texto-suave" aria-hidden="true" />
             <select
               id="event-localidad"

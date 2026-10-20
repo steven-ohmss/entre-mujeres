@@ -90,7 +90,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="flex min-h-11 items-center transition hover:text-blanco"
+                    className="flex min-h-12 items-center transition hover:text-blanco"
                   >
                     {link.label}
                   </Link>
@@ -108,13 +108,13 @@ export default function Footer() {
                     <a
                       href={href}
                       {...(externo ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                      className="flex min-h-11 items-center gap-2 break-words transition hover:text-blanco"
+                      className="flex min-h-12 items-center gap-2 break-words transition hover:text-blanco"
                     >
                       <Icon size={17} className="shrink-0" aria-hidden="true" />
                       {texto}
                     </a>
                   ) : (
-                    <span className="flex min-h-11 items-center gap-2">
+                    <span className="flex min-h-12 items-center gap-2">
                       <Icon size={17} className="shrink-0" aria-hidden="true" />
                       {texto}
                     </span>

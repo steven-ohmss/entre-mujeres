@@ -66,7 +66,7 @@ function FilterGroup({
     <details open={alwaysOpen || undefined} className="group mt-5 border-t border-texto/15 pt-4">
       <summary
         onClick={alwaysOpen ? (event) => event.preventDefault() : undefined}
-        className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-sm font-semibold text-texto xl:min-h-0 xl:cursor-default [&::-webkit-details-marker]:hidden"
+        className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-2 text-sm font-semibold text-texto xl:min-h-0 xl:cursor-default [&::-webkit-details-marker]:hidden"
       >
         {title}
         <ChevronDown
@@ -102,7 +102,7 @@ export default function MapFilters({
         Cundinamarca.
       </p>
 
-      <div className="mt-5 flex min-h-11 items-center gap-2 rounded-lg border border-texto/60 bg-crema px-3 py-2">
+      <div className="mt-5 flex min-h-12 items-center gap-2 rounded-lg border border-texto/60 bg-crema px-3 py-2">
         <Search size={16} className="shrink-0 text-texto-suave" aria-hidden="true" />
         <input
           type="search"
@@ -150,7 +150,7 @@ export default function MapFilters({
         <label htmlFor="map-localidad" className="field-label">
           Filtrar por localidad
         </label>
-        <div className="flex min-h-11 items-center gap-2 rounded-lg border border-texto/60 bg-crema px-3 py-2">
+        <div className="flex min-h-12 items-center gap-2 rounded-lg border border-texto/60 bg-crema px-3 py-2">
           <MapPin size={16} className="shrink-0 text-texto-suave" aria-hidden="true" />
           <select
             id="map-localidad"

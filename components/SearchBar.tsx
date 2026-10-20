@@ -112,7 +112,7 @@ export default function SearchBar({
   return (
     <div ref={containerRef} className={`relative w-full ${className}`}>
       <div
-        className={`flex min-h-12 items-center gap-2 rounded-full border px-4 py-2.5 ${
+        className={`flex min-h-12 items-center gap-2 rounded-full border px-4 ${
           esOscuro
             ? "border-crema/35 bg-crema/15 text-crema"
             : "border-texto/15 bg-blanco text-texto"
@@ -146,7 +146,9 @@ export default function SearchBar({
             type="button"
             onClick={() => alEscribir("")}
             aria-label="Borrar la búsqueda"
-            className={`shrink-0 rounded-full p-1 ${esOscuro ? "text-crema/80" : "text-texto-suave"}`}
+            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${
+              esOscuro ? "text-crema/80 hover:bg-crema/15" : "text-texto-suave hover:bg-crema"
+            }`}
           >
             <X size={18} />
           </button>
@@ -216,7 +218,7 @@ export default function SearchBar({
                       key={categoria}
                       type="button"
                       onClick={() => irA(hrefCategoria(categoria))}
-                      className="inline-flex min-h-11 items-center gap-2 rounded-full border border-texto/20 px-4 text-sm font-medium text-texto transition hover:bg-crema"
+                      className="inline-flex min-h-12 items-center gap-2 rounded-full border border-texto/20 px-4 text-sm font-medium text-texto transition hover:bg-crema"
                     >
                       <Icono size={17} aria-hidden="true" />
                       {categoria}

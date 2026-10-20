@@ -85,7 +85,9 @@ export default function Hero() {
         <div className="relative z-10 flex min-h-[640px] flex-col justify-center pt-[72px] sm:min-h-[620px]">
           <div className="container-page py-16 sm:py-20">
             <div className="max-w-3xl">
-              <span className="eyebrow text-rosa-claro">Mujeres que transforman territorios</span>
+              {/* rosa-palido y no rosa-claro: sobre la capa oscura, el claro se queda en
+                  4,4:1 y no alcanza AA; el pálido llega a 7,8:1. */}
+              <span className="eyebrow text-rosa-palido">Mujeres que transforman territorios</span>
 
               <h1 className="mt-4 font-titulos text-4xl font-semibold leading-tight text-blanco sm:text-5xl">
                 Conectamos el trabajo de las mujeres de Bogotá y Cundinamarca
