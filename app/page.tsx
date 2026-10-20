@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import CarruselInicio from "@/components/CarruselInicio";
 import QuickAccess from "@/components/QuickAccess";
 import CommunitySection from "@/components/CommunitySection";
 import ProductSection from "@/components/ProductSection";
@@ -17,6 +18,7 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <CarruselInicio />
         <QuickAccess />
         <CommunitySection />
         <ProductSection />

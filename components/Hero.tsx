@@ -1,77 +1,107 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Users, Sprout, Heart } from "lucide-react";
+import Link from "next/link";
+import {
+  HERO_VIDEO_POSTER,
+  HERO_VIDEO_POSTER_ALT,
+  HERO_VIDEO_URL,
+  esPendiente,
+} from "@/config/site";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
 const SIDE_WORDS = ["BOGOTÁ", "CUNDINAMARCA", "MUJERES", "TERRITORIO", "OPORTUNIDADES"];
 
-const BENEFITS = [
-  { icon: Users, label: "Más mujeres conectadas" },
-  { icon: Sprout, label: "Territorios más fuertes" },
-  { icon: Heart, label: "Oportunidades reales" },
-];
-
+/**
+ * Inicio con video de fondo (4.3).
+ *
+ * El video es un adorno, no contenido: si no hay archivo, si la persona pidió reducir
+ * movimiento o si está en una conexión lenta, queda la foto y la pantalla se ve igual de
+ * completa. Por eso el poster no es un respaldo de emergencia sino la base sobre la que
+ * el video se monta cuando se puede.
+ */
 export default function Hero() {
+  const prefiereMenosMovimiento = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const [conexionLenta, setConexionLenta] = useState(false);
+
+  useEffect(() => {
+    // navigator.connection no existe en todos los navegadores; si no está, se asume buena.
+    const conexion = (
+      navigator as Navigator & {
+        connection?: { saveData?: boolean; effectiveType?: string };
+      }
+    ).connection;
+    if (!conexion) return;
+    const lenta =
+      Boolean(conexion.saveData) || /(^|-)2g$/.test(conexion.effectiveType ?? "");
+    setConexionLenta(lenta);
+  }, []);
+
+  const hayVideo =
+    !esPendiente(HERO_VIDEO_URL) && !prefiereMenosMovimiento && !conexionLenta;
+
   return (
-    <section id="inicio" className="relative overflow-hidden bg-crema">
-      <div className="relative min-h-[640px] w-full sm:min-h-[600px]">
-        <div className="absolute inset-0 bg-verde-bosque/20">
-          <Image
-            src="/images/hero-mujeres.jpg"
-            alt="Mujeres campesinas con sombrero trabajando en una huerta, con montañas al fondo"
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
+    <section id="inicio" className="relative overflow-hidden bg-verde-bosque-oscuro">
+      <div className="relative min-h-[640px] w-full sm:min-h-[620px]">
+        <div className="absolute inset-0">
+          {hayVideo ? (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster={HERO_VIDEO_POSTER}
+              aria-hidden="true"
+              className="h-full w-full object-cover"
+            >
+              <source src={HERO_VIDEO_URL} type="video/mp4" />
+            </video>
+          ) : (
+            <Image
+              src={HERO_VIDEO_POSTER}
+              alt={HERO_VIDEO_POSTER_ALT}
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          )}
         </div>
 
-        <div className="absolute inset-0 bg-gradient-to-r from-crema via-crema/85 to-crema/10 sm:from-crema sm:via-crema/70 sm:to-transparent" />
-
-        {/* Penumbra bajo el header translúcido: sin algo oscuro detrás, el verde al 65 %
-            no alcanza el contraste mínimo. Es transitoria — en el paso del video la
-            reemplaza la capa oscura propia del video (4.3.1). */}
+        {/* Capa oscura: el texto va encima del video y tiene que leerse sin depender de
+            qué fotograma esté pasando. */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-texto/55 via-texto/20 to-transparent"
+          className="absolute inset-0 bg-gradient-to-b from-texto/75 via-texto/55 to-texto/70"
           aria-hidden="true"
         />
 
-        {/* pt-[72px] despeja la barra fija, que ahora se superpone al inicio. */}
-        <div className="relative z-10 flex h-full min-h-[640px] flex-col justify-center pt-[72px] sm:min-h-[600px]">
+        {/* pt-[72px] despeja la barra fija. */}
+        <div className="relative z-10 flex min-h-[640px] flex-col justify-center pt-[72px] sm:min-h-[620px]">
           <div className="container-page py-16 sm:py-20">
-            <div className="max-w-xl">
-              <span className="eyebrow">Mujeres que transforman territorios</span>
-              <h1 className="mt-3 font-titulos text-4xl leading-tight text-texto sm:text-5xl">
-                ¿Quieres ser parte de esta comunidad?
+            <div className="max-w-3xl">
+              <span className="eyebrow text-rosa-claro">Mujeres que transforman territorios</span>
+
+              <h1 className="mt-4 font-titulos text-4xl font-semibold leading-tight text-blanco sm:text-5xl">
+                Conectamos el trabajo de las mujeres de Bogotá y Cundinamarca
               </h1>
-              <p className="mt-5 max-w-lg text-base leading-relaxed text-texto-suave sm:text-lg">
-                Si haces parte de una iniciativa, emprendimiento o colectivo de mujeres en
-                Bogotá o Cundinamarca, cuéntanos tu historia. Queremos conocerte, apoyarte y
-                dar más visibilidad al trabajo de las mujeres que hacen territorio.
+
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-blanco/90">
+                Conoce sus productos, sus comunidades y sus ferias.
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a href="#quiero-ser-parte" className="btn-primary">
-                  Registra tu iniciativa →
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link href="/productos" className="btn-primary bg-rosa hover:bg-rosa-oscuro">
+                  Ver los productos
+                </Link>
+                <a href="#mapa" className="btn-secondary btn-secondary--claro">
+                  Ver el mapa
                 </a>
-                <a href="#nosotras" className="btn-secondary">
-                  Conoce más
-                </a>
-              </div>
-
-              <div className="mt-10 flex flex-wrap gap-x-8 gap-y-4">
-                {BENEFITS.map(({ icon: Icon, label }) => (
-                  <div key={label} className="flex items-center gap-2">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blanco text-verde-bosque">
-                      <Icon size={18} aria-hidden="true" />
-                    </span>
-                    <span className="text-sm font-medium text-texto">{label}</span>
-                  </div>
-                ))}
               </div>
             </div>
           </div>
         </div>
 
-        {/* top-24 y no top-8: la barra fija ocupa los primeros 72 px. */}
         <p
           className="script-text absolute right-6 top-24 hidden max-w-[220px] text-right text-blanco drop-shadow-sm sm:right-10 sm:top-28 md:block"
           aria-hidden="true"
@@ -86,11 +116,10 @@ export default function Hero() {
           {SIDE_WORDS.map((word) => (
             <li key={word} className="flex items-center justify-end gap-2">
               {word}
-              <span className="h-1.5 w-1.5 rounded-full bg-blanco" />
+              <span className="h-1.5 w-1.5 rounded-full bg-rosa-claro" />
             </li>
           ))}
         </ul>
-
       </div>
     </section>
   );

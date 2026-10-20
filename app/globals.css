@@ -143,6 +143,26 @@ img {
   background-color: var(--color-blanco);
 }
 
+/* Variante clara, para cuando el botón va sobre el video del inicio. */
+.btn-secondary--claro {
+  color: var(--color-blanco);
+  border-color: rgba(247, 243, 235, 0.75);
+}
+
+.btn-secondary--claro:hover {
+  background-color: rgba(247, 243, 235, 0.16);
+}
+
+/* La barra de desplazamiento del carrusel estorba: se desliza con el dedo o con las
+   flechas, y los puntos indican en qué diapositiva va. */
+.carrusel-pista {
+  scrollbar-width: none;
+}
+
+.carrusel-pista::-webkit-scrollbar {
+  display: none;
+}
+
 .btn-secondary:focus-visible {
   outline: 2px solid var(--color-rosa);
   outline-offset: 2px;
