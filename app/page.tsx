@@ -4,10 +4,10 @@ import CarruselInicio from "@/components/CarruselInicio";
 import QuickAccess from "@/components/QuickAccess";
 import CalendarSection from "@/components/CalendarSection";
 import InteractiveMap from "@/components/InteractiveMap";
+import JoinSection from "@/components/JoinSection";
 import NewsSection from "@/components/NewsSection";
 import AboutSection from "@/components/AboutSection";
-import JoinSection from "@/components/JoinSection";
-import AccompanimentSection from "@/components/AccompanimentSection";
+import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -19,11 +19,12 @@ export default function Home() {
         <CarruselInicio />
         <QuickAccess />
         <CalendarSection />
+        {/* La invitación a sumarse va justo debajo del mapa, como pide 4.7. */}
         <InteractiveMap />
+        <JoinSection />
         <NewsSection />
         <AboutSection />
-        <JoinSection />
-        <AccompanimentSection />
+        <ContactSection />
       </main>
       <Footer />
     </>
