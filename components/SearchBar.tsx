@@ -1,13 +1,19 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Search } from "lucide-react";
-import { communities, products, calendarEvents } from "@/data/data";
-
-interface SearchResultGroup {
-  label: string;
-  items: { id: string; title: string; hint: string; href: string }[];
-}
+import { useRouter } from "next/navigation";
+import { Search, Users, X } from "lucide-react";
+import Foto from "./Foto";
+import { ICONO_PRODUCTO, ICONO_TODAS } from "@/lib/categorias";
+import {
+  MINIMO_LETRAS,
+  buscar,
+  categoriasSugeridas,
+  destinoAlEnviar,
+  hrefCategoria,
+  resultadosPlanos,
+  type Resultado,
+} from "@/lib/search";
 
 interface SearchBarProps {
   placeholder?: string;
@@ -18,63 +24,89 @@ interface SearchBarProps {
   tono?: "claro" | "oscuro";
 }
 
+function iconoDe(resultado: Resultado) {
+  if (resultado.tipo === "comunidad") return Users;
+  if (resultado.categoria) return ICONO_PRODUCTO[resultado.categoria];
+  return ICONO_TODAS;
+}
+
+/**
+ * Buscador (4.2).
+ *
+ * El problema que resuelve: antes, elegir "Mermelada campesina" llevaba otra vez a la
+ * sección general de productos y tocaba volver a buscar ahí dentro. Ahora cada sugerencia
+ * sabe su destino y abre directamente el producto o el perfil de la comunidad.
+ */
 export default function SearchBar({
-  placeholder = "Buscar una comunidad, producto o lugar",
+  placeholder = "Buscar un producto o una comunidad",
   autoFocus = false,
   className = "",
   onNavigate,
   tono = "claro",
 }: SearchBarProps) {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [resaltado, setResaltado] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const alTocarFuera = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", alTocarFuera);
+    return () => document.removeEventListener("mousedown", alTocarFuera);
   }, []);
 
-  const groups: SearchResultGroup[] = useMemo(() => {
-    const term = query.trim().toLowerCase();
-    if (term.length < 2) return [];
+  const grupos = useMemo(() => buscar(query), [query]);
+  const planos = useMemo(() => resultadosPlanos(grupos), [grupos]);
 
-    const communityMatches = communities
-      .filter((c) => c.name.toLowerCase().includes(term) || c.ubicacion.toLowerCase().includes(term))
-      .slice(0, 5)
-      .map((c) => ({ id: c.id, title: c.name, hint: c.ubicacion, href: "#comunidades" }));
-
-    const productMatches = products
-      .filter((p) => p.name.toLowerCase().includes(term))
-      .slice(0, 5)
-      .map((p) => ({ id: p.id, title: p.name, hint: p.type, href: "#productos" }));
-
-    const eventMatches = calendarEvents
-      .filter((e) => e.title.toLowerCase().includes(term) || e.location.toLowerCase().includes(term))
-      .slice(0, 5)
-      .map((e) => ({ id: e.id, title: e.title, hint: e.location, href: "#calendario" }));
-
-    const result: SearchResultGroup[] = [];
-    if (communityMatches.length) result.push({ label: "Comunidades", items: communityMatches });
-    if (productMatches.length) result.push({ label: "Productos", items: productMatches });
-    if (eventMatches.length) result.push({ label: "Eventos", items: eventMatches });
-    return result;
-  }, [query]);
-
-  const hasQuery = query.trim().length >= 2;
-  const hasResults = groups.length > 0;
+  const hayConsulta = query.trim().length >= MINIMO_LETRAS;
+  const hayResultados = planos.length > 0;
   const esOscuro = tono === "oscuro";
 
-  const handleSelect = (href: string) => {
+  const irA = (href: string) => {
     setQuery("");
     setIsOpen(false);
+    setResaltado(-1);
     onNavigate?.();
-    const target = document.querySelector(href);
-    target?.scrollIntoView({ behavior: "smooth" });
+    router.push(href);
+  };
+
+  const alEscribir = (valor: string) => {
+    setQuery(valor);
+    setIsOpen(true);
+    setResaltado(-1);
+  };
+
+  const alPresionarTecla = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "ArrowDown" && planos.length > 0) {
+      event.preventDefault();
+      setResaltado((i) => (i + 1) % planos.length);
+      return;
+    }
+    if (event.key === "ArrowUp" && planos.length > 0) {
+      event.preventDefault();
+      setResaltado((i) => (i <= 0 ? planos.length - 1 : i - 1));
+      return;
+    }
+    if (event.key === "Escape") {
+      setIsOpen(false);
+      return;
+    }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      // Con algo resaltado se abre eso; si no, manda el buscador: un solo resultado va
+      // directo y varios van a la lista ya filtrada.
+      if (resaltado >= 0 && planos[resaltado]) {
+        irA(planos[resaltado].href);
+        return;
+      }
+      const destino = destinoAlEnviar(query);
+      if (destino) irA(destino);
+    }
   };
 
   return (
@@ -95,46 +127,104 @@ export default function SearchBar({
           type="search"
           value={query}
           autoFocus={autoFocus}
-          onChange={(event) => {
-            setQuery(event.target.value);
-            setIsOpen(true);
-          }}
+          onChange={(event) => alEscribir(event.target.value)}
           onFocus={() => setIsOpen(true)}
+          onKeyDown={alPresionarTecla}
           placeholder={placeholder}
           aria-label={placeholder}
+          aria-expanded={isOpen && hayConsulta}
+          aria-controls="resultados-busqueda"
+          role="combobox"
           className={`w-full min-w-0 bg-transparent text-sm focus:outline-none ${
             esOscuro
               ? "text-crema placeholder:text-crema/75"
               : "text-texto placeholder:text-texto-suave"
           }`}
         />
+        {query ? (
+          <button
+            type="button"
+            onClick={() => alEscribir("")}
+            aria-label="Borrar la búsqueda"
+            className={`shrink-0 rounded-full p-1 ${esOscuro ? "text-crema/80" : "text-texto-suave"}`}
+          >
+            <X size={18} />
+          </button>
+        ) : null}
       </div>
 
-      {isOpen && hasQuery ? (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-80 overflow-y-auto rounded-2xl border border-texto/10 bg-blanco p-2 shadow-xl animate-fade-in">
-          {hasResults ? (
-            groups.map((group) => (
-              <div key={group.label} className="mb-1 last:mb-0">
+      {isOpen && hayConsulta ? (
+        <div
+          id="resultados-busqueda"
+          className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[26rem] overflow-y-auto rounded-2xl border border-texto/10 bg-blanco p-2 shadow-xl animate-fade-in"
+        >
+          {hayResultados ? (
+            grupos.map((grupo) => (
+              <div key={grupo.tipo} className="mb-1 last:mb-0">
                 <p className="px-3 pb-1 pt-2 text-xs font-bold uppercase tracking-wide text-texto-suave">
-                  {group.label}
+                  {grupo.etiqueta}
                 </p>
-                {group.items.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => handleSelect(item.href)}
-                    className="flex w-full flex-col rounded-xl px-3 py-2 text-left transition hover:bg-crema"
-                  >
-                    <span className="text-sm font-medium text-texto">{item.title}</span>
-                    <span className="text-xs text-texto-suave">{item.hint}</span>
-                  </button>
-                ))}
+
+                {grupo.items.map((item) => {
+                  const Icono = iconoDe(item);
+                  const indice = planos.findIndex((r) => r.id === item.id);
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => irA(item.href)}
+                      onMouseEnter={() => setResaltado(indice)}
+                      className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition ${
+                        indice === resaltado ? "bg-crema" : "hover:bg-crema"
+                      }`}
+                    >
+                      <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-rosa-palido">
+                        {item.imagen ? (
+                          <Foto src={item.imagen} alt="" icon={Icono} sizes="48px" />
+                        ) : (
+                          <span className="flex h-full w-full items-center justify-center text-rosa-oscuro">
+                            <Icono size={22} aria-hidden="true" />
+                          </span>
+                        )}
+                      </span>
+
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-base font-medium text-texto">
+                          {item.titulo}
+                        </span>
+                        <span className="block truncate text-sm text-texto-suave">
+                          {item.detalle}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             ))
           ) : (
-            <p className="px-3 py-4 text-sm text-texto-suave">
-              No encontramos resultados para &quot;{query}&quot;.
-            </p>
+            <div className="px-3 py-4">
+              <p className="text-base text-texto">
+                No encontramos nada con <strong>“{query.trim()}”</strong>.
+              </p>
+              <p className="mt-1 text-sm text-texto-suave">Prueba con una de estas categorías:</p>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                {categoriasSugeridas().map((categoria) => {
+                  const Icono = ICONO_PRODUCTO[categoria];
+                  return (
+                    <button
+                      key={categoria}
+                      type="button"
+                      onClick={() => irA(hrefCategoria(categoria))}
+                      className="inline-flex min-h-11 items-center gap-2 rounded-full border border-texto/20 px-4 text-sm font-medium text-texto transition hover:bg-crema"
+                    >
+                      <Icono size={17} aria-hidden="true" />
+                      {categoria}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           )}
         </div>
       ) : null}
