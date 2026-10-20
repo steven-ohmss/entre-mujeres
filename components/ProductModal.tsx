@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { Phone, Mail, AtSign } from "lucide-react";
 import Modal from "./Modal";
+import Foto from "./Foto";
+import { ICONO_PRODUCTO } from "@/lib/categorias";
 import type { Product, Community } from "@/types";
 
 interface ProductModalProps {
@@ -20,17 +21,18 @@ export default function ProductModal({ product, community, isOpen, onClose }: Pr
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} ariaLabel={`Información de ${product.name}`}>
+      {/* Sin fotos reales se muestra un solo recuadro con "Foto próximamente" en vez de
+          dejar el espacio en blanco. */}
       <div className="grid gap-3 sm:grid-cols-2">
-        {product.images.map((image, index) => (
+        {(product.images.length > 0 ? product.images : [null]).map((image, index) => (
           <div
-            key={image + index}
+            key={(image ?? "pendiente") + index}
             className="relative h-40 overflow-hidden rounded-xl bg-rosa-palido sm:h-48"
           >
-            <Image
+            <Foto
               src={image}
               alt={`Fotografía ${index + 1} de ${product.name}`}
-              fill
-              className="object-cover"
+              icon={ICONO_PRODUCTO[product.type]}
               sizes="350px"
             />
           </div>

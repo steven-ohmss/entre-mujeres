@@ -1,5 +1,6 @@
-import Image from "next/image";
 import { MapPin } from "lucide-react";
+import Foto from "./Foto";
+import { ICONO_COMUNIDAD } from "@/lib/categorias";
 import type { Community } from "@/types";
 
 interface CommunityCardProps {
@@ -11,11 +12,10 @@ export default function CommunityCard({ community, onOpen }: CommunityCardProps)
   return (
     <article className="card flex h-full flex-col overflow-hidden">
       <div className="relative h-44 w-full bg-rosa-palido">
-        <Image
+        <Foto
           src={community.image}
           alt={`Foto de la comunidad ${community.name}`}
-          fill
-          className="object-cover"
+          icon={ICONO_COMUNIDAD[community.category]}
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
         />
       </div>

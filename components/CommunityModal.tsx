@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import { MapPin, Phone, Mail, AtSign, CalendarDays } from "lucide-react";
 import Modal from "./Modal";
+import Foto from "./Foto";
+import { ICONO_COMUNIDAD } from "@/lib/categorias";
 import type { Community, Product, CalendarEvent } from "@/types";
 import { formatEventDate } from "@/lib/date";
 
@@ -40,11 +41,10 @@ export default function CommunityModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} ariaLabel={`Información de ${community.name}`}>
       <div className="relative -mx-6 -mt-6 h-48 w-[calc(100%+3rem)] bg-rosa-palido sm:-mx-8 sm:-mt-8 sm:h-56 sm:w-[calc(100%+4rem)]">
-        <Image
+        <Foto
           src={community.image}
           alt={`Foto de la comunidad ${community.name}`}
-          fill
-          className="object-cover"
+          icon={ICONO_COMUNIDAD[community.category]}
           sizes="700px"
         />
       </div>

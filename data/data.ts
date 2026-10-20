@@ -1,3 +1,4 @@
+import { PENDIENTE, contacto } from "@/config/site";
 import type {
   Community,
   Product,
@@ -68,6 +69,7 @@ export const organizers: Organizer[] = ["Red Mujer", "Otras comunidades", "Aliad
 export const communities: Community[] = [
   {
     id: "red-mujer",
+    slug: "red-mujer",
     name: "Red Mujer",
     category: "Comunidades rurales",
     localidad: "Usme",
@@ -80,14 +82,16 @@ export const communities: Community[] = [
       "Generamos espacios para el fortalecimiento de la productividad de la región y buscamos que la red crezca y se relacione con otras iniciativas del territorio, como Mujer y Tierra.",
     image: "/images/red-mujer.jpg",
     contact: {
-      phone: "[+57 000 000 0000]",
-      email: "[correo@pendiente.com]",
-      social: "[@usuario_pendiente]",
+      whatsapp: PENDIENTE,
+      phone: PENDIENTE,
+      email: PENDIENTE,
+      social: PENDIENTE,
     },
     isExample: false,
   },
   {
     id: "manos-de-usme",
+    slug: "manos-de-usme",
     name: "Manos de Usme",
     category: "Productoras",
     localidad: "Usme",
@@ -100,14 +104,16 @@ export const communities: Community[] = [
       "Producimos conservas, encurtidos y mermeladas artesanales, y ofrecemos talleres de transformación de alimentos a otras mujeres del territorio.",
     image: "/images/comunidad-1.jpg",
     contact: {
-      phone: "[+57 000 000 0000]",
-      email: "[correo@pendiente.com]",
-      social: "[@usuario_pendiente]",
+      whatsapp: PENDIENTE,
+      phone: PENDIENTE,
+      email: PENDIENTE,
+      social: PENDIENTE,
     },
     isExample: true,
   },
   {
     id: "telar-y-tierra",
+    slug: "telar-y-tierra",
     name: "Telar y Tierra",
     category: "Emprendimientos",
     localidad: "Ciudad Bolívar",
@@ -120,14 +126,16 @@ export const communities: Community[] = [
       "Diseñamos y confeccionamos prendas, bolsos y accesorios tejidos a mano, y dictamos talleres de tejido para jóvenes del territorio.",
     image: "/images/comunidad-2.jpg",
     contact: {
-      phone: "[+57 000 000 0000]",
-      email: "[correo@pendiente.com]",
-      social: "[@usuario_pendiente]",
+      whatsapp: PENDIENTE,
+      phone: PENDIENTE,
+      email: PENDIENTE,
+      social: PENDIENTE,
     },
     isExample: true,
   },
   {
     id: "raices-de-sumapaz",
+    slug: "raices-de-sumapaz",
     name: "Raíces de Sumapaz",
     category: "Comunidades rurales",
     localidad: "Sumapaz",
@@ -140,14 +148,16 @@ export const communities: Community[] = [
       "Cultivamos de manera sostenible y organizamos recorridos de turismo rural y educación ambiental para grupos y familias.",
     image: "/images/comunidad-3.jpg",
     contact: {
-      phone: "[+57 000 000 0000]",
-      email: "[correo@pendiente.com]",
-      social: "[@usuario_pendiente]",
+      whatsapp: PENDIENTE,
+      phone: PENDIENTE,
+      email: PENDIENTE,
+      social: PENDIENTE,
     },
     isExample: true,
   },
   {
     id: "semillas-de-bosa",
+    slug: "semillas-de-bosa",
     name: "Semillas de Bosa",
     category: "Servicios de apoyo",
     localidad: "Bosa",
@@ -160,14 +170,16 @@ export const communities: Community[] = [
       "Brindamos acompañamiento psicosocial, formación en emprendimiento y espacios de escucha para mujeres cabeza de hogar.",
     image: "/images/comunidad-4.jpg",
     contact: {
-      phone: "[+57 000 000 0000]",
-      email: "[correo@pendiente.com]",
-      social: "[@usuario_pendiente]",
+      whatsapp: PENDIENTE,
+      phone: PENDIENTE,
+      email: PENDIENTE,
+      social: PENDIENTE,
     },
     isExample: true,
   },
   {
     id: "sabores-de-la-concordia",
+    slug: "sabores-de-la-concordia",
     name: "Sabores de la Concordia",
     category: "Productoras",
     localidad: "Santa Fe",
@@ -178,80 +190,138 @@ export const communities: Community[] = [
       "Somos vendedoras y cocineras que llevamos años ofreciendo sabores tradicionales del campo en la plaza de mercado.",
     whatWeDo:
       "Preparamos y vendemos comida tradicional, y participamos en ferias y mercados campesinos por toda la ciudad.",
-    image: "/images/producto-4.jpg",
+    // La foto que estaba aquí (/images/producto-4.jpg) es de productos lácteos con la marca
+    // y el teléfono de otra empresa impresos en la etiqueta: no es de esta comunidad y no
+    // debe publicarse. Vacío = la interfaz muestra "Foto próximamente".
+    image: "",
     contact: {
-      phone: "[+57 000 000 0000]",
-      email: "[correo@pendiente.com]",
-      social: "[@usuario_pendiente]",
+      whatsapp: PENDIENTE,
+      phone: PENDIENTE,
+      email: PENDIENTE,
+      social: PENDIENTE,
     },
     isExample: true,
   },
 ];
 
+/**
+ * Productos y servicios de la red.
+ *
+ * Sobre las fotos (4.4.6): cada producto debe mostrar SU propia foto y ninguna se repite
+ * entre productos distintos. Las fotos de archivo que venían en el proyecto no coincidían
+ * con el producto que acompañaban (por ejemplo, "Conservas de la huerta" mostraba una
+ * ruana), así que se dejaron en `images: []`. Un arreglo vacío no es un error: la interfaz
+ * muestra el placeholder con el icono de la categoría y "Foto próximamente", que es
+ * preferible a enseñar un producto que no es. Para publicar una foto real basta con poner
+ * su ruta aquí.
+ *
+ * `availability` y `features` de los registros con isExample: true son valores de ejemplo
+ * tomados de la descripción y la presentación; hay que confirmarlos con cada comunidad.
+ */
 export const products: Product[] = [
   {
     id: "conservas-de-la-huerta",
+    slug: "conservas-de-la-huerta",
     name: "Conservas de la huerta",
     type: "Gastronomía",
     communityId: "manos-de-usme",
     description:
       "Conservas artesanales de frutas y verduras cultivadas en huertas familiares de la zona rural de Usme.",
     presentation: "Frascos de vidrio de 250 g y 500 g.",
-    images: ["/images/producto-1.jpg"],
+    features: [
+      "Frascos de vidrio",
+      "Presentaciones de 250 g y 500 g",
+      "Frutas y verduras de huertas familiares de Usme",
+    ],
+    availability: "Disponible",
+    images: [],
     isExample: true,
   },
   {
     id: "mermelada-campesina",
+    slug: "mermelada-campesina",
     name: "Mermelada campesina",
     type: "Gastronomía",
     communityId: "red-mujer",
     description:
       "Mermeladas elaboradas con fruta fresca de la vereda Arrayanes, sin conservantes artificiales.",
     presentation: "Frascos de vidrio de 300 g.",
-    images: ["/images/producto-2.jpg"],
+    features: [
+      "Frascos de vidrio de 300 g",
+      "Fruta fresca de la vereda Arrayanes",
+      "Sin conservantes artificiales",
+    ],
+    availability: "Disponible",
+    images: [],
     isExample: true,
   },
   {
     id: "bolsos-tejidos-a-mano",
+    slug: "bolsos-tejidos-a-mano",
     name: "Bolsos tejidos a mano",
     type: "Ropa y textiles",
     communityId: "telar-y-tierra",
     description:
       "Bolsos y accesorios tejidos a mano con fibras naturales, en diseños y colores inspirados en el territorio.",
     presentation: "Piezas únicas, tejidas por encargo.",
-    images: ["/images/producto-3.jpg"],
+    features: [
+      "Tejido a mano",
+      "Fibras naturales",
+      "Piezas únicas, diseños inspirados en el territorio",
+    ],
+    availability: "Por encargo",
+    images: [],
     isExample: true,
   },
   {
     id: "ruanas-de-lana",
+    slug: "ruanas-de-lana",
     name: "Ruanas de lana",
     type: "Ropa y textiles",
     communityId: "telar-y-tierra",
     description: "Ruanas tejidas en lana virgen, ideales para el clima frío de la sabana y el páramo.",
     presentation: "Tallas única y ajustable.",
-    images: ["/images/producto-4.jpg"],
+    features: ["Lana virgen", "Tejido a mano", "Talla única y ajustable"],
+    availability: "Por encargo",
+    // Única foto del proyecto que sí corresponde al producto que acompaña.
+    images: ["/images/producto-1.jpg"],
     isExample: true,
   },
   {
     id: "recorrido-turismo-rural-sumapaz",
+    slug: "recorrido-turismo-rural-sumapaz",
     name: "Recorrido de turismo rural en Sumapaz",
     type: "Turismo rural",
     communityId: "raices-de-sumapaz",
     description:
       "Recorrido guiado por senderos del páramo de Sumapaz, con explicación sobre cultivos sostenibles y cuidado del agua.",
     presentation: "Grupos de hasta 15 personas, jornada de medio día.",
-    images: ["/images/producto-1.jpg"],
+    features: [
+      "Jornada de medio día",
+      "Grupos de hasta 15 personas",
+      "Recorrido guiado por senderos del páramo",
+      "Incluye explicación sobre cultivos sostenibles y cuidado del agua",
+    ],
+    availability: "Por encargo",
+    images: [],
     isExample: true,
   },
   {
     id: "taller-formacion-emprendimiento",
+    slug: "taller-formacion-emprendimiento",
     name: "Taller de formación en emprendimiento",
     type: "Educación y formación",
     communityId: "semillas-de-bosa",
     description:
       "Taller práctico dirigido a mujeres que quieren iniciar o fortalecer su propio emprendimiento.",
     presentation: "Sesiones grupales de 3 horas.",
-    images: ["/images/producto-2.jpg"],
+    features: [
+      "Sesiones grupales de 3 horas",
+      "Taller práctico",
+      "Dirigido a mujeres que inician o fortalecen su emprendimiento",
+    ],
+    availability: "Por encargo",
+    images: [],
     isExample: true,
   },
 ];
@@ -411,10 +481,14 @@ export const mapMarkers: MapMarker[] = [
   },
 ];
 
+/**
+ * Contacto general de Red Mujer. El dato real vive en config/site.ts, que es el único
+ * archivo que el equipo tiene que tocar para actualizarlo.
+ */
 export const contactInfo: ContactInfo = {
-  email: "[correo@pendiente.com]",
-  phone: "[+57 000 000 0000]",
-  social: "[@usuario_pendiente]",
+  email: contacto.correo,
+  phone: contacto.telefono,
+  social: contacto.instagram,
 };
 
 export const localidadesConOtro = [...localidades, "Otro municipio de Cundinamarca"] as const;

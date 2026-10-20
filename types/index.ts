@@ -13,6 +13,9 @@ export type ProductType =
   | "Gastronomía"
   | "Otros";
 
+/** Disponibilidad de un producto o servicio (4.4.3). */
+export type Availability = "Disponible" | "Por encargo" | "Por temporada";
+
 export type EventType =
   | "Feria"
   | "Taller"
@@ -38,6 +41,8 @@ export type Localidad =
   | "Sumapaz";
 
 export interface CommunityContact {
+  /** Número con indicativo del país. PENDIENTE mientras el equipo no lo entregue. */
+  whatsapp: string;
   phone: string;
   email: string;
   social: string;
@@ -45,6 +50,8 @@ export interface CommunityContact {
 
 export interface Community {
   id: string;
+  /** Parte final de la URL de su perfil: /comunidades/<slug>. */
+  slug: string;
   name: string;
   category: CommunityCategory;
   localidad: Localidad;
@@ -54,17 +61,31 @@ export interface Community {
   whatWeDo: string;
   image: string;
   contact: CommunityContact;
+  /** Catálogo o portafolio propio de la comunidad, si existe. */
+  catalogUrl?: string;
   isExample: boolean;
 }
 
 export interface Product {
   id: string;
+  /** Parte final de la URL de su página: /productos/<slug>. */
+  slug: string;
   name: string;
   type: ProductType;
   communityId: string;
   description: string;
   presentation: string;
+  /** Características concretas: material, tamaño, presentación, duración… (4.4.3). */
+  features: string[];
+  availability: Availability;
+  /**
+   * Fotos propias de ESTE producto. Nunca se repiten entre productos distintos: si
+   * todavía no hay foto real se deja el arreglo vacío y la interfaz muestra el
+   * placeholder con el icono de la categoría y "Foto próximamente" (4.4.6).
+   */
   images: string[];
+  /** Catálogo o portafolio donde se ve este producto, si existe. */
+  catalogUrl?: string;
   isExample: boolean;
 }
 

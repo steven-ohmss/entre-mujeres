@@ -1,4 +1,5 @@
-import Image from "next/image";
+import Foto from "./Foto";
+import { ICONO_COMUNIDAD } from "@/lib/categorias";
 import type { Community } from "@/types";
 
 interface CommunityMapCardProps {
@@ -23,11 +24,10 @@ export default function CommunityMapCard({
       }
     >
       <div className="relative h-36 w-full bg-rosa-palido">
-        <Image
+        <Foto
           src={community.image}
           alt={`Foto de la comunidad ${community.name}`}
-          fill
-          className="object-cover"
+          icon={ICONO_COMUNIDAD[community.category]}
           sizes={variant === "popup" ? "280px" : "360px"}
         />
       </div>
