@@ -190,9 +190,10 @@ export const communities: Community[] = [
       "Somos vendedoras y cocineras que llevamos años ofreciendo sabores tradicionales del campo en la plaza de mercado.",
     whatWeDo:
       "Preparamos y vendemos comida tradicional, y participamos en ferias y mercados campesinos por toda la ciudad.",
-    // La foto que estaba aquí (/images/producto-4.jpg) es de productos lácteos con la marca
-    // y el teléfono de otra empresa impresos en la etiqueta: no es de esta comunidad y no
-    // debe publicarse. Vacío = la interfaz muestra "Foto próximamente".
+    // La foto que estaba aquí era de yogures con la marca y el teléfono de otra empresa
+    // impresos en la etiqueta: no era de esta comunidad y no se debía publicar, así que
+    // se borró del repositorio. Vacío = la interfaz muestra "Foto próximamente", a la
+    // espera de la foto real (ver docs/guia-material.md).
     image: "",
     contact: {
       whatsapp: PENDIENTE,
@@ -207,13 +208,20 @@ export const communities: Community[] = [
 /**
  * Productos y servicios de la red.
  *
- * Sobre las fotos (4.4.6): cada producto debe mostrar SU propia foto y ninguna se repite
- * entre productos distintos. Las fotos de archivo que venían en el proyecto no coincidían
- * con el producto que acompañaban (por ejemplo, "Conservas de la huerta" mostraba una
- * ruana), así que se dejaron en `images: []`. Un arreglo vacío no es un error: la interfaz
- * muestra el placeholder con el icono de la categoría y "Foto próximamente", que es
- * preferible a enseñar un producto que no es. Para publicar una foto real basta con poner
- * su ruta aquí.
+ * Sobre las fotos (4.4.6): cada producto muestra SU propia foto y ninguna se repite entre
+ * productos distintos. Cada archivo se llama igual que el slug del producto, así que al
+ * reemplazarlo basta con sobrescribir el archivo en public/images/productos/ sin tocar
+ * este dato.
+ *
+ * PROVISIONAL: las seis fotos de abajo son material de archivo entregado como relleno,
+ * no fotos de las comunidades, y están a baja resolución (entre 440 y 588 px de ancho,
+ * frente a los 1600 px que pide la guía), así que se ven blandas en pantallas grandes.
+ * Se reemplazarán por las fotos reales con el mismo nombre de archivo. La lista completa
+ * de lo que falta está en docs/guia-material.md.
+ *
+ * Si un producto se queda sin foto, `images: []` no es un error: la interfaz muestra el
+ * placeholder con el icono de la categoría y "Foto próximamente", que es preferible a
+ * enseñar un producto que no es.
  *
  * `availability` y `features` de los registros con isExample: true son valores de ejemplo
  * tomados de la descripción y la presentación; hay que confirmarlos con cada comunidad.
@@ -234,7 +242,7 @@ export const products: Product[] = [
       "Frutas y verduras de huertas familiares de Usme",
     ],
     availability: "Disponible",
-    images: [],
+    images: ["/images/productos/conservas-de-la-huerta.jpg"],
     isExample: true,
   },
   {
@@ -252,7 +260,7 @@ export const products: Product[] = [
       "Sin conservantes artificiales",
     ],
     availability: "Disponible",
-    images: [],
+    images: ["/images/productos/mermelada-campesina.jpg"],
     isExample: true,
   },
   {
@@ -270,7 +278,7 @@ export const products: Product[] = [
       "Piezas únicas, diseños inspirados en el territorio",
     ],
     availability: "Por encargo",
-    images: [],
+    images: ["/images/productos/bolsos-tejidos-a-mano.jpg"],
     isExample: true,
   },
   {
@@ -283,8 +291,7 @@ export const products: Product[] = [
     presentation: "Tallas única y ajustable.",
     features: ["Lana virgen", "Tejido a mano", "Talla única y ajustable"],
     availability: "Por encargo",
-    // Única foto del proyecto que sí corresponde al producto que acompaña.
-    images: ["/images/producto-1.jpg"],
+    images: ["/images/productos/ruanas-de-lana.jpg"],
     isExample: true,
   },
   {
@@ -303,7 +310,7 @@ export const products: Product[] = [
       "Incluye explicación sobre cultivos sostenibles y cuidado del agua",
     ],
     availability: "Por encargo",
-    images: [],
+    images: ["/images/productos/recorrido-turismo-rural-sumapaz.jpg"],
     isExample: true,
   },
   {
@@ -321,7 +328,7 @@ export const products: Product[] = [
       "Dirigido a mujeres que inician o fortalecen su emprendimiento",
     ],
     availability: "Por encargo",
-    images: [],
+    images: ["/images/productos/taller-formacion-emprendimiento.jpg"],
     isExample: true,
   },
 ];

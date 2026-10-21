@@ -33,14 +33,23 @@ export function esPendiente(valor: string | null | undefined): boolean {
  * Video de fondo del inicio. Debe ir comprimido y liviano (menos de 5 MB, MP4 o WebM)
  * para que cargue en conexiones lentas. Mientras sea PENDIENTE el hero muestra solo
  * la imagen del poster.
+ *
+ * PROVISIONAL: el video actual (4 MB, 20 s, sin audio) es material de archivo, no del
+ * territorio. Se reemplazará por metraje de Bogotá y Cundinamarca con este mismo nombre
+ * de archivo, así que no habrá que tocar esta línea. Ver docs/guia-material.md.
  */
-export const HERO_VIDEO_URL: ValorPendiente = PENDIENTE;
+export const HERO_VIDEO_URL: ValorPendiente = "/video/inicio-portada.mp4";
 
 /** Imagen que se ve mientras carga el video, si falla, o si la persona pidió reducir movimiento. */
-export const HERO_VIDEO_POSTER = "/images/hero-mujeres.jpg";
+export const HERO_VIDEO_POSTER = "/images/inicio/portada.jpg";
 
+/**
+ * Describe la foto que de verdad está publicada, no la que quisiéramos tener: quien usa
+ * lector de pantalla tiene que oír lo que hay en la pantalla. Cuando llegue el material
+ * del territorio hay que reescribir esta frase junto con la imagen.
+ */
 export const HERO_VIDEO_POSTER_ALT =
-  "Mujeres campesinas con sombrero trabajando en una huerta, con montañas al fondo";
+  "Camino de tierra entre dos campos de cultivo, al atardecer y con el cielo despejado";
 
 // --- Registro de nuevas iniciativas (4.7) ----------------------------------
 
