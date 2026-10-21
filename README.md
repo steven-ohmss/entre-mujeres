@@ -25,7 +25,7 @@ npm run build
 
 ## Sin backend
 
-Este proyecto no tiene backend ni base de datos: todo el contenido vive en `data/data.ts`. El formulario "Quiero ser parte" (`components/JoinForm.tsx`) simula el envío (validación + estado de carga + mensaje de confirmación) pero no guarda la información en ningún lado todavía. Busca el comentario `// TODO:` dentro de ese archivo para conectar un backend real o un servicio de formularios.
+Este proyecto no tiene backend ni base de datos: todo el contenido vive en `data/data.ts`. Las solicitudes para aparecer en el mapa no las recibe el sitio: el bloque "Quiero aparecer en el mapa" (`components/JoinSection.tsx`) abre el formulario de Google del equipo, cuya URL está en `GOOGLE_FORM_URL` dentro de `config/site.ts`.
 
 ## Mapa de comunidades
 

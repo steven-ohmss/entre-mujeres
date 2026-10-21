@@ -54,7 +54,7 @@ export const HERO_VIDEO_POSTER_ALT =
 // --- Registro de nuevas iniciativas (4.7) ----------------------------------
 
 /** Formulario de Google que abre el botón "Quiero aparecer en el mapa", en una pestaña nueva. */
-export const GOOGLE_FORM_URL: ValorPendiente = PENDIENTE;
+export const GOOGLE_FORM_URL: ValorPendiente = "https://forms.gle/PjhEWbvvtXwkWJYNA";
 
 // --- Contacto de Red Mujer (4.8) -------------------------------------------
 
