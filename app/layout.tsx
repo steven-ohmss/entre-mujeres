@@ -31,8 +31,13 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
+    // suppressHydrationWarning: algunas extensiones del navegador (como las que cambian
+    // el cursor) inyectan atributos en <html> antes de que React hidrate, y eso hace que
+    // React avise de una diferencia que no viene de nuestro código ni podemos evitar.
+    // Solo silencia el aviso de este elemento, no el de sus hijos.
     <html
       lang="es"
+      suppressHydrationWarning
       className={`${poppins.variable} ${dmSans.variable} ${caveat.variable}`}
     >
       <body className="min-h-screen bg-crema font-sans text-texto antialiased">

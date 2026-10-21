@@ -82,7 +82,8 @@ Para cada cambio se describe el problema, lo que hay que hacer y cómo saber que
 1. **Fondo principal en video.** El hero (sección principal) reemplaza la foto actual por un **video de fondo**:
    - Atributos `autoplay muted loop playsInline`, con una imagen `poster` que se muestre mientras carga o si el video no se reproduce.
    - Capa oscura o degradado encima del video para que el texto se lea bien.
-   - Video comprimido y liviano (idealmente menos de 5 MB, formato MP4/WebM) para que cargue rápido con conexiones lentas; en celular con conexión lenta o con "reducir movimiento" activado, mostrar solo la imagen.
+   - Video comprimido y liviano (idealmente menos de 5 MB, formato MP4/WebM) para que cargue rápido con conexiones lentas; en celular con conexión lenta o con ahorro de datos activado, mostrar solo la imagen.
+   - **Actualizado tras la revisión del equipo:** el video arranca solo para todo el mundo, **también para quien tiene activado "reducir movimiento"** en su sistema. Antes esa preferencia ocultaba el video, y en la práctica dejaba sin verlo a mucha gente que apaga las animaciones de Windows por rendimiento, no por sensibilidad al movimiento. A cambio, el hero lleva un **botón pequeño de pausa/reproducción en la esquina inferior derecha**, con área táctil de 48 px, fondo sólido para que se lea sobre cualquier fotograma y etiqueta accesible ("Pausar video" / "Reproducir video"), para que quien necesite detener el movimiento pueda hacerlo de inmediato. La regla de la conexión lenta y el ahorro de datos se mantiene igual.
    - Dejar la ruta del video en una constante (`HERO_VIDEO_URL = "PENDIENTE"`) si el equipo aún no lo entrega.
 2. **Título (h1): una frase concreta que defina mejor el sitio.** Propuesta (el equipo puede ajustarla):
    **"Conectamos el trabajo de las mujeres de Bogotá y Cundinamarca"**

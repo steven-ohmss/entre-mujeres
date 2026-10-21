@@ -150,20 +150,20 @@ imagen. **Pide siempre las fotos horizontales.**
 
 ### ¿Y si entro a la página y no veo el video, solo la foto?
 
-**Lo más probable es que no sea una falla, sino tu computador pidiendo menos
-movimiento.** La página respeta esa preferencia a propósito: hay personas a las que el
-movimiento en pantalla les produce mareo o dolor de cabeza, así que cuando el sistema
-dice "menos animaciones", el video no se carga y queda la foto.
+El video **arranca solo para todo el mundo**, sin importar cómo tengas configuradas las
+animaciones de tu computador o tu teléfono. Si quieres detenerlo, en la **esquina
+inferior derecha** del inicio hay un botón redondo para pausarlo y volver a ponerlo.
 
-Para comprobarlo en Windows: **Configuración › Accesibilidad › Efectos visuales ›
-Efectos de animación**. Si está apagado, enciéndelo, recarga la página y el video
-aparece. En un celular Android la opción está en Accesibilidad › Quitar animaciones, y
-en iPhone en Accesibilidad › Movimiento › Reducir movimiento.
+Solo hay dos casos en los que el video no se carga y queda la foto, y los dos son a
+propósito, porque el archivo pesa 4 MB:
 
-El video tampoco se carga si el teléfono está en modo de ahorro de datos o con una
-conexión muy lenta. También es a propósito: son 4 MB.
+- El teléfono está en **modo de ahorro de datos**.
+- La **conexión es muy lenta** (red 2G).
 
-En los tres casos la página se ve completa, solo que quieta. No hay nada que arreglar.
+En ambos la página se ve completa, solo que quieta. No hay nada que arreglar.
+
+Si no ves el video y no estás en ninguno de esos dos casos, lo más probable es que
+estés mirando la versión publicada y los cambios todavía no se hayan subido. Avísanos.
 
 ### 4.2 Foto de respaldo de la bienvenida
 
