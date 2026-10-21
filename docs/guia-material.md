@@ -148,6 +148,23 @@ imagen. **Pide siempre las fotos horizontales.**
 | **Peso máximo** | **5 MB.** Si pesa más, hay que acortarlo o bajarle la calidad |
 | **Sonido** | **Sin sonido.** El video se reproduce callado, así que el sonido no se oiría nunca y solo haría el archivo más pesado |
 
+### ¿Y si entro a la página y no veo el video, solo la foto?
+
+**Lo más probable es que no sea una falla, sino tu computador pidiendo menos
+movimiento.** La página respeta esa preferencia a propósito: hay personas a las que el
+movimiento en pantalla les produce mareo o dolor de cabeza, así que cuando el sistema
+dice "menos animaciones", el video no se carga y queda la foto.
+
+Para comprobarlo en Windows: **Configuración › Accesibilidad › Efectos visuales ›
+Efectos de animación**. Si está apagado, enciéndelo, recarga la página y el video
+aparece. En un celular Android la opción está en Accesibilidad › Quitar animaciones, y
+en iPhone en Accesibilidad › Movimiento › Reducir movimiento.
+
+El video tampoco se carga si el teléfono está en modo de ahorro de datos o con una
+conexión muy lenta. También es a propósito: son 4 MB.
+
+En los tres casos la página se ve completa, solo que quieta. No hay nada que arreglar.
+
 ### 4.2 Foto de respaldo de la bienvenida
 
 Esta foto es obligatoria **aunque haya video**. Se ve mientras el video carga, y es lo
