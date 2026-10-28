@@ -1,6 +1,16 @@
-import { communities, products, productTypes } from "@/data/data";
+import { productTypes } from "@/lib/catalogos";
 import { esPendiente } from "@/config/site";
-import type { Product, ProductType } from "@/types";
+import type { Community, Product, ProductType } from "@/types";
+
+/**
+ * Lo que el buscador necesita para trabajar. Antes se importaba aquí directamente; ahora
+ * llega desde el servidor, porque el contenido vive en Supabase y no en un archivo. El
+ * comportamiento de las funciones no cambió: solo de dónde reciben la lista.
+ */
+export interface Catalogo {
+  comunidades: Community[];
+  productos: Product[];
+}
 
 /**
  * Buscador de Entre mujeres (4.2).
@@ -108,8 +118,8 @@ function mejorPuntaje(campos: { texto: string; peso: number }[], consulta: strin
 
 // --- Búsqueda --------------------------------------------------------------
 
-function comunidadDe(producto: Product) {
-  return communities.find((c) => c.id === producto.communityId);
+function comunidadDe(producto: Product, comunidades: Community[]) {
+  return comunidades.find((c) => c.id === producto.communityId);
 }
 
 export function hrefProducto(slug: string): string {
@@ -132,14 +142,18 @@ export function hrefBusqueda(consulta: string): string {
  * Resultados ordenados y agrupados por tipo. Cada uno trae su destino real: elegirlo
  * lleva al producto o a la comunidad, nunca de vuelta a la sección general.
  */
-export function buscar(consulta: string, porGrupo = 5): GrupoResultados[] {
+export function buscar(
+  consulta: string,
+  { comunidades, productos }: Catalogo,
+  porGrupo = 5
+): GrupoResultados[] {
   const termino = raiz(consulta);
   if (termino.length < MINIMO_LETRAS) return [];
 
   const conPuntaje: { resultado: Resultado; puntos: number }[] = [];
 
-  for (const producto of products) {
-    const comunidad = comunidadDe(producto);
+  for (const producto of productos) {
+    const comunidad = comunidadDe(producto, comunidades);
     const puntos = mejorPuntaje(
       [
         { texto: producto.name, peso: 1 },
@@ -168,7 +182,7 @@ export function buscar(consulta: string, porGrupo = 5): GrupoResultados[] {
   for (const categoria of productTypes) {
     const puntos = mejorPuntaje([{ texto: categoria, peso: 0.95 }], termino);
     if (puntos > 0) {
-      const cuantos = products.filter((p) => p.type === categoria).length;
+      const cuantos = productos.filter((p) => p.type === categoria).length;
       conPuntaje.push({
         puntos,
         resultado: {
@@ -184,7 +198,7 @@ export function buscar(consulta: string, porGrupo = 5): GrupoResultados[] {
     }
   }
 
-  for (const comunidad of communities) {
+  for (const comunidad of comunidades) {
     const puntos = mejorPuntaje(
       [
         { texto: comunidad.name, peso: 1 },
@@ -233,24 +247,27 @@ export function resultadosPlanos(grupos: GrupoResultados[]): Resultado[] {
  * A dónde ir al presionar Enter: si hay un único resultado claro se abre directamente,
  * y si hay varios se muestra la lista ya filtrada (4.2).
  */
-export function destinoAlEnviar(consulta: string): string | null {
+export function destinoAlEnviar(consulta: string, catalogo: Catalogo): string | null {
   const texto = consulta.trim();
   if (texto.length < MINIMO_LETRAS) return null;
 
-  const todos = resultadosPlanos(buscar(texto));
+  const todos = resultadosPlanos(buscar(texto, catalogo));
   if (todos.length === 0) return hrefBusqueda(texto);
   if (todos.length === 1) return todos[0].href;
   return hrefBusqueda(texto);
 }
 
 /** Productos que coinciden con el texto buscado, para la lista de /productos?q=… */
-export function filtrarProductos(consulta: string): Product[] {
+export function filtrarProductos(
+  consulta: string,
+  { comunidades, productos }: Catalogo
+): Product[] {
   const termino = raiz(consulta);
-  if (termino.length === 0) return products;
+  if (termino.length === 0) return productos;
 
-  return products
+  return productos
     .map((producto) => {
-      const comunidad = comunidadDe(producto);
+      const comunidad = comunidadDe(producto, comunidades);
       return {
         producto,
         puntos: mejorPuntaje(
@@ -271,9 +288,9 @@ export function filtrarProductos(consulta: string): Product[] {
 }
 
 /** Categorías sugeridas cuando una búsqueda no encontró nada (4.2). */
-export function categoriasSugeridas(cuantas = 4): ProductType[] {
+export function categoriasSugeridas(productos: Product[], cuantas = 4): ProductType[] {
   const conProductos = productTypes.filter((categoria) =>
-    products.some((p) => p.type === categoria)
+    productos.some((p) => p.type === categoria)
   );
   return conProductos.slice(0, cuantas);
 }

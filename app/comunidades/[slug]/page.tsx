@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import Foto from "@/components/Foto";
 import ProductCard from "@/components/ProductCard";
 import BotonWhatsApp from "@/components/BotonWhatsApp";
-import { calendarEvents, communities, products } from "@/data/data";
+import { obtenerComunidades, obtenerEventos, obtenerProductos } from "@/lib/datos";
 import { ICONO_COMUNIDAD } from "@/lib/categorias";
 import { esPendiente, mensajeComunidad, textoOProximamente } from "@/config/site";
 import { compareISODates, formatEventDate } from "@/lib/date";
@@ -16,13 +16,22 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  return communities.map((comunidad) => ({ slug: comunidad.slug }));
+/**
+ * Las comunidades que ya existen se dejan preparadas al publicar. Una comunidad nueva no
+ * queda fuera: se arma la primera vez que alguien entra, sin volver a publicar el sitio.
+ *
+ * Si la base no responde al publicar, esto lanza y el despliegue falla a propósito:
+ * Vercel deja en línea la versión anterior.
+ */
+export async function generateStaticParams() {
+  const comunidades = await obtenerComunidades();
+  return comunidades.map((comunidad) => ({ slug: comunidad.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const comunidad = communities.find((c) => c.slug === slug);
+  const comunidades = await obtenerComunidades();
+  const comunidad = comunidades.find((c) => c.slug === slug);
   if (!comunidad) return { title: "Comunidad no encontrada · Entre mujeres" };
   return {
     title: `${comunidad.name} · Entre mujeres`,
@@ -34,10 +43,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PaginaComunidad({ params }: Props) {
   const { slug } = await params;
-  const comunidad = communities.find((c) => c.slug === slug);
+  const [comunidades, productos, calendarEvents] = await Promise.all([
+    obtenerComunidades(),
+    obtenerProductos(),
+    obtenerEventos(),
+  ]);
+
+  const comunidad = comunidades.find((c) => c.slug === slug);
   if (!comunidad) notFound();
 
-  const suyos = products.filter((p) => p.communityId === comunidad.id);
+  const suyos = productos.filter((p) => p.communityId === comunidad.id);
   const eventos = [...calendarEvents]
     .filter((e) => e.communityId === comunidad.id)
     .sort((a, b) => compareISODates(a.date, b.date));

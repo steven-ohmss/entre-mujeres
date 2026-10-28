@@ -441,7 +441,7 @@ Lo más fácil es mandar un archivo de texto o una hoja de cálculo con dos colu
 nombre del archivo y descripción.
 
 **Dónde queda escrita esa frase.** Cada foto de producto guarda la suya al lado de la
-imagen, en `data/data.ts`. Si llega una foto nueva sin su frase, quien la suba tiene que
+imagen, en la tabla `product_images` de Supabase. Si llega una foto nueva sin su frase, quien la suba tiene que
 escribirla mirando la imagen: una foto sin descripción deja por fuera a quien usa lector
 de pantalla. Y si se reemplaza una foto por otra distinta, **hay que reescribir la
 frase**, porque la vieja ya no describe lo que se ve.

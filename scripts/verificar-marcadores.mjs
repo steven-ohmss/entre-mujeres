@@ -1,14 +1,14 @@
-// Verifica que cada marcador del mapa (data/data.ts) cae dentro del polígono de la
+// Verifica que cada marcador del mapa (supabase/seed/contenido-inicial.ts) cae dentro del polígono de la
 // localidad que declara su comunidad. Conviene correrlo cada vez que se agrega o se
 // corrige una coordenada.
 //
 //   node --import ./scripts/alias-arroba.mjs scripts/verificar-marcadores.mjs
 //
-// El --import hace falta porque data/data.ts importa con el alias "@/", que node no
+// El --import hace falta porque supabase/seed/contenido-inicial.ts importa con el alias "@/", que node no
 // resuelve por su cuenta.
 
 import { readFileSync } from "node:fs";
-import { mapMarkers, communities } from "../data/data.ts";
+import { mapMarkers, communities } from "../supabase/seed/contenido-inicial.ts";
 
 const geojson = JSON.parse(readFileSync("public/data/localidades-bogota.geojson", "utf8"));
 

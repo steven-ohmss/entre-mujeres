@@ -1,7 +1,7 @@
 import { HeartHandshake, MapPin, Target, Users } from "lucide-react";
 import SectionHeading from "./SectionHeading";
 import Foto from "./Foto";
-import { communities } from "@/data/data";
+import type { Community } from "@/types";
 
 const BLOQUES = [
   {
@@ -40,8 +40,8 @@ const PASOS = [
  * quiénes somos y "Construimos la red juntas", que antes era una sección suelta al final
  * del sitio sin relación visible con el resto.
  */
-export default function AboutSection() {
-  const redMujer = communities.find((c) => c.id === "red-mujer");
+export default function AboutSection({ comunidades }: { comunidades: Community[] }) {
+  const redMujer = comunidades.find((c) => c.id === "red-mujer");
 
   return (
     <section id="nosotras" className="bg-blanco py-20 sm:py-24">

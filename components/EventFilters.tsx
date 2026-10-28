@@ -1,7 +1,7 @@
 "use client";
 
 import { Search, MapPin } from "lucide-react";
-import { localidades, eventTypes, organizers } from "@/data/data";
+import { localidades, eventTypes, organizers } from "@/lib/catalogos";
 import type { EventType, Localidad, Organizer } from "@/types";
 
 interface EventFiltersProps {

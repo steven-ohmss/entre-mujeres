@@ -112,7 +112,7 @@ preguntar por un producto.
 
 ## 5. Datos de ejemplo que hay que confirmar o quitar
 
-Estos registros llevan la marca `isExample: true` en `data/data.ts`, es decir que su
+Estos registros llevan la marca `is_example` en true en Supabase, es decir que su
 contenido se escribió como relleno para poder ver la página armada, **no lo entregó la
 comunidad**:
 

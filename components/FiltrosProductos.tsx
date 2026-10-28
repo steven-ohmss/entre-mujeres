@@ -1,7 +1,7 @@
 "use client";
 
 import { MapPin, Users, X } from "lucide-react";
-import { communityCategories, localidades, productTypes } from "@/data/data";
+import { communityCategories, localidades, productTypes } from "@/lib/catalogos";
 import { ICONO_PRODUCTO, ICONO_TODAS } from "@/lib/categorias";
 import type { CommunityCategory, Localidad, ProductType } from "@/types";
 

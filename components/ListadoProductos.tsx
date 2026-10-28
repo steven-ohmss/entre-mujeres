@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { PackageSearch } from "lucide-react";
 import ProductCard from "./ProductCard";
 import FiltrosProductos, { type EstadoFiltros } from "./FiltrosProductos";
-import { communities, products } from "@/data/data";
+import { useCatalogo } from "./ProveedorCatalogo";
 import { ICONO_PRODUCTO } from "@/lib/categorias";
 import { categoriasSugeridas, filtrarProductos, hrefCategoria } from "@/lib/search";
 import type { CommunityCategory, Localidad, ProductType } from "@/types";
@@ -21,6 +21,8 @@ export default function ListadoProductos() {
   const parametros = useSearchParams();
   const texto = parametros.get("q")?.trim() ?? "";
   const categoriaUrl = parametros.get("categoria") as ProductType | null;
+  const catalogo = useCatalogo();
+  const { comunidades, productos } = catalogo;
 
   const [categoria, setCategoria] = useState<ProductType | "Todas">(categoriaUrl ?? "Todas");
   const [localidad, setLocalidad] = useState<Localidad | "Todas">("Todas");
@@ -29,16 +31,16 @@ export default function ListadoProductos() {
   const filtros: EstadoFiltros = { categoria, localidad, tipoComunidad, texto };
 
   const visibles = useMemo(() => {
-    const base = texto ? filtrarProductos(texto) : products;
+    const base = texto ? filtrarProductos(texto, catalogo) : productos;
 
     return base.filter((producto) => {
-      const comunidad = communities.find((c) => c.id === producto.communityId);
+      const comunidad = comunidades.find((c) => c.id === producto.communityId);
       const coincideCategoria = categoria === "Todas" || producto.type === categoria;
       const coincideLocalidad = localidad === "Todas" || comunidad?.localidad === localidad;
       const coincideTipo = tipoComunidad === "Todas" || comunidad?.category === tipoComunidad;
       return coincideCategoria && coincideLocalidad && coincideTipo;
     });
-  }, [categoria, localidad, texto, tipoComunidad]);
+  }, [catalogo, categoria, comunidades, localidad, productos, texto, tipoComunidad]);
 
   const hayFiltros = categoria !== "Todas" || localidad !== "Todas" || tipoComunidad !== "Todas";
 
@@ -71,7 +73,7 @@ export default function ListadoProductos() {
               <ProductCard
                 key={producto.id}
                 product={producto}
-                community={communities.find((c) => c.id === producto.communityId)}
+                community={comunidades.find((c) => c.id === producto.communityId)}
               />
             ))}
           </div>
@@ -92,7 +94,7 @@ export default function ListadoProductos() {
           </p>
 
           <div className="mt-6 flex flex-wrap justify-center gap-2.5">
-            {categoriasSugeridas().map((sugerida) => {
+            {categoriasSugeridas(productos).map((sugerida) => {
               const Icono = ICONO_PRODUCTO[sugerida];
               return (
                 <Link key={sugerida} href={hrefCategoria(sugerida)} className="pill-filter">

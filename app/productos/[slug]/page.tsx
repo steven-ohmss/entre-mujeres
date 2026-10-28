@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import Foto from "@/components/Foto";
 import ProductCard from "@/components/ProductCard";
 import BotonWhatsApp from "@/components/BotonWhatsApp";
-import { communities, products } from "@/data/data";
+import { obtenerComunidades, obtenerProductos } from "@/lib/datos";
 import { ICONO_PRODUCTO } from "@/lib/categorias";
 import { esPendiente, mensajeProducto } from "@/config/site";
 
@@ -15,13 +15,25 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  return products.map((producto) => ({ slug: producto.slug }));
+/**
+ * Los productos que ya existen se dejan preparados al publicar, para que abran de
+ * inmediato. Los que no estén en esta lista no quedan fuera: Next los arma la primera
+ * vez que alguien entra, así que un producto creado desde el panel aparece sin tener
+ * que volver a publicar el sitio.
+ *
+ * Si la base no responde mientras se publica, esto lanza y el despliegue falla. Es
+ * deliberado: Vercel deja en línea la versión anterior, que es mucho mejor que publicar
+ * un sitio sin contenido.
+ */
+export async function generateStaticParams() {
+  const productos = await obtenerProductos();
+  return productos.map((producto) => ({ slug: producto.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const producto = products.find((p) => p.slug === slug);
+  const productos = await obtenerProductos();
+  const producto = productos.find((p) => p.slug === slug);
   if (!producto) return { title: "Producto no encontrado · Entre mujeres" };
   return {
     title: `${producto.name} · Entre mujeres`,
@@ -37,14 +49,19 @@ const COLOR_DISPONIBILIDAD: Record<string, string> = {
 
 export default async function PaginaProducto({ params }: Props) {
   const { slug } = await params;
-  const producto = products.find((p) => p.slug === slug);
+  const [productos, comunidades] = await Promise.all([
+    obtenerProductos(),
+    obtenerComunidades(),
+  ]);
+
+  const producto = productos.find((p) => p.slug === slug);
   if (!producto) notFound();
 
-  const comunidad = communities.find((c) => c.id === producto.communityId);
+  const comunidad = comunidades.find((c) => c.id === producto.communityId);
   const Icono = ICONO_PRODUCTO[producto.type];
 
   const hermanos = comunidad
-    ? products.filter((p) => p.communityId === comunidad.id && p.id !== producto.id)
+    ? productos.filter((p) => p.communityId === comunidad.id && p.id !== producto.id)
     : [];
 
   const catalogo = producto.catalogUrl ?? comunidad?.catalogUrl;

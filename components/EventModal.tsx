@@ -4,19 +4,20 @@ import Image from "next/image";
 import { MapPin, Clock, Users2 } from "lucide-react";
 import Modal from "./Modal";
 import { formatEventDate } from "@/lib/date";
-import { communities } from "@/data/data";
-import type { CalendarEvent } from "@/types";
+import type { CalendarEvent, Community } from "@/types";
 
 interface EventModalProps {
   event: CalendarEvent | null;
   isOpen: boolean;
   onClose: () => void;
+  /** Para poder nombrar a la comunidad que organiza; si falta, el nombre se omite. */
+  comunidades: Community[];
 }
 
-export default function EventModal({ event, isOpen, onClose }: EventModalProps) {
+export default function EventModal({ event, isOpen, onClose, comunidades }: EventModalProps) {
   if (!event) return null;
 
-  const community = communities.find((c) => c.id === event.communityId);
+  const community = comunidades.find((c) => c.id === event.communityId);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} ariaLabel={`Detalle del evento ${event.title}`}>

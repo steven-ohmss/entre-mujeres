@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, CalendarDays, Newspaper } from "lucide-react";
 import Foto from "./Foto";
-import { calendarEvents, newsItems } from "@/data/data";
+import type { CalendarEvent, NewsItem } from "@/types";
 import { compareISODates, formatEventDate } from "@/lib/date";
 import { useHoy } from "@/lib/hoy";
 import { useMediaQuery } from "@/lib/useMediaQuery";
@@ -21,7 +21,11 @@ interface Diapositiva {
 const MAXIMO = 6;
 const MS_ENTRE_AVANCES = 6000;
 
-function diapositivasDesde(hoy: string | null): Diapositiva[] {
+function diapositivasDesde(
+  hoy: string | null,
+  calendarEvents: CalendarEvent[],
+  newsItems: NewsItem[]
+): Diapositiva[] {
   // Antes de montar no se conoce la fecha, así que se muestran los eventos en orden y el
   // filtro de "ya pasó" entra apenas el navegador la resuelve.
   const eventos = [...calendarEvents]
@@ -54,14 +58,20 @@ function diapositivasDesde(hoy: string | null): Diapositiva[] {
   return [...eventos, ...noticias].slice(0, MAXIMO);
 }
 
-export default function CarruselInicio() {
+export default function CarruselInicio({
+  eventos,
+  noticias,
+}: {
+  eventos: CalendarEvent[];
+  noticias: NewsItem[];
+}) {
   const hoy = useHoy();
   const prefiereMenosMovimiento = useMediaQuery("(prefers-reduced-motion: reduce)");
   const pistaRef = useRef<HTMLDivElement>(null);
   const [activo, setActivo] = useState(0);
   const [pausado, setPausado] = useState(false);
 
-  const diapositivas = diapositivasDesde(hoy);
+  const diapositivas = diapositivasDesde(hoy, eventos, noticias);
   const total = diapositivas.length;
 
   const irA = useCallback((indice: number) => {

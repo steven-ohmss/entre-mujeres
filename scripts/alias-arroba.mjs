@@ -1,5 +1,5 @@
 // Enseña a node a resolver el alias "@/..." de tsconfig.json, que apunta a la raíz del
-// proyecto. Sin esto, importar data/data.ts desde un script falla, porque ese archivo
+// proyecto. Sin esto, importar supabase/seed/contenido-inicial.ts desde un script falla, porque ese archivo
 // importa "@/config/site" y node no lee los paths de tsconfig.
 //
 // Se usa así:

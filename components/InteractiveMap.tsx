@@ -5,9 +5,15 @@ import dynamic from "next/dynamic";
 import MapFilters from "./MapFilters";
 import CommunityMapCard from "./CommunityMapCard";
 import type { MapMarkerWithCommunity } from "./CommunityLeafletMap";
-import { communities, mapMarkers, products } from "@/data/data";
 import { useMediaQuery } from "@/lib/useMediaQuery";
-import type { CommunityCategory, ProductType, Localidad } from "@/types";
+import type {
+  Community,
+  CommunityCategory,
+  MapMarker,
+  Product,
+  ProductType,
+  Localidad,
+} from "@/types";
 
 // Leaflet solo funciona en el navegador.
 const CommunityLeafletMap = dynamic(() => import("./CommunityLeafletMap"), {
@@ -15,13 +21,27 @@ const CommunityLeafletMap = dynamic(() => import("./CommunityLeafletMap"), {
   loading: () => <div className="h-full w-full bg-rosa-palido/40" />,
 });
 
-const markersWithCommunity: MapMarkerWithCommunity[] = mapMarkers.flatMap((marker) => {
-  const community = communities.find((c) => c.id === marker.communityId);
-  return community ? [{ marker, community }] : [];
-});
+interface InteractiveMapProps {
+  comunidades: Community[];
+  marcadores: MapMarker[];
+  productos: Product[];
+}
 
-export default function InteractiveMap() {
+export default function InteractiveMap({
+  comunidades,
+  marcadores,
+  productos,
+}: InteractiveMapProps) {
   const isDesktop = useMediaQuery("(min-width: 1280px)");
+
+  const markersWithCommunity = useMemo<MapMarkerWithCommunity[]>(
+    () =>
+      marcadores.flatMap((marker) => {
+        const community = comunidades.find((c) => c.id === marker.communityId);
+        return community ? [{ marker, community }] : [];
+      }),
+    [comunidades, marcadores]
+  );
   const filtersPanelRef = useRef<HTMLDivElement>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState<CommunityCategory | "Todas">("Todas");
@@ -36,7 +56,7 @@ export default function InteractiveMap() {
       const matchesLocalidad = localidad === "Todas" || community.localidad === localidad;
       const matchesProductType =
         productType === "Todas" ||
-        products.some((p) => p.communityId === community.id && p.type === productType);
+        productos.some((p) => p.communityId === community.id && p.type === productType);
       const matchesSearch =
         term.length === 0 ||
         community.name.toLowerCase().includes(term) ||
@@ -44,7 +64,7 @@ export default function InteractiveMap() {
 
       return matchesCategory && matchesLocalidad && matchesProductType && matchesSearch;
     });
-  }, [category, localidad, productType, searchTerm]);
+  }, [category, localidad, markersWithCommunity, productType, productos, searchTerm]);
 
   // En escritorio la ficha es un popup que solo se abre al elegir un marcador; en pantallas
   // pequeñas la ficha va debajo del mapa y muestra la primera comunidad visible por defecto.

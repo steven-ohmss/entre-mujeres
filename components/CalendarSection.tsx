@@ -8,12 +8,15 @@ import MonthCalendar from "./MonthCalendar";
 import EventListRow from "./EventListRow";
 import EventModal from "./EventModal";
 import LeafDecoration from "./LeafDecoration";
-import { calendarEvents } from "@/data/data";
 import { compareISODates, formatEventDate, parseISODate } from "@/lib/date";
 import { useHoy } from "@/lib/hoy";
-import type { CalendarEvent, EventType, Localidad, Organizer } from "@/types";
+import type { CalendarEvent, Community, EventType, Localidad, Organizer } from "@/types";
 
-const ordenadosPorFecha = [...calendarEvents].sort((a, b) => compareISODates(a.date, b.date));
+interface CalendarSectionProps {
+  eventos: CalendarEvent[];
+  /** Solo para que la ficha del evento pueda nombrar a la comunidad que organiza. */
+  comunidades: Community[];
+}
 
 /**
  * Calendario (4.6).
@@ -22,8 +25,13 @@ const ordenadosPorFecha = [...calendarEvents].sort((a, b) => compareISODates(a.d
  * manda lo que la gente viene a averiguar: cuál es el próximo evento, calculado desde hoy.
  * Los que ya pasaron no se muestran.
  */
-export default function CalendarSection() {
+export default function CalendarSection({ eventos, comunidades }: CalendarSectionProps) {
   const hoy = useHoy();
+
+  const ordenadosPorFecha = useMemo(
+    () => [...eventos].sort((a, b) => compareISODates(a.date, b.date)),
+    [eventos]
+  );
 
   const [localidad, setLocalidad] = useState<Localidad | "Todas">("Todas");
   const [keyword, setKeyword] = useState("");
@@ -42,7 +50,7 @@ export default function CalendarSection() {
   /** Eventos que todavía no han pasado. Antes de montar se muestran todos. */
   const proximos = useMemo(
     () => ordenadosPorFecha.filter((e) => (hoy ? compareISODates(e.date, hoy) >= 0 : true)),
-    [hoy]
+    [hoy, ordenadosPorFecha]
   );
 
   const filtrados = useMemo(() => {
@@ -68,7 +76,7 @@ export default function CalendarSection() {
 
   const proximoEvento = filtrados[0] ?? null;
   const eventoAbierto: CalendarEvent | null =
-    calendarEvents.find((e) => e.id === selectedEventId) ?? null;
+    eventos.find((e) => e.id === selectedEventId) ?? null;
 
   const hayFiltros =
     keyword.trim().length > 0 ||
@@ -259,6 +267,7 @@ export default function CalendarSection() {
         event={eventoAbierto}
         isOpen={Boolean(eventoAbierto)}
         onClose={() => setSelectedEventId(null)}
+        comunidades={comunidades}
       />
     </section>
   );

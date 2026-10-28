@@ -1,11 +1,14 @@
 # Supabase: cómo aplicar las migraciones y cargar los datos
 
-Esta guía es para quien tenga acceso al proyecto de Supabase. Hay que hacerlo **una sola
-vez**, y después solo se repite el paso 4 cada vez que cambie `data/data.ts`.
+Esta guía es para quien tenga acceso al proyecto de Supabase. Los pasos 1 a 3 y el 5 se
+hacen **una sola vez**; el paso 4 solo hace falta para volver a sembrar la base desde
+cero.
 
-> **Importante:** el sitio **todavía no lee de Supabase.** La fuente que alimenta las
-> páginas sigue siendo `data/data.ts`. Lo que se arma aquí es la base de datos cargada y
-> lista; conectar el sitio es un paso aparte.
+> **El sitio lee de Supabase.** Todas las páginas públicas (inicio, carrusel, mapa,
+> calendario, noticias, productos, buscador y las páginas de cada producto y cada
+> comunidad) toman su contenido de la base, desde el servidor. El archivo que antes
+> alimentaba el sitio quedó como semilla en `supabase/seed/contenido-inicial.ts`, y solo
+> lo usa el script de carga.
 
 ---
 
@@ -47,8 +50,8 @@ desde el panel de Supabase, en **Project Settings → API keys**:
 
 ## Paso 2: aplicar las migraciones
 
-Las cuatro migraciones están en `supabase/migrations/` y hay que aplicarlas **en orden**,
-porque cada una se apoya en la anterior:
+Las migraciones están en `supabase/migrations/` y hay que aplicarlas **en orden**, porque
+cada una se apoya en la anterior:
 
 | Orden | Archivo | Qué hace |
 | --- | --- | --- |
@@ -56,6 +59,7 @@ porque cada una se apoya en la anterior:
 | 2 | `20261028120100_admins.sql` | Crea la tabla `admins` y la función `is_admin()` |
 | 3 | `20261028120200_rls.sql` | Activa los permisos de las cinco tablas |
 | 4 | `20261028120300_bucket_imagenes.sql` | Crea el bucket y sus permisos |
+| 5 | `20261028130000_orden.sql` | Agrega la columna que fija en qué orden se ven |
 
 Hay dos caminos. **Con hacer uno de los dos basta.**
 
@@ -138,7 +142,10 @@ Borrarlo de `admins` **no borra su cuenta**: solo deja de poder escribir.
 
 ## Paso 4: cargar los datos y las imágenes
 
-Este es el paso que se repite cada vez que cambie `data/data.ts`.
+Este paso siembra la base con el contenido inicial, que vive en
+`supabase/seed/contenido-inicial.ts`. **Es para arrancar o para volver a empezar**, no
+para el día a día: una vez sembrada, el contenido se cambia en la base (y, más adelante,
+desde el panel). El archivo de semilla ya no alimenta el sitio.
 
 Primero, ver qué haría sin tocar nada. Esto funciona incluso antes de pegar las claves:
 
@@ -157,11 +164,11 @@ Sube las 14 imágenes de `public/images/` al bucket y luego copia las 4 comunida
 
 **Se puede correr las veces que haga falta.** Todo va por *upsert* contra el slug de cada
 fila y la ruta de cada archivo, así que la segunda corrida actualiza lo que cambió en vez
-de duplicarlo. Si una foto desaparece de `data/data.ts`, su fila también se borra, para
+de duplicarlo. Si una foto desaparece de `supabase/seed/contenido-inicial.ts`, su fila también se borra, para
 que la base no se quede mostrando una foto que el sitio ya no usa.
 
 Lo que el script **no** hace es borrar comunidades, productos, eventos ni noticias que
-salgan de `data/data.ts`: eso se hace a mano, a propósito, para que una carga no se lleve
+salgan de `supabase/seed/contenido-inicial.ts`: eso se hace a mano, a propósito, para que una carga no se lleve
 contenido por delante sin que nadie se dé cuenta.
 
 ### Cómo quedan las imágenes
@@ -183,6 +190,54 @@ el nombre del bucket y sin la barra del principio.
 > (`red-mujer.jpg`, `evento-1.jpg`), porque así están en `public/images/`. Cuando lleguen
 > las fotos reales y se reorganicen en carpetas según `guia-material.md`, el bucket las
 > va a reflejar solo.
+
+---
+
+## Paso 5: las variables en Vercel
+
+El sitio publicado necesita **dos** variables, las mismas dos que empiezan por
+`NEXT_PUBLIC_`. Se agregan en **Project Settings → Environment Variables**, marcando los
+tres entornos (Production, Preview y Development):
+
+| Nombre | Valor | Por qué |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://wwqxnfsfowhgdmzifaky.supabase.co` | Dónde está el proyecto. También es de donde `next.config.ts` saca el permiso para mostrar las fotos del bucket |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | la clave **publishable** (`sb_publishable_…`) | Con la que el sitio lee. Solo puede hacer lo que cualquier visitante: el RLS es quien la limita |
+
+> **`SUPABASE_SERVICE_ROLE_KEY` NO se agrega en Vercel.** La clave secret se salta todos
+> los permisos y el sitio no la necesita para nada: solo la usa el script de carga, que
+> se corre a mano desde un computador de confianza. Si algún día el panel de
+> administración la necesita, será con una decisión aparte.
+
+Después de agregarlas hay que **volver a desplegar** para que el build las vea. Si
+faltan, el despliegue falla al preparar las páginas de producto y de comunidad, que es
+lo correcto: Vercel deja en línea la versión anterior en vez de publicar un sitio vacío.
+
+---
+
+## Cómo refrescar el sitio cuando cambie el contenido
+
+Las páginas no consultan la base en cada visita: el resultado se guarda y se reusa
+durante **una hora** (`cacheLife("hours")` en `lib/datos.ts`). Eso es lo que hace que el
+sitio cargue rápido con señal lenta.
+
+Hoy, si cambias algo en la base, se ve **dentro de la hora siguiente**, sin volver a
+publicar.
+
+Cuando exista el panel de administración, no habrá que esperar: cada consulta lleva una
+etiqueta, y al guardar un cambio el panel puede refrescar justo lo que cambió desde una
+Server Action:
+
+```ts
+import { revalidateTag } from "next/cache";
+import { ETIQUETAS } from "@/lib/datos";
+
+revalidateTag(ETIQUETAS.productos, "max");
+```
+
+Las etiquetas son `comunidades`, `productos`, `eventos` y `noticias`. Las consultas que
+mezclan tablas llevan las dos, así que cambiar una comunidad también refresca los
+productos que la nombran.
 
 ---
 

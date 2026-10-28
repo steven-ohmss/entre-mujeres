@@ -7,7 +7,7 @@ import {
   getMonthLabel,
   getWeekdayHeaders,
 } from "@/lib/date";
-import { eventTypes } from "@/data/data";
+import { eventTypes } from "@/lib/catalogos";
 import type { CalendarEvent } from "@/types";
 
 interface MonthCalendarProps {

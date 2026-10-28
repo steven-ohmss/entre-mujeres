@@ -1,4 +1,4 @@
-// Copia el contenido de data/data.ts a Supabase y sube las imágenes de public/images
+// Copia el contenido de supabase/seed/contenido-inicial.ts a Supabase y sube las imágenes de public/images
 // al bucket "imagenes".
 //
 //   node --env-file=.env.local --import ./scripts/alias-arroba.mjs scripts/cargar-supabase.mjs
@@ -23,7 +23,7 @@ import {
   calendarEvents,
   newsItems,
   mapMarkers,
-} from "@/data/data";
+} from "../supabase/seed/contenido-inicial.ts";
 
 const SECO = process.argv.includes("--dry-run");
 const BUCKET = "imagenes";
@@ -125,9 +125,10 @@ async function subirImagenes() {
 
 // --- 2. Comunidades --------------------------------------------------------
 
-function filaComunidad(c) {
+function filaComunidad(c, orden) {
   const marcador = mapMarkers.find((m) => m.communityId === c.id);
   return {
+    orden,
     slug: c.slug,
     name: c.name,
     category: c.category ?? null,
@@ -152,7 +153,7 @@ function filaComunidad(c) {
 }
 
 async function cargarComunidades() {
-  const filas = communities.map(filaComunidad);
+  const filas = communities.map((c, i) => filaComunidad(c, i));
   console.log(`\n2. Comunidades (${filas.length})`);
   if (SECO) {
     for (const f of filas) console.log(`   [seco] upsert ${f.slug}`);
@@ -173,13 +174,14 @@ async function cargarComunidades() {
 
 async function cargarProductos(idPorSlugComunidad) {
   const slugPorId = new Map(communities.map((c) => [c.id, c.slug]));
-  const filas = products.map((p) => {
+  const filas = products.map((p, orden) => {
     const slugComunidad = slugPorId.get(p.communityId);
     const idComunidad = idPorSlugComunidad.get(slugComunidad);
     if (!SECO && !idComunidad) {
       fallar(`producto ${p.slug}`, new Error(`su comunidad "${p.communityId}" no existe`));
     }
     return {
+      orden,
       slug: p.slug,
       name: p.name,
       type: p.type,
@@ -231,7 +233,7 @@ async function cargarProductos(idPorSlugComunidad) {
     if (errorFotos) fallar("cargando fotos de producto", errorFotos);
   }
 
-  // Si una foto dejó de estar en data/data.ts, su fila sobra: sin esto la base se
+  // Si una foto dejó de estar en supabase/seed/contenido-inicial.ts, su fila sobra: sin esto la base se
   // quedaría mostrando una foto que el sitio ya no usa.
   const vigentes = fotos.map((f) => f.storage_path);
   const limpieza = db.from("product_images").delete();
@@ -250,7 +252,8 @@ async function cargarProductos(idPorSlugComunidad) {
 
 async function cargarEventos(idPorSlugComunidad) {
   const slugPorId = new Map(communities.map((c) => [c.id, c.slug]));
-  const filas = calendarEvents.map((e) => ({
+  const filas = calendarEvents.map((e, orden) => ({
+    orden,
     // Los eventos ya se identifican con un texto tipo slug ("feria-campesina-usme").
     slug: e.id,
     title: e.title,
@@ -279,7 +282,8 @@ async function cargarEventos(idPorSlugComunidad) {
 }
 
 async function cargarNoticias() {
-  const filas = newsItems.map((n) => ({
+  const filas = newsItems.map((n, orden) => ({
+    orden,
     slug: n.id,
     type: n.type,
     title: n.title,
@@ -318,5 +322,5 @@ await cargarNoticias();
 console.log(
   SECO
     ? "\nListo (en seco). Quita --dry-run para escribir de verdad."
-    : "\nListo. Se puede volver a correr cuando cambie data/data.ts."
+    : "\nListo. Se puede volver a correr cuando cambie supabase/seed/contenido-inicial.ts."
 );

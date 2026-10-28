@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { MapPin, Clock, ChevronRight } from "lucide-react";
 import { getDateBlockParts } from "@/lib/date";
-import { eventTypes } from "@/data/data";
+import { eventTypes } from "@/lib/catalogos";
 import type { CalendarEvent } from "@/types";
 
 interface EventListRowProps {

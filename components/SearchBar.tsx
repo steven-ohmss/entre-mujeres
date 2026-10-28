@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search, Users, X } from "lucide-react";
 import Foto from "./Foto";
 import { ICONO_PRODUCTO, ICONO_TODAS } from "@/lib/categorias";
+import { useCatalogo } from "./ProveedorCatalogo";
 import {
   MINIMO_LETRAS,
   buscar,
@@ -60,7 +61,12 @@ export default function SearchBar({
     return () => document.removeEventListener("mousedown", alTocarFuera);
   }, []);
 
-  const grupos = useMemo(() => buscar(query), [query]);
+  // El contenido llega del servidor por contexto (ver ProveedorCatalogo): el buscador
+  // vive en la barra de navegación, que sale en todas las páginas, y así no hay que
+  // encadenarle los datos ruta por ruta.
+  const catalogo = useCatalogo();
+
+  const grupos = useMemo(() => buscar(query, catalogo), [query, catalogo]);
   const planos = useMemo(() => resultadosPlanos(grupos), [grupos]);
 
   const hayConsulta = query.trim().length >= MINIMO_LETRAS;
@@ -104,7 +110,7 @@ export default function SearchBar({
         irA(planos[resaltado].href);
         return;
       }
-      const destino = destinoAlEnviar(query);
+      const destino = destinoAlEnviar(query, catalogo);
       if (destino) irA(destino);
     }
   };
@@ -211,7 +217,7 @@ export default function SearchBar({
               <p className="mt-1 text-sm text-texto-suave">Prueba con una de estas categorías:</p>
 
               <div className="mt-3 flex flex-wrap gap-2">
-                {categoriasSugeridas().map((categoria) => {
+                {categoriasSugeridas(catalogo.productos).map((categoria) => {
                   const Icono = ICONO_PRODUCTO[categoria];
                   return (
                     <button

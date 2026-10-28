@@ -17,7 +17,7 @@ import {
   MoreHorizontal,
   ChevronDown,
 } from "lucide-react";
-import { localidades } from "@/data/data";
+import { localidades } from "@/lib/catalogos";
 import type { CommunityCategory, ProductType, Localidad } from "@/types";
 
 const CATEGORY_OPTIONS: { value: CommunityCategory | "Todas"; label: string; icon: typeof Leaf }[] = [
