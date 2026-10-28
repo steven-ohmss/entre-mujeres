@@ -23,15 +23,19 @@ npm run build
 - **Datos de comunidades, productos, eventos, noticias, marcadores del mapa y contacto**: todos están en `data/data.ts`. Los registros marcados con `isExample: true` son de ejemplo y deben reemplazarse por información real a medida que nuevas comunidades se sumen a la red.
 - **Tipos de datos**: si necesitas agregar campos nuevos, revisa primero `types/index.ts`.
 
-## Sin backend
+## De dónde salen los datos
 
-Este proyecto no tiene backend ni base de datos: todo el contenido vive en `data/data.ts`. Las solicitudes para aparecer en el mapa no las recibe el sitio: el bloque "Quiero aparecer en el mapa" (`components/JoinSection.tsx`) abre el formulario de Google del equipo, cuya URL está en `GOOGLE_FORM_URL` dentro de `config/site.ts`.
+**El sitio no consulta ninguna base de datos: todo el contenido que se ve vive en `data/data.ts`** y se compila dentro de las páginas estáticas.
+
+Existe además un proyecto de Supabase con el mismo contenido, pero **el sitio todavía no lee de ahí**. Las migraciones están en `supabase/migrations/` y el script que lo carga es `scripts/cargar-supabase.mjs` (`npm run supabase:cargar`). El paso a paso está en [`docs/supabase.md`](docs/supabase.md). Mientras esa conexión no se haga, `data/data.ts` sigue siendo la única fuente y hay que cargar Supabase de nuevo cada vez que cambie.
+
+Las solicitudes para aparecer en el mapa no las recibe el sitio: el bloque "Quiero aparecer en el mapa" (`components/JoinSection.tsx`) abre el formulario de Google del equipo, cuya URL está en `GOOGLE_FORM_URL` dentro de `config/site.ts`.
 
 ## Mapa de comunidades
 
 El mapa de la sección `#mapa` usa [Leaflet](https://leafletjs.com) con `react-leaflet`. La configuración (teselas, centro, zoom y límites) está en `lib/mapConfig.ts`.
 
-- **Marcadores**: están en `mapMarkers` dentro de `data/data.ts`, con `lat` y `lng` reales. Los de ejemplo tienen coordenadas aproximadas marcadas con `// TODO:`. Para comprobar que cada marcador cae dentro de su localidad: `node scripts/verificar-marcadores.mjs`.
+- **Marcadores**: están en `mapMarkers` dentro de `data/data.ts`, con `lat` y `lng` reales. Los de ejemplo tienen coordenadas aproximadas marcadas con `// TODO:`. Para comprobar que cada marcador cae dentro de su localidad: `node --import ./scripts/alias-arroba.mjs scripts/verificar-marcadores.mjs`.
 - **Localidades**: `public/data/localidades-bogota.geojson` se generó a partir del conjunto [Localidad. Bogotá D.C.](https://datosabiertos.bogota.gov.co/dataset/localidad-bogota-d-c) de Datos Abiertos Bogotá (licencia CC BY 4.0). Para regenerarlo, descarga el recurso GeoJSON (`loca.json`) en `referencias/localidades-bogota-esri.json` y ejecuta `node scripts/generar-localidades.mjs`.
 
 ### Teselas del mapa base

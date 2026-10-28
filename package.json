@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "supabase:cargar": "node --env-file=.env.local --import ./scripts/alias-arroba.mjs scripts/cargar-supabase.mjs",
+    "supabase:cargar:seco": "node --import ./scripts/alias-arroba.mjs scripts/cargar-supabase.mjs --dry-run"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
@@ -17,6 +19,7 @@
     "react-leaflet": "^5.0.0"
   },
   "devDependencies": {
+    "@supabase/supabase-js": "^2.118.0",
     "@tailwindcss/postcss": "^4",
     "@types/leaflet": "^1.9.22",
     "@types/node": "^20",

@@ -45,3 +45,6 @@ next-env.d.ts
 
 # worktrees de Claude Code (copias de trabajo locales, no son parte del proyecto)
 .claude/worktrees/
+
+# archivos temporales de la CLI de Supabase
+supabase/.temp/
