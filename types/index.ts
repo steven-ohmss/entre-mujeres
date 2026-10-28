@@ -53,7 +53,12 @@ export interface Community {
   /** Parte final de la URL de su perfil: /comunidades/<slug>. */
   slug: string;
   name: string;
-  category: CommunityCategory;
+  /**
+   * Se omite mientras la comunidad no confirme a qué categoría pertenece. Sin categoría
+   * no entra en ningún filtro concreto, pero sí sigue apareciendo con "Todas las
+   * categorías" y en el mapa, y su página muestra "Información próximamente".
+   */
+  category?: CommunityCategory;
   localidad: Localidad;
   ubicacion: string;
   shortDescription: string;
@@ -77,7 +82,8 @@ export interface Product {
   presentation: string;
   /** Características concretas: material, tamaño, presentación, duración… (4.4.3). */
   features: string[];
-  availability: Availability;
+  /** Se omite mientras la comunidad no la confirme; la interfaz no muestra la etiqueta. */
+  availability?: Availability;
   /**
    * Fotos propias de ESTE producto. Nunca se repiten entre productos distintos: si
    * todavía no hay foto real se deja el arreglo vacío y la interfaz muestra el

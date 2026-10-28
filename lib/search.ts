@@ -1,4 +1,5 @@
 import { communities, products, productTypes } from "@/data/data";
+import { esPendiente } from "@/config/site";
 import type { Product, ProductType } from "@/types";
 
 /**
@@ -189,8 +190,10 @@ export function buscar(consulta: string, porGrupo = 5): GrupoResultados[] {
         { texto: comunidad.name, peso: 1 },
         { texto: comunidad.ubicacion, peso: 0.6 },
         { texto: comunidad.localidad, peso: 0.6 },
-        { texto: comunidad.category, peso: 0.5 },
-        { texto: comunidad.shortDescription, peso: 0.3 },
+        { texto: comunidad.category ?? "", peso: 0.5 },
+        // Un texto todavía pendiente no entra al buscador: si no, buscar "pendiente"
+        // devolvería justo las comunidades a las que les falta la descripción.
+        { texto: esPendiente(comunidad.shortDescription) ? "" : comunidad.shortDescription, peso: 0.3 },
       ],
       termino
     );

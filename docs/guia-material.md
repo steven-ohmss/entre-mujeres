@@ -9,11 +9,15 @@ muestra sola.
 
 Al final hay una **lista de chequeo** para ir marcando lo que ya está listo.
 
+Los datos que faltan y que no son fotos (categorías, descripciones, disponibilidad,
+contacto, y la duda de si la Vereda Arrayanes y El Salero II son el mismo lugar) están
+en [`datos-pendientes.md`](./datos-pendientes.md).
+
 ---
 
 ## 0. Material provisional que hay que reemplazar
 
-> **Hay 8 archivos publicados que son de relleno, no del territorio.** Están conectados
+> **Hay 3 archivos publicados que son de relleno, no del territorio.** Están conectados
 > y se ven en la página, pero **ninguno es definitivo**. Esta es la lista para no
 > olvidarlos.
 
@@ -21,22 +25,17 @@ Al final hay una **lista de chequeo** para ir marcando lo que ya está listo.
 | --- | --- |
 | `public/video/inicio-portada.mp4` | Material de archivo. Técnicamente cumple (4,08 MB, 20 s, sin sonido), pero no muestra Bogotá ni Cundinamarca |
 | `public/images/inicio/portada.jpg` | Un camino de tierra entre cultivos al atardecer. No aparece ninguna mujer y el paisaje no es el andino del territorio |
-| `public/images/productos/conservas-de-la-huerta.jpg` | De archivo · 440 × 330 px, falta resolución |
 | `public/images/productos/mermelada-campesina.jpg` | De archivo · 451 × 338 px, falta resolución |
-| `public/images/productos/bolsos-tejidos-a-mano.jpg` | De archivo · 588 × 440 px, falta resolución |
-| `public/images/productos/ruanas-de-lana.jpg` | De archivo · 588 × 440 px, falta resolución |
-| `public/images/productos/recorrido-turismo-rural-sumapaz.jpg` | Se ve auténtica del páramo, pero 471 × 353 px, falta resolución |
-| `public/images/productos/taller-formacion-emprendimiento.jpg` | De archivo · 588 × 440 px, falta resolución |
 
 **Cómo se reemplazan: solo hay que sobrescribir el archivo, con el mismo nombre y en la
 misma carpeta.** No hay que avisar a nadie ni tocar el código. Por eso los nombres
 importan tanto.
 
-Las seis fotos de producto están muy por debajo del ancho que pide esta guía
-(1600 px). En la página del producto la foto se muestra a unos 720 px de ancho, que en
-una pantalla moderna son 1440 px reales: una imagen de 588 px se estira dos veces y
-media y se ve borrosa. Como pesan entre 44 y 63 KB, hay muchísimo margen para subirlas
-más grandes sin acercarse al límite de 250 KB.
+La foto de la mermelada está muy por debajo del ancho que pide esta guía (1600 px). En
+la página del producto la foto se muestra a unos 720 px de ancho, que en una pantalla
+moderna son 1440 px reales: una imagen de 451 px se estira tres veces y se ve borrosa.
+Como pesa unos 50 KB, hay muchísimo margen para subirla más grande sin acercarse al
+límite de 250 KB.
 
 Cuando se reemplace la portada o el video, hay que avisar: **la frase que describe la
 portada para los lectores de pantalla está escrita a la medida de la foto actual** y hay
@@ -60,7 +59,7 @@ Ejemplos de cómo se traduce un nombre real:
 | --- | --- |
 | Mermelada campesina | `mermelada-campesina.jpg` |
 | Raíces de Sumapaz | `raices-de-sumapaz.jpg` |
-| Jornada de acompañamiento psicosocial | `jornada-acompanamiento-psicosocial.jpg` |
+| Yogurt artesanal de guanábana | `yogurt-artesanal-de-guanabana.jpg` |
 
 **Buena noticia: esos nombres ya existen.** Cada producto y cada comunidad ya tiene su
 nombre corto dentro de la página. Por ejemplo, la comunidad Raíces de Sumapaz vive en
@@ -73,7 +72,7 @@ que inventar nada: en las tablas de abajo está escrito uno por uno.
 - `Foto 1.jpg`, `IMG_20260312.jpg`, `WhatsApp Image 2026-03-12 at 10.14.jpg`
 - `Mermelada Campesina.JPG` (mayúsculas y espacio)
 - `raíces_de_sumapaz.jpg` (tilde y guion bajo)
-- `producto-1.jpg`, `comunidad-2.jpg` (no dicen de qué son)
+- `producto-1.jpg`, `comunidad-1.jpg` (no dicen de qué son)
 
 ---
 
@@ -97,9 +96,9 @@ app/
                      → favicon y la imagen que se ve al compartir el enlace
 ```
 
-Hoy todas las fotos están sueltas en `public/images/` con nombres genéricos
-(`producto-1.jpg`, `comunidad-2.jpg`). La propuesta de cómo quedaría cada una está en
-la sección 10.
+Hoy varias fotos están sueltas en `public/images/` con nombres genéricos
+(`comunidad-1.jpg`, `evento-2.jpg`). La propuesta de cómo quedaría cada una está en la
+sección 10.
 
 ---
 
@@ -184,7 +183,7 @@ reduzcan las animaciones.
 
 ## 5. Comunidades
 
-Se necesitan **6 fotos, una por comunidad**. Cada foto aparece en tres lugares: en la
+Se necesitan **4 fotos, una por comunidad**. Cada foto aparece en tres lugares: en la
 tarjeta de la comunidad, en la ventanita que se abre al tocar su punto en el mapa, y
 grande en la parte de arriba de su página propia.
 
@@ -197,26 +196,28 @@ porque es lo que cuenta la historia.
 
 | Comunidad | Nombre del archivo | Qué debe mostrar |
 | --- | --- | --- |
-| Red Mujer | `public/images/comunidades/red-mujer.jpg` | Mujeres de Red Mujer reunidas en la vereda Arrayanes, Usme. Es la más importante de las seis: también se usa grande en la sección "Nosotras" |
-| Manos de Usme | `public/images/comunidades/manos-de-usme.jpg` | Las productoras preparando conservas y encurtidos, o en la huerta de donde salen los frutos |
-| Telar y Tierra | `public/images/comunidades/telar-y-tierra.jpg` | Las tejedoras trabajando en el telar, con las fibras y las piezas a la vista |
+| Red Mujer | `public/images/comunidades/red-mujer.jpg` | Mujeres de Red Mujer reunidas en la Granja Agroecológica El Salero II, Usme. Es la más importante de las cuatro: también se usa grande en la sección "Nosotras" |
+| Manos de Usme | `public/images/comunidades/manos-de-usme.jpg` | Las productoras preparando conservas y encurtidos, o en la huerta de donde salen los frutos. Están en el Parque La Fiscala, Usme |
 | Raíces de Sumapaz | `public/images/comunidades/raices-de-sumapaz.jpg` | Mujeres campesinas en el páramo de Sumapaz, con el cultivo o el paisaje del páramo |
-| Semillas de Bosa | `public/images/comunidades/semillas-de-bosa.jpg` | Un encuentro o taller del colectivo con mujeres participando. Al ser acompañamiento psicosocial, cuidar que nadie quede identificable sin haberlo autorizado |
-| Sabores de la Concordia | `public/images/comunidades/sabores-de-la-concordia.jpg` | Las vendedoras en su puesto de la plaza de mercado de La Concordia, con la comida tradicional |
+| Granja La Dorada | `public/images/comunidades/granja-la-dorada.jpg` | Las mujeres de la granja en la Vereda El Hato, Usme, trabajando. De esta comunidad todavía no sabemos a qué se dedica, así que **conviene esperar a que nos cuenten** antes de pedir la foto: hoy su página muestra "Información próximamente" |
 
 ---
 
 ## 6. Productos
 
-Se necesitan **6 fotos, una por producto como mínimo**. Aparecen en la tarjeta del
+Se necesitan **7 fotos, una por producto como mínimo**. Aparecen en la tarjeta del
 producto, en su página propia y como miniatura en los resultados del buscador.
 
 > **Regla que no se puede romper: cada producto lleva SU propia foto.**
 >
-> Ninguna foto se repite entre dos productos distintos. Si alguien busca "miel", tiene
-> que ver esa miel y no una ruana. Hoy la página tiene ese problema, y por eso casi
-> todos los productos muestran el cartel "Foto próximamente": es mejor eso que mostrar
-> un producto que no es.
+> Ninguna foto se repite entre dos productos distintos. Si alguien busca "queso", tiene
+> que ver ese queso y no un yogurt. Mientras falte la foto, el producto muestra el
+> cartel "Foto próximamente": es mejor eso que mostrar un producto que no es.
+
+> **Los seis productos nuevos de Red Mujer no tienen ninguna foto todavía.** Son los
+> cinco yogures y el queso campesino: hoy los seis salen con el cartel "Foto
+> próximamente". Es lo más urgente de esta guía, porque son los únicos productos
+> propios de la red que están publicados.
 
 **Qué debe mostrar una foto de producto.** El producto solo, bien iluminado, sobre un
 fondo sencillo que no distraiga: una mesa de madera, una tela lisa. Luz de día, nunca
@@ -227,12 +228,19 @@ de referencia. Sin logos ni teléfonos de otras marcas a la vista.
 
 | Producto | Nombre del archivo | Qué debe mostrar |
 | --- | --- | --- |
-| Conservas de la huerta | `public/images/productos/conservas-de-la-huerta.jpg` | Los frascos de vidrio de conservas y encurtidos, de 250 g y 500 g, con la etiqueta visible |
 | Mermelada campesina | `public/images/productos/mermelada-campesina.jpg` | El frasco de vidrio de 300 g de mermelada, si se puede con la fruta fresca al lado |
-| Bolsos tejidos a mano | `public/images/productos/bolsos-tejidos-a-mano.jpg` | Uno o dos bolsos tejidos, donde se vea la textura de la fibra natural y el diseño |
-| Ruanas de lana | `public/images/productos/ruanas-de-lana.jpg` | Una ruana de lana virgen, puesta o colgada de modo que se vea completa |
-| Recorrido de turismo rural en Sumapaz | `public/images/productos/recorrido-turismo-rural-sumapaz.jpg` | Un grupo en el sendero del páramo con la guía explicando. Aquí el "producto" es la experiencia, así que la foto muestra el recorrido |
-| Taller de formación en emprendimiento | `public/images/productos/taller-formacion-emprendimiento.jpg` | El taller en marcha: mujeres trabajando en grupo, la facilitadora, el material |
+| Yogurt artesanal de fresa | `public/images/productos/yogurt-artesanal-de-fresa.jpg` | El envase de 1 litro, con fresas frescas al lado para que se entienda el sabor de un golpe |
+| Yogurt artesanal de mora | `public/images/productos/yogurt-artesanal-de-mora.jpg` | El envase de 1 litro, con moras frescas al lado |
+| Yogurt artesanal de guanábana | `public/images/productos/yogurt-artesanal-de-guanabana.jpg` | El envase de 1 litro, con la guanábana al lado (entera o partida) |
+| Yogurt artesanal de frutos rojos | `public/images/productos/yogurt-artesanal-de-frutos-rojos.jpg` | El envase de 1 litro, con arándanos, fresas y moras al lado |
+| Yogurt griego | `public/images/productos/yogurt-griego.jpg` | El envase de 1 litro. Si se puede, una cucharada que muestre lo cremoso y espeso, que es lo que lo distingue de los otros |
+| Queso campesino | `public/images/productos/queso-campesino.jpg` | El queso de 500 g entero y, si se puede, una tajada al lado para que se vea la textura suave y firme |
+
+> **Ojo con los cinco yogures: los envases se parecen entre sí.** Si las cinco fotos
+> salen iguales, en la lista de productos no se va a poder distinguir un sabor de otro.
+> Por eso cada una pide la fruta al lado: es lo que diferencia una foto de la
+> siguiente. Vale la pena hacerlas todas en la misma sesión, con la misma luz y el
+> mismo fondo, para que se vean como una familia.
 
 ### Si un producto tiene varias fotos
 
@@ -248,23 +256,18 @@ mermelada-campesina-3.jpg
 
 ## 7. Eventos del calendario
 
-Se necesitan **6 fotos, una por evento**. Aparecen en el banner deslizable del inicio,
+Se necesitan **2 fotos, una por evento**. Aparecen en el banner deslizable del inicio,
 como miniatura en la lista del calendario y grande al abrir el evento.
 
-> Hoy estos 6 eventos comparten solo 3 fotos, y esas mismas 3 se usan además en las
-> noticias: **3 fotos haciendo 9 trabajos.** Por eso se repiten imágenes al bajar por
-> la página.
+> Hoy estos 2 eventos usan 2 fotos de archivo, y una de ellas se usa además en la
+> noticia del origen de Red Mujer. Por eso se repite una imagen al bajar por la página.
 
 **Todas:** 1200 × 675 px (16:9) · JPG · **máximo 200 KB**
 
 | Evento | Nombre del archivo | Qué debe mostrar |
 | --- | --- | --- |
 | Feria Campesina de Usme | `public/images/eventos/feria-campesina-usme.jpg` | Los puestos de la feria con productos y gente comprando |
-| Encuentro de Mujeres Rurales | `public/images/eventos/encuentro-mujeres-rurales.jpg` | El grupo reunido en el encuentro, en círculo o en plenaria |
-| Huertas para la vida | `public/images/eventos/huertas-para-la-vida.jpg` | El taller de huerta: manos en la tierra, semillas, herramientas |
-| Mercado de Saberes y Sabores | `public/images/eventos/mercado-saberes-sabores.jpg` | El mercado montado, con la comida y los productos campesinos |
 | Minga comunitaria en la vereda Arrayanes | `public/images/eventos/minga-comunitaria-arrayanes.jpg` | La minga: la comunidad trabajando junta en la vereda |
-| Jornada de acompañamiento psicosocial | `public/images/eventos/jornada-acompanamiento-psicosocial.jpg` | La jornada de manera respetuosa y no identificable: manos, un círculo de sillas, un plano general de espaldas |
 
 Si de un evento todavía no hay foto porque aún no ha pasado, sirve una foto de la
 edición anterior o del lugar donde se va a hacer.
@@ -273,15 +276,13 @@ edición anterior o del lugar donde se va a hacer.
 
 ## 8. Noticias e historias
 
-Se necesitan **3 fotos**, una por publicación.
+Se necesita **1 foto**, una por publicación.
 
 **Todas:** 1200 × 675 px (16:9) · JPG · **máximo 200 KB**
 
 | Publicación | Nombre del archivo | Qué debe mostrar |
 | --- | --- | --- |
 | El origen de Red Mujer en la vereda Arrayanes | `public/images/noticias/historia-red-mujer.jpg` | Las fundadoras, o el lugar donde empezó todo en la vereda Arrayanes. Si hay una foto de archivo de los primeros años, mejor |
-| Nuevas comunidades se suman a la red | `public/images/noticias/noticia-nuevas-comunidades.jpg` | El momento en que las nuevas comunidades se integran: una reunión, una firma, un grupo grande |
-| Taller de tejido reunió a más de 20 mujeres | `public/images/noticias/actividad-reciente-taller-tejido.jpg` | El taller de tejido lleno, con las participantes y sus trabajos |
 
 **Para cada noticia nueva que se publique de aquí en adelante** hace falta su foto, con
 el nombre armado igual: en minúsculas, sin tildes, con guiones, y que describa de qué
@@ -354,7 +355,7 @@ pobre.
 
 ### Ya resuelto
 
-La pantalla de bienvenida y los seis productos ya tienen su archivo en la carpeta
+La pantalla de bienvenida y la mermelada campesina ya tienen su archivo en la carpeta
 correcta y con el nombre correcto, y están conectados a la página. Siguen siendo
 provisionales: la lista está en la sección 0.
 
@@ -366,6 +367,21 @@ Se borraron tres fotos que no se podían publicar:
 | `producto-3.jpg` | Materas biodegradables, que tampoco son un producto de la red, y la foto traía texto de publicidad incrustado ("Material natural", "Biodegradable") |
 | `producto-4.jpg` | Yogures con la marca, la página web y el teléfono de otra empresa (BBG) impresos en la etiqueta. No es de la red y no se debía publicar |
 
+Y se borraron estas, porque el producto, la comunidad o el evento al que acompañaban ya
+no está en la página:
+
+| Archivo borrado | Por qué |
+| --- | --- |
+| `productos/conservas-de-la-huerta.jpg` | El producto salió de la página |
+| `productos/bolsos-tejidos-a-mano.jpg` | El producto salió de la página |
+| `productos/ruanas-de-lana.jpg` | El producto salió de la página |
+| `productos/recorrido-turismo-rural-sumapaz.jpg` | El producto salió de la página |
+| `productos/taller-formacion-emprendimiento.jpg` | El producto salió de la página |
+| `producto-1.jpg` | Era la foto de las ruanas antes de mudarse a su carpeta |
+| `comunidad-2.jpg` | Era de Telar y Tierra, que salió de la página |
+| `comunidad-4.jpg` | Era de Semillas de Bosa, que salió de la página |
+| `evento-3.jpg` | Acompañaba dos eventos y una noticia que salieron de la página |
+
 ### Pendiente de renombrar
 
 Estas fotos siguen sueltas en `public/images/` con nombres genéricos. Son de archivo,
@@ -376,19 +392,16 @@ trabajo dos veces:
 | --- | --- | --- |
 | `red-mujer.jpg` | `comunidades/red-mujer.jpg` | Reemplazar por una foto real de Red Mujer |
 | `comunidad-1.jpg` | `comunidades/manos-de-usme.jpg` | Reemplazar por foto real |
-| `comunidad-2.jpg` | `comunidades/telar-y-tierra.jpg` | Reemplazar por foto real |
 | `comunidad-3.jpg` | `comunidades/raices-de-sumapaz.jpg` | Reemplazar por foto real |
-| `comunidad-4.jpg` | `comunidades/semillas-de-bosa.jpg` | Reemplazar por foto real |
-| `evento-1.jpg` | `eventos/feria-campesina-usme.jpg` | Hoy se usa en 2 eventos y 1 noticia a la vez |
-| `evento-2.jpg` | `eventos/encuentro-mujeres-rurales.jpg` | Hoy se usa en 2 eventos y 1 noticia a la vez |
-| `evento-3.jpg` | `eventos/huertas-para-la-vida.jpg` | Hoy se usa en 2 eventos y 1 noticia a la vez |
+| `evento-1.jpg` | `eventos/feria-campesina-usme.jpg` | Hoy se usa en 1 evento y 1 noticia a la vez |
+| `evento-2.jpg` | `eventos/minga-comunitaria-arrayanes.jpg` | Reemplazar por foto real |
 
-Dos archivos quedaron sin uso y se borrarán cuando llegue su reemplazo:
-`hero-mujeres.jpg`, que era la portada anterior, y `producto-1.jpg`, que era la foto de
-las ruanas antes de mudarse a su carpeta.
+Un archivo quedó sin uso y se borrará cuando llegue su reemplazo: `hero-mujeres.jpg`,
+que era la portada anterior.
 
-Faltan por completo, sin nada que renombrar: 3 eventos, las 3 noticias, los logos, el
-favicon y la imagen para compartir.
+Faltan por completo, sin nada que renombrar: los 6 productos de Red Mujer (los cinco
+yogures y el queso), la foto de Granja La Dorada, la noticia, los logos, el favicon y
+la imagen para compartir.
 
 ---
 
@@ -397,9 +410,8 @@ favicon y la imagen para compartir.
 ### 11.1 Permiso de las personas que salen
 
 Las fotos van a una página pública en internet. **Antes de entregar una foto donde se
-reconozca a alguien, hay que tener su permiso.** Es especialmente delicado en las fotos
-de Semillas de Bosa y de la jornada de acompañamiento psicosocial, por el tipo de
-trabajo que hacen.
+reconozca a alguien, hay que tener su permiso.** Hay que pedirlo siempre, incluso para
+las fotos de grupo en la huerta o en la feria.
 
 Cuando no haya permiso pero la foto sea necesaria, sirve fotografiar manos, el trabajo,
 el producto, o a las personas de espaldas o en plano general.
@@ -434,34 +446,27 @@ pendientes de reemplazo (sección 0).
 
 - [ ] `comunidades/red-mujer.jpg`
 - [ ] `comunidades/manos-de-usme.jpg`
-- [ ] `comunidades/telar-y-tierra.jpg`
 - [ ] `comunidades/raices-de-sumapaz.jpg`
-- [ ] `comunidades/semillas-de-bosa.jpg`
-- [ ] `comunidades/sabores-de-la-concordia.jpg`
+- [ ] `comunidades/granja-la-dorada.jpg` — esperar a que nos cuenten a qué se dedican
 
 ### Productos (1600 × 1200, máx. 250 KB cada una)
 
-- [x] 🟡 `productos/conservas-de-la-huerta.jpg` — 440 × 330, falta resolución
 - [x] 🟡 `productos/mermelada-campesina.jpg` — 451 × 338, falta resolución
-- [x] 🟡 `productos/bolsos-tejidos-a-mano.jpg` — 588 × 440, falta resolución
-- [x] 🟡 `productos/ruanas-de-lana.jpg` — 588 × 440, falta resolución
-- [x] 🟡 `productos/recorrido-turismo-rural-sumapaz.jpg` — 471 × 353, falta resolución
-- [x] 🟡 `productos/taller-formacion-emprendimiento.jpg` — 588 × 440, falta resolución
+- [ ] `productos/yogurt-artesanal-de-fresa.jpg`
+- [ ] `productos/yogurt-artesanal-de-mora.jpg`
+- [ ] `productos/yogurt-artesanal-de-guanabana.jpg`
+- [ ] `productos/yogurt-artesanal-de-frutos-rojos.jpg`
+- [ ] `productos/yogurt-griego.jpg`
+- [ ] `productos/queso-campesino.jpg`
 
 ### Eventos (1200 × 675, máx. 200 KB cada una)
 
 - [ ] `eventos/feria-campesina-usme.jpg`
-- [ ] `eventos/encuentro-mujeres-rurales.jpg`
-- [ ] `eventos/huertas-para-la-vida.jpg`
-- [ ] `eventos/mercado-saberes-sabores.jpg`
 - [ ] `eventos/minga-comunitaria-arrayanes.jpg`
-- [ ] `eventos/jornada-acompanamiento-psicosocial.jpg`
 
 ### Noticias (1200 × 675, máx. 200 KB cada una)
 
 - [ ] `noticias/historia-red-mujer.jpg`
-- [ ] `noticias/noticia-nuevas-comunidades.jpg`
-- [ ] `noticias/actividad-reciente-taller-tejido.jpg`
 
 ### Logos e iconos
 
@@ -493,14 +498,14 @@ pendientes de reemplazo (sección 0).
 | --- | --- | --- |
 | Video de bienvenida | 1 | Publicado, **provisional** |
 | Foto de bienvenida | 1 | Publicada, **provisional** |
-| Productos | 6 | Publicadas, **provisionales** y en baja resolución |
-| Comunidades | 6 | Faltan. Hay 5 de archivo sin renombrar |
-| Eventos | 6 | Faltan. Hay 3 de archivo, repetidas entre sí |
-| Noticias | 3 | Faltan |
+| Productos | 7 | Falta 1 por entregar y 6 faltan por completo (los 5 yogures y el queso). La mermelada está publicada, **provisional** y en baja resolución |
+| Comunidades | 4 | Faltan. Hay 3 de archivo sin renombrar |
+| Eventos | 2 | Faltan. Hay 2 de archivo, una compartida con la noticia |
+| Noticias | 1 | Falta |
 | Logos | 3 | Faltan |
 | Favicon e iconos | 3 | Falta. Es el de la plantilla |
 | Imagen para compartir | 1 | Falta |
-| **Total** | **30 archivos** | **8 publicados (provisionales), 22 por entregar** |
+| **Total** | **23 archivos** | **3 publicados (provisionales), 20 por entregar** |
 
 Mientras falten, la página **no se ve rota**: donde no hay foto aparece un recuadro
 discreto con el icono de la categoría y el texto "Foto próximamente". Se pueden ir

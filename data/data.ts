@@ -73,9 +73,14 @@ export const communities: Community[] = [
     name: "Red Mujer",
     category: "Comunidades rurales",
     localidad: "Usme",
-    ubicacion: "Usme – Vereda Arrayanes",
+    ubicacion: "Granja Agroecológica El Salero II",
     shortDescription:
       "Organización que fomenta la responsabilidad social empresarial y la igualdad de derechos de mujeres, jóvenes, niños y adultos mayores en el territorio.",
+    // PENDIENTE DE CONFIRMAR: estos dos textos (y el contacto general de config/site.ts)
+    // hablan de la Vereda Arrayanes, mientras que la ubicación de arriba y el punto del
+    // mapa son la Granja Agroecológica El Salero II. Falta que el equipo confirme si son
+    // el mismo lugar llamado de dos maneras o si son dos sitios distintos, así que el
+    // texto se deja tal como lo escribió Red Mujer (ver docs/datos-pendientes.md).
     whoWeAre:
       "Somos una organización cuyo objetivo es fomentar con Responsabilidad Social Empresarial e Igualdad de derechos de mujeres, jóvenes, niños y adultos mayores, generando espacios para el fortalecimiento de la productividad de la región.",
     whatWeDo:
@@ -95,7 +100,7 @@ export const communities: Community[] = [
     name: "Manos de Usme",
     category: "Productoras",
     localidad: "Usme",
-    ubicacion: "Usme – Barrio La Fiscala",
+    ubicacion: "Parque La Fiscala, Usme",
     shortDescription:
       "Grupo de mujeres productoras de conservas y encurtidos artesanales a partir de cultivos de la zona rural de Usme.",
     whoWeAre:
@@ -103,28 +108,6 @@ export const communities: Community[] = [
     whatWeDo:
       "Producimos conservas, encurtidos y mermeladas artesanales, y ofrecemos talleres de transformación de alimentos a otras mujeres del territorio.",
     image: "/images/comunidad-1.jpg",
-    contact: {
-      whatsapp: PENDIENTE,
-      phone: PENDIENTE,
-      email: PENDIENTE,
-      social: PENDIENTE,
-    },
-    isExample: true,
-  },
-  {
-    id: "telar-y-tierra",
-    slug: "telar-y-tierra",
-    name: "Telar y Tierra",
-    category: "Emprendimientos",
-    localidad: "Ciudad Bolívar",
-    ubicacion: "Ciudad Bolívar – Vereda Quiba",
-    shortDescription:
-      "Emprendimiento textil de mujeres que elaboran prendas y accesorios tejidos a mano con fibras naturales.",
-    whoWeAre:
-      "Somos un colectivo de mujeres tejedoras que aprendimos el oficio de nuestras madres y abuelas.",
-    whatWeDo:
-      "Diseñamos y confeccionamos prendas, bolsos y accesorios tejidos a mano, y dictamos talleres de tejido para jóvenes del territorio.",
-    image: "/images/comunidad-2.jpg",
     contact: {
       whatsapp: PENDIENTE,
       phone: PENDIENTE,
@@ -156,44 +139,19 @@ export const communities: Community[] = [
     isExample: true,
   },
   {
-    id: "semillas-de-bosa",
-    slug: "semillas-de-bosa",
-    name: "Semillas de Bosa",
-    category: "Servicios de apoyo",
-    localidad: "Bosa",
-    ubicacion: "Bosa – Barrio San Bernardino",
-    shortDescription:
-      "Colectivo que ofrece acompañamiento psicosocial y formación en emprendimiento a mujeres cabeza de hogar.",
-    whoWeAre:
-      "Somos un equipo de mujeres profesionales y lideresas comunitarias comprometidas con el bienestar de otras mujeres.",
-    whatWeDo:
-      "Brindamos acompañamiento psicosocial, formación en emprendimiento y espacios de escucha para mujeres cabeza de hogar.",
-    image: "/images/comunidad-4.jpg",
-    contact: {
-      whatsapp: PENDIENTE,
-      phone: PENDIENTE,
-      email: PENDIENTE,
-      social: PENDIENTE,
-    },
-    isExample: true,
-  },
-  {
-    id: "sabores-de-la-concordia",
-    slug: "sabores-de-la-concordia",
-    name: "Sabores de la Concordia",
-    category: "Productoras",
-    localidad: "Santa Fe",
-    ubicacion: "Santa Fe – La Concordia",
-    shortDescription:
-      "Red de vendedoras de comida tradicional y productos campesinos en la plaza de mercado de La Concordia.",
-    whoWeAre:
-      "Somos vendedoras y cocineras que llevamos años ofreciendo sabores tradicionales del campo en la plaza de mercado.",
-    whatWeDo:
-      "Preparamos y vendemos comida tradicional, y participamos en ferias y mercados campesinos por toda la ciudad.",
-    // La foto que estaba aquí era de yogures con la marca y el teléfono de otra empresa
-    // impresos en la etiqueta: no era de esta comunidad y no se debía publicar, así que
-    // se borró del repositorio. Vacío = la interfaz muestra "Foto próximamente", a la
-    // espera de la foto real (ver docs/guia-material.md).
+    // De esta comunidad solo están confirmados el nombre y el lugar. La categoría, la
+    // descripción, la foto y el contacto están PENDIENTES y no se inventan: `category`
+    // se omite a propósito, así que no entra en ningún filtro concreto pero sí aparece
+    // con "Todas las categorías" y en el mapa, y su página muestra
+    // "Información próximamente" donde todavía no hay texto (ver docs/datos-pendientes.md).
+    id: "granja-la-dorada",
+    slug: "granja-la-dorada",
+    name: "Granja La Dorada",
+    localidad: "Usme",
+    ubicacion: "Vereda El Hato, Usme",
+    shortDescription: PENDIENTE,
+    whoWeAre: PENDIENTE,
+    whatWeDo: PENDIENTE,
     image: "",
     contact: {
       whatsapp: PENDIENTE,
@@ -201,7 +159,7 @@ export const communities: Community[] = [
       email: PENDIENTE,
       social: PENDIENTE,
     },
-    isExample: true,
+    isExample: false,
   },
 ];
 
@@ -213,38 +171,23 @@ export const communities: Community[] = [
  * reemplazarlo basta con sobrescribir el archivo en public/images/productos/ sin tocar
  * este dato.
  *
- * PROVISIONAL: las seis fotos de abajo son material de archivo entregado como relleno,
- * no fotos de las comunidades, y están a baja resolución (entre 440 y 588 px de ancho,
- * frente a los 1600 px que pide la guía), así que se ven blandas en pantallas grandes.
- * Se reemplazarán por las fotos reales con el mismo nombre de archivo. La lista completa
- * de lo que falta está en docs/guia-material.md.
- *
  * Si un producto se queda sin foto, `images: []` no es un error: la interfaz muestra el
  * placeholder con el icono de la categoría y "Foto próximamente", que es preferible a
- * enseñar un producto que no es.
+ * enseñar un producto que no es. Los seis productos de Red Mujer (los cinco yogures y el
+ * queso) están así, a la espera de la foto real. La lista de lo que falta está en
+ * docs/guia-material.md.
  *
- * `availability` y `features` de los registros con isExample: true son valores de ejemplo
- * tomados de la descripción y la presentación; hay que confirmarlos con cada comunidad.
+ * PROVISIONAL: la foto de la mermelada campesina es material de archivo, no de la
+ * comunidad, y está a baja resolución (451 px de ancho frente a los 1600 px que pide la
+ * guía), así que se ve blanda en pantallas grandes. Se reemplazará por la foto real con
+ * el mismo nombre de archivo.
+ *
+ * `availability` se omite mientras la comunidad no la confirme: la etiqueta simplemente
+ * no se muestra, en vez de afirmar una disponibilidad que nadie verificó. La
+ * `availability` y las `features` de los registros con isExample: true son valores de
+ * ejemplo tomados de la descripción y la presentación; hay que confirmarlos.
  */
 export const products: Product[] = [
-  {
-    id: "conservas-de-la-huerta",
-    slug: "conservas-de-la-huerta",
-    name: "Conservas de la huerta",
-    type: "Gastronomía",
-    communityId: "manos-de-usme",
-    description:
-      "Conservas artesanales de frutas y verduras cultivadas en huertas familiares de la zona rural de Usme.",
-    presentation: "Frascos de vidrio de 250 g y 500 g.",
-    features: [
-      "Frascos de vidrio",
-      "Presentaciones de 250 g y 500 g",
-      "Frutas y verduras de huertas familiares de Usme",
-    ],
-    availability: "Disponible",
-    images: ["/images/productos/conservas-de-la-huerta.jpg"],
-    isExample: true,
-  },
   {
     id: "mermelada-campesina",
     slug: "mermelada-campesina",
@@ -264,72 +207,82 @@ export const products: Product[] = [
     isExample: true,
   },
   {
-    id: "bolsos-tejidos-a-mano",
-    slug: "bolsos-tejidos-a-mano",
-    name: "Bolsos tejidos a mano",
-    type: "Ropa y textiles",
-    communityId: "telar-y-tierra",
+    id: "yogurt-artesanal-de-fresa",
+    slug: "yogurt-artesanal-de-fresa",
+    name: "Yogurt artesanal de fresa",
+    type: "Gastronomía",
+    communityId: "red-mujer",
     description:
-      "Bolsos y accesorios tejidos a mano con fibras naturales, en diseños y colores inspirados en el territorio.",
-    presentation: "Piezas únicas, tejidas por encargo.",
-    features: [
-      "Tejido a mano",
-      "Fibras naturales",
-      "Piezas únicas, diseños inspirados en el territorio",
-    ],
-    availability: "Por encargo",
-    images: ["/images/productos/bolsos-tejidos-a-mano.jpg"],
-    isExample: true,
+      "Yogurt 100% artesanal de fresa, cremoso y naturalmente delicioso. Elaborado con 100% leche sin agua ni conservantes añadidos.",
+    presentation: "1 litro.",
+    features: [],
+    images: [],
+    isExample: false,
   },
   {
-    id: "ruanas-de-lana",
-    slug: "ruanas-de-lana",
-    name: "Ruanas de lana",
-    type: "Ropa y textiles",
-    communityId: "telar-y-tierra",
-    description: "Ruanas tejidas en lana virgen, ideales para el clima frío de la sabana y el páramo.",
-    presentation: "Tallas única y ajustable.",
-    features: ["Lana virgen", "Tejido a mano", "Talla única y ajustable"],
-    availability: "Por encargo",
-    images: ["/images/productos/ruanas-de-lana.jpg"],
-    isExample: true,
+    id: "yogurt-artesanal-de-mora",
+    slug: "yogurt-artesanal-de-mora",
+    name: "Yogurt artesanal de mora",
+    type: "Gastronomía",
+    communityId: "red-mujer",
+    description:
+      "Yogurt 100% artesanal de mora, cremoso y naturalmente delicioso. Elaborado con 100% leche sin agua ni conservantes añadidos.",
+    presentation: "1 litro.",
+    features: [],
+    images: [],
+    isExample: false,
   },
   {
-    id: "recorrido-turismo-rural-sumapaz",
-    slug: "recorrido-turismo-rural-sumapaz",
-    name: "Recorrido de turismo rural en Sumapaz",
-    type: "Turismo rural",
-    communityId: "raices-de-sumapaz",
+    id: "yogurt-artesanal-de-guanabana",
+    slug: "yogurt-artesanal-de-guanabana",
+    name: "Yogurt artesanal de guanábana",
+    type: "Gastronomía",
+    communityId: "red-mujer",
     description:
-      "Recorrido guiado por senderos del páramo de Sumapaz, con explicación sobre cultivos sostenibles y cuidado del agua.",
-    presentation: "Grupos de hasta 15 personas, jornada de medio día.",
-    features: [
-      "Jornada de medio día",
-      "Grupos de hasta 15 personas",
-      "Recorrido guiado por senderos del páramo",
-      "Incluye explicación sobre cultivos sostenibles y cuidado del agua",
-    ],
-    availability: "Por encargo",
-    images: ["/images/productos/recorrido-turismo-rural-sumapaz.jpg"],
-    isExample: true,
+      "Yogurt 100% artesanal de guanábana, cremoso y naturalmente delicioso. Elaborado con 100% leche sin agua ni conservantes añadidos.",
+    presentation: "1 litro.",
+    features: [],
+    images: [],
+    isExample: false,
   },
   {
-    id: "taller-formacion-emprendimiento",
-    slug: "taller-formacion-emprendimiento",
-    name: "Taller de formación en emprendimiento",
-    type: "Educación y formación",
-    communityId: "semillas-de-bosa",
+    id: "yogurt-artesanal-de-frutos-rojos",
+    slug: "yogurt-artesanal-de-frutos-rojos",
+    name: "Yogurt artesanal de frutos rojos",
+    type: "Gastronomía",
+    communityId: "red-mujer",
     description:
-      "Taller práctico dirigido a mujeres que quieren iniciar o fortalecer su propio emprendimiento.",
-    presentation: "Sesiones grupales de 3 horas.",
-    features: [
-      "Sesiones grupales de 3 horas",
-      "Taller práctico",
-      "Dirigido a mujeres que inician o fortalecen su emprendimiento",
-    ],
-    availability: "Por encargo",
-    images: ["/images/productos/taller-formacion-emprendimiento.jpg"],
-    isExample: true,
+      "Yogurt 100% artesanal de frutos rojos, con arándanos, fresa y mora, cremoso y naturalmente delicioso. Elaborado con 100% leche sin agua ni conservantes añadidos.",
+    presentation: "1 litro.",
+    features: [],
+    images: [],
+    isExample: false,
+  },
+  {
+    id: "yogurt-griego",
+    slug: "yogurt-griego",
+    name: "Yogurt griego",
+    type: "Gastronomía",
+    communityId: "red-mujer",
+    description:
+      "Yogurt griego 100% artesanal, cremoso y naturalmente delicioso. Elaborado con 100% leche sin agua ni conservantes añadidos.",
+    presentation: "1 litro.",
+    features: [],
+    images: [],
+    isExample: false,
+  },
+  {
+    id: "queso-campesino",
+    slug: "queso-campesino",
+    name: "Queso campesino",
+    type: "Gastronomía",
+    communityId: "red-mujer",
+    description:
+      "El auténtico sabor del campo en cada bocado. Nuestro queso campesino natural, elaborado artesanalmente con leche fresca, ofrece una textura suave y firme, con el toque justo de sal. Fresco, versátil e ideal para disfrutar en cualquier momento del día.",
+    presentation: "500 gramos.",
+    features: [],
+    images: [],
+    isExample: false,
   },
 ];
 
@@ -350,52 +303,6 @@ export const calendarEvents: CalendarEvent[] = [
     isExample: true,
   },
   {
-    id: "encuentro-mujeres-rurales",
-    title: "Encuentro de Mujeres Rurales",
-    date: "2026-10-17",
-    startTime: "2:00 p.m.",
-    endTime: "5:00 p.m.",
-    location: "Casa de la Cultura, Suba",
-    localidad: "Suba",
-    type: "Reunión",
-    organizer: "Otras comunidades",
-    communityId: "semillas-de-bosa",
-    description: "Un espacio para compartir experiencias, fortalecer redes y construir juntas.",
-    image: "/images/evento-2.jpg",
-    isExample: true,
-  },
-  {
-    id: "huertas-para-la-vida",
-    title: "Huertas para la vida",
-    date: "2026-10-24",
-    startTime: "10:00 a.m.",
-    endTime: "12:00 p.m.",
-    location: "Centro Comunitario Ciudad Bolívar",
-    localidad: "Ciudad Bolívar",
-    type: "Taller",
-    organizer: "Otras comunidades",
-    communityId: "telar-y-tierra",
-    description:
-      "Taller práctico con niños y niñas sobre cultivo en casa y cuidado del territorio.",
-    image: "/images/evento-3.jpg",
-    isExample: true,
-  },
-  {
-    id: "mercado-saberes-sabores",
-    title: "Mercado de Saberes y Sabores",
-    date: "2026-11-07",
-    startTime: "9:00 a.m.",
-    endTime: "3:00 p.m.",
-    location: "Plaza de Mercado La Concordia, Bogotá D.C.",
-    localidad: "Santa Fe",
-    type: "Feria",
-    organizer: "Aliados",
-    communityId: "sabores-de-la-concordia",
-    description: "Ven y apoya los productos de mujeres campesinas de Bogotá y Cundinamarca.",
-    image: "/images/evento-1.jpg",
-    isExample: true,
-  },
-  {
     id: "minga-comunitaria-arrayanes",
     title: "Minga comunitaria en la vereda Arrayanes",
     date: "2026-11-21",
@@ -409,22 +316,6 @@ export const calendarEvents: CalendarEvent[] = [
     description:
       "Jornada comunitaria de siembra y cuidado de la huerta colectiva de la vereda Arrayanes.",
     image: "/images/evento-2.jpg",
-    isExample: true,
-  },
-  {
-    id: "jornada-acompanamiento-psicosocial",
-    title: "Jornada de acompañamiento psicosocial",
-    date: "2026-12-05",
-    startTime: "9:00 a.m.",
-    endTime: "12:00 p.m.",
-    location: "Salón Comunal San Bernardino, Bosa",
-    localidad: "Bosa",
-    type: "Evento de apoyo",
-    organizer: "Aliados",
-    communityId: "semillas-de-bosa",
-    description:
-      "Espacio gratuito de escucha y orientación para mujeres cabeza de hogar del sector.",
-    image: "/images/evento-3.jpg",
     isExample: true,
   },
 ];
@@ -442,50 +333,22 @@ export const newsItems: NewsItem[] = [
     image: "/images/evento-1.jpg",
     isExample: true,
   },
-  {
-    id: "noticia-nuevas-comunidades",
-    type: "Noticia",
-    title: "Nuevas comunidades se suman a la red",
-    date: "2026-09-02",
-    summary:
-      "Tres nuevos colectivos de mujeres de Bosa, Ciudad Bolívar y Sumapaz se unieron a la plataforma este mes.",
-    fullText:
-      "Este es un texto de ejemplo. Aquí se anunciará la llegada de nuevas comunidades a la red y una breve reseña de su trabajo en el territorio.",
-    image: "/images/evento-2.jpg",
-    isExample: true,
-  },
-  {
-    id: "actividad-reciente-taller-tejido",
-    type: "Actividad reciente",
-    title: "Taller de tejido reunió a más de 20 mujeres",
-    date: "2026-09-18",
-    summary:
-      "El taller de Telar y Tierra fue un espacio de aprendizaje y encuentro entre mujeres de distintas localidades.",
-    fullText:
-      "Este es un texto de ejemplo. Aquí se describirá cómo se desarrolló la actividad, quiénes participaron y qué aprendizajes dejó para la comunidad.",
-    image: "/images/evento-3.jpg",
-    isExample: true,
-  },
 ];
 
 export const mapMarkers: MapMarker[] = [
-  // TODO: reemplazar por coordenadas reales
-  { id: "marker-red-mujer", communityId: "red-mujer", lat: 4.405, lng: -74.125 },
-  // TODO: reemplazar por coordenadas reales
-  { id: "marker-manos-de-usme", communityId: "manos-de-usme", lat: 4.527, lng: -74.113 },
-  // TODO: reemplazar por coordenadas reales
-  { id: "marker-telar-y-tierra", communityId: "telar-y-tierra", lat: 4.535, lng: -74.172 },
+  // Coordenadas confirmadas por el equipo. Las tres caen dentro de Usme según la capa de
+  // localidades de public/data/localidades-bogota.geojson, que es lo que verifica
+  // `node --import ./scripts/alias-arroba.mjs scripts/verificar-marcadores.mjs`.
+  { id: "marker-red-mujer", communityId: "red-mujer", lat: 4.372639, lng: -74.1414653 },
+  { id: "marker-manos-de-usme", communityId: "manos-de-usme", lat: 4.5321262, lng: -74.1097545 },
+  {
+    id: "marker-granja-la-dorada",
+    communityId: "granja-la-dorada",
+    lat: 4.3829212,
+    lng: -74.1659716,
+  },
   // TODO: reemplazar por coordenadas reales
   { id: "marker-raices-de-sumapaz", communityId: "raices-de-sumapaz", lat: 4.12, lng: -74.23 },
-  // TODO: reemplazar por coordenadas reales
-  { id: "marker-semillas-de-bosa", communityId: "semillas-de-bosa", lat: 4.628, lng: -74.205 },
-  // TODO: reemplazar por coordenadas reales
-  {
-    id: "marker-sabores-de-la-concordia",
-    communityId: "sabores-de-la-concordia",
-    lat: 4.6,
-    lng: -74.06,
-  },
 ];
 
 /**

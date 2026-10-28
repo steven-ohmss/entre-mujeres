@@ -10,6 +10,13 @@
 
 export const PENDIENTE = "PENDIENTE";
 
+/**
+ * Lo que lee el público donde falta un texto que la comunidad todavía no entregó. Es el
+ * equivalente de "Foto próximamente" para las palabras: dice la verdad en vez de dejar
+ * un hueco o rellenar con algo inventado.
+ */
+export const PROXIMAMENTE = "Información próximamente";
+
 export type Pendiente = typeof PENDIENTE;
 
 /** Un valor que el equipo todavía no entregó. */
@@ -25,6 +32,11 @@ export function esPendiente(valor: string | null | undefined): boolean {
   if (limpio.length === 0) return true;
   if (limpio.toUpperCase() === PENDIENTE) return true;
   return limpio.startsWith("[") && limpio.endsWith("]");
+}
+
+/** El texto tal cual, o "Información próximamente" si todavía no lo han entregado. */
+export function textoOProximamente(valor: string | null | undefined): string {
+  return esPendiente(valor) ? PROXIMAMENTE : (valor as string).trim();
 }
 
 // --- Inicio: video de fondo del hero (4.3) ---------------------------------

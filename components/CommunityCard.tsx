@@ -1,6 +1,7 @@
 import { MapPin } from "lucide-react";
 import Foto from "./Foto";
 import { ICONO_COMUNIDAD } from "@/lib/categorias";
+import { textoOProximamente } from "@/config/site";
 import type { Community } from "@/types";
 
 interface CommunityCardProps {
@@ -15,19 +16,23 @@ export default function CommunityCard({ community, onOpen }: CommunityCardProps)
         <Foto
           src={community.image}
           alt={`Foto de la comunidad ${community.name}`}
-          icon={ICONO_COMUNIDAD[community.category]}
+          icon={community.category ? ICONO_COMUNIDAD[community.category] : undefined}
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
         />
       </div>
       <div className="flex flex-1 flex-col gap-2 p-5">
-        <span className="pill-tag w-fit bg-rosa-palido text-rosa-oscuro">{community.category}</span>
+        {community.category ? (
+          <span className="pill-tag w-fit bg-rosa-palido text-rosa-oscuro">
+            {community.category}
+          </span>
+        ) : null}
         <h3 className="font-titulos text-xl text-texto">{community.name}</h3>
         <p className="flex items-center gap-1.5 text-sm text-texto-suave">
           <MapPin size={14} className="shrink-0" aria-hidden="true" />
           {community.ubicacion}
         </p>
         <p className="mt-1 line-clamp-3 flex-1 text-sm leading-relaxed text-texto-suave">
-          {community.shortDescription}
+          {textoOProximamente(community.shortDescription)}
         </p>
         <button type="button" onClick={onOpen} className="btn-secondary mt-3 self-start">
           Ver comunidad

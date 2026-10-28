@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Foto from "./Foto";
 import { ICONO_COMUNIDAD } from "@/lib/categorias";
+import { textoOProximamente } from "@/config/site";
 import type { Community } from "@/types";
 
 interface CommunityMapCardProps {
@@ -26,7 +27,7 @@ export default function CommunityMapCard({ community, variant = "card" }: Commun
         <Foto
           src={community.image}
           alt={`Foto de la comunidad ${community.name}`}
-          icon={ICONO_COMUNIDAD[community.category]}
+          icon={community.category ? ICONO_COMUNIDAD[community.category] : undefined}
           sizes={variant === "popup" ? "280px" : "360px"}
         />
       </div>
@@ -37,7 +38,7 @@ export default function CommunityMapCard({ community, variant = "card" }: Commun
           {community.ubicacion}
         </p>
         <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-texto-suave">
-          {community.shortDescription}
+          {textoOProximamente(community.shortDescription)}
         </p>
 
         <Link

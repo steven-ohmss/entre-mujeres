@@ -80,13 +80,17 @@ export default async function PaginaProducto({ params }: Props) {
                   <Icono size={16} className="mr-1.5" aria-hidden="true" />
                   {producto.type}
                 </span>
-                <span
-                  className={`pill-tag ${
-                    COLOR_DISPONIBILIDAD[producto.availability] ?? "bg-crema text-texto"
-                  }`}
-                >
-                  {producto.availability}
-                </span>
+                {/* Sin disponibilidad confirmada no se muestra la etiqueta: es mejor no
+                    decir nada que afirmar un "Disponible" que nadie verificó. */}
+                {producto.availability ? (
+                  <span
+                    className={`pill-tag ${
+                      COLOR_DISPONIBILIDAD[producto.availability] ?? "bg-crema text-texto"
+                    }`}
+                  >
+                    {producto.availability}
+                  </span>
+                ) : null}
               </div>
 
               <h1 className="mt-4 font-titulos text-4xl font-semibold leading-tight text-texto sm:text-5xl">

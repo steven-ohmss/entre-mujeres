@@ -9,7 +9,7 @@ import ProductCard from "@/components/ProductCard";
 import BotonWhatsApp from "@/components/BotonWhatsApp";
 import { calendarEvents, communities, products } from "@/data/data";
 import { ICONO_COMUNIDAD } from "@/lib/categorias";
-import { esPendiente, mensajeComunidad } from "@/config/site";
+import { esPendiente, mensajeComunidad, textoOProximamente } from "@/config/site";
 import { compareISODates, formatEventDate } from "@/lib/date";
 
 interface Props {
@@ -26,7 +26,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!comunidad) return { title: "Comunidad no encontrada · Entre mujeres" };
   return {
     title: `${comunidad.name} · Entre mujeres`,
-    description: comunidad.shortDescription,
+    // Sin descripción propia se deja fuera la etiqueta, en vez de publicar un marcador
+    // interno como resumen de la página en buscadores y al compartir el enlace.
+    description: esPendiente(comunidad.shortDescription) ? undefined : comunidad.shortDescription,
   };
 }
 
@@ -49,7 +51,7 @@ export default async function PaginaComunidad({ params }: Props) {
           <Foto
             src={comunidad.image}
             alt={`Foto de la comunidad ${comunidad.name}`}
-            icon={ICONO_COMUNIDAD[comunidad.category]}
+            icon={comunidad.category ? ICONO_COMUNIDAD[comunidad.category] : undefined}
             sizes="100vw"
             priority
           />
@@ -70,7 +72,9 @@ export default async function PaginaComunidad({ params }: Props) {
 
           <div className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start">
             <div>
-              <span className="pill-tag bg-rosa-palido text-rosa-oscuro">{comunidad.category}</span>
+              <span className="pill-tag bg-rosa-palido text-rosa-oscuro">
+                {textoOProximamente(comunidad.category)}
+              </span>
 
               <h1 className="mt-4 font-titulos text-4xl font-semibold leading-tight text-texto sm:text-5xl">
                 {comunidad.name}
@@ -83,12 +87,16 @@ export default async function PaginaComunidad({ params }: Props) {
 
               <section className="mt-9">
                 <h2 className="font-titulos text-2xl font-semibold text-texto">Su historia</h2>
-                <p className="mt-3 text-lg leading-relaxed text-texto">{comunidad.whoWeAre}</p>
+                <p className="mt-3 text-lg leading-relaxed text-texto">
+                  {textoOProximamente(comunidad.whoWeAre)}
+                </p>
               </section>
 
               <section className="mt-8">
                 <h2 className="font-titulos text-2xl font-semibold text-texto">Qué hacen</h2>
-                <p className="mt-3 text-lg leading-relaxed text-texto">{comunidad.whatWeDo}</p>
+                <p className="mt-3 text-lg leading-relaxed text-texto">
+                  {textoOProximamente(comunidad.whatWeDo)}
+                </p>
               </section>
             </div>
 
