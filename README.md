@@ -35,6 +35,20 @@ npm run build
 
 Si la base no responde, el sitio no muestra una página rota: `app/error.tsx` explica que el problema es nuestro y ofrece reintentar.
 
+## Entrar al panel
+
+El sitio **no tiene registro público**: solo entra quien recibe una invitación desde Supabase. El paso a paso para configurarlo e invitar a alguien está en [`docs/invitaciones-y-acceso.md`](docs/invitaciones-y-acceso.md).
+
+- **`/iniciar-sesion`**: correo y contraseña, con "¿Olvidaste tu contraseña?".
+- **`/auth/confirm`**: recibe los enlaces de los correos (invitación y recuperación) y canjea el `token_hash` por una sesión.
+- **`/definir-contrasena`**: donde se crea la contraseña, solo con la sesión que deja el enlace del correo.
+- **`/admin`**: el panel. Por ahora solo da la bienvenida; las secciones llegan en el paso 5.
+- **`/sin-acceso`**: para quien inició sesión pero no es administradora.
+
+Quién puede entrar lo decide `proxy.ts` (que en Next 16 reemplaza a `middleware.ts`) **antes** de renderizar nada: sin sesión va a `/iniciar-sesion`, y con sesión pero sin permiso va a `/sin-acceso`. La comprobación va ahí y no dentro de las páginas porque con el render parcial de esta versión el contenido empieza a enviarse antes de que un `redirect()` de layout alcance a actuar.
+
+Quien es invitada queda como administradora sola, por un disparador en `auth.users` (ver la migración `admin_al_invitar`). La clave secret nunca llega al navegador: las pantallas de sesión usan la publishable y es el RLS quien limita lo que puede hacer.
+
 Las solicitudes para aparecer en el mapa no las recibe el sitio: el bloque "Quiero aparecer en el mapa" (`components/JoinSection.tsx`) abre el formulario de Google del equipo, cuya URL está en `GOOGLE_FORM_URL` dentro de `config/site.ts`.
 
 ## Mapa de comunidades

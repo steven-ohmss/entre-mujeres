@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AtSign, Leaf, Mail, MapPin, MessageCircle, Phone, Venus } from "lucide-react";
 import LeafDecoration from "./LeafDecoration";
+import AccesoCuenta from "./AccesoCuenta";
 import {
   contacto,
   esPendiente,
@@ -96,6 +97,10 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+
+              {/* Se resuelve en el navegador: con sesión muestra "Panel" y
+                  "Cerrar sesión", y si no, "Iniciar sesión". */}
+              <AccesoCuenta variante="pie" />
             </ul>
           </div>
 

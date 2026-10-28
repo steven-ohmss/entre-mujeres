@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import SearchBar from "./SearchBar";
+import AccesoCuenta from "./AccesoCuenta";
 
 /**
  * Menú ordenado por importancia (4.1). "Comunidades" ya no está: se integra dentro de
@@ -168,6 +169,8 @@ export default function Navbar() {
             ) : null}
           </div>
 
+          <AccesoCuenta variante="header" />
+
           <Link
             href="/#quiero-ser-parte"
             className="inline-flex min-h-12 items-center justify-center whitespace-nowrap rounded-full bg-crema px-6 font-semibold text-verde-bosque transition hover:bg-blanco focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rosa-claro"
@@ -209,6 +212,8 @@ export default function Navbar() {
               </Link>
             ))}
           </div>
+
+          <AccesoCuenta variante="header-movil" onNavegar={() => setIsMenuOpen(false)} />
 
           <Link
             href="/#quiero-ser-parte"
