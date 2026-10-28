@@ -42,12 +42,20 @@ El sitio **no tiene registro público**: solo entra quien recibe una invitación
 - **`/iniciar-sesion`**: correo y contraseña, con "¿Olvidaste tu contraseña?".
 - **`/auth/confirm`**: recibe los enlaces de los correos (invitación y recuperación) y canjea el `token_hash` por una sesión.
 - **`/definir-contrasena`**: donde se crea la contraseña, solo con la sesión que deja el enlace del correo.
-- **`/admin`**: el panel. Por ahora solo da la bienvenida; las secciones llegan en el paso 5.
+- **`/admin`**: el panel, con las cuatro secciones (comunidades, productos, eventos y noticias). La guía para quien lo usa está en [`docs/guia-panel.md`](docs/guia-panel.md).
 - **`/sin-acceso`**: para quien inició sesión pero no es administradora.
 
 Quién puede entrar lo decide `proxy.ts` (que en Next 16 reemplaza a `middleware.ts`) **antes** de renderizar nada: sin sesión va a `/iniciar-sesion`, y con sesión pero sin permiso va a `/sin-acceso`. La comprobación va ahí y no dentro de las páginas porque con el render parcial de esta versión el contenido empieza a enviarse antes de que un `redirect()` de layout alcance a actuar.
 
 Quien es invitada queda como administradora sola, por un disparador en `auth.users` (ver la migración `admin_al_invitar`). La clave secret nunca llega al navegador: las pantallas de sesión usan la publishable y es el RLS quien limita lo que puede hacer.
+
+### Cómo escribe el panel
+
+Todo pasa por Server Actions en [`app/admin/acciones.ts`](app/admin/acciones.ts), y cada una hace tres cosas antes de tocar nada: vuelve a comprobar `is_admin()` (una Server Action es una dirección que se puede llamar sin pasar por ninguna página), vuelve a validar los datos con [`lib/validacion.ts`](lib/validacion.ts) — las mismas reglas que usa el formulario, porque las del navegador se pueden saltar — y al terminar llama a `updateTag()` para que el sitio público muestre el cambio de inmediato.
+
+Las fotos son la excepción: se achican en el navegador ([`lib/imagenes.ts`](lib/imagenes.ts)) y suben **directo al bucket con la sesión de la usuaria**, no a través del servidor. Las Server Actions tienen un límite de cuerpo pequeño y una foto no cabe cómoda; así además es el RLS del bucket quien autoriza. Al reemplazar o quitar una foto se borra la anterior, para no dejar archivos huérfanos.
+
+El panel lee con [`lib/datos-admin.ts`](lib/datos-admin.ts), sin caché: quien acaba de guardar tiene que ver su cambio al volver al listado, no la versión de hace una hora.
 
 Las solicitudes para aparecer en el mapa no las recibe el sitio: el bloque "Quiero aparecer en el mapa" (`components/JoinSection.tsx`) abre el formulario de Google del equipo, cuya URL está en `GOOGLE_FORM_URL` dentro de `config/site.ts`.
 
