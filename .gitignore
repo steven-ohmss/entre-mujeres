@@ -48,3 +48,6 @@ next-env.d.ts
 
 # archivos temporales de la CLI de Supabase
 supabase/.temp/
+
+# scripts de prueba de un solo uso (necesitan playwright, que no es dependencia)
+scripts/.*.mjs
