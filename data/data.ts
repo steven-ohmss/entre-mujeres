@@ -211,15 +211,10 @@ export const products: Product[] = [
     ],
     isExample: true,
   },
-  // SIN CONECTAR, PENDIENTE DE CONFIRMAR (los cuatro yogures de fruta que siguen):
-  // en public/images/productos/ ya están los archivos yogurt-artesanal-de-fresa.jpg,
-  // -de-mora.jpg, -de-guanabana.jpg y -de-frutos-rojos.jpg, pero la botella que se ve en
-  // las cuatro lleva impresa la marca "Delicias del Campo", no la de Red Mujer, y dice
-  // "Yogur Artesanal" donde el dato dice "Yogurt artesanal". No se publican hasta saber
-  // si esa es la marca comercial de Red Mujer o si son fotos de otra empresa, porque ya
-  // hubo que borrar una foto de yogures por traer la marca de un tercero (ver la sección
-  // 10 de docs/guia-material.md). Mientras tanto sale "Foto próximamente", que es
-  // preferible a publicar la marca de alguien más.
+  // Los cuatro yogures de fruta vienen en botella de vidrio con la etiqueta de
+  // "Delicias del Campo", que es la marca comercial con la que Red Mujer vende sus
+  // yogures (confirmado por el equipo). El yogurt griego y el queso campesino, en
+  // cambio, llevan la marca Red Mujer directamente.
   {
     id: "yogurt-artesanal-de-fresa",
     slug: "yogurt-artesanal-de-fresa",
@@ -230,7 +225,12 @@ export const products: Product[] = [
       "Yogurt 100% artesanal de fresa, cremoso y naturalmente delicioso. Elaborado con 100% leche sin agua ni conservantes añadidos.",
     presentation: "1 litro.",
     features: [],
-    images: [],
+    images: [
+      {
+        src: "/images/productos/yogurt-artesanal-de-fresa.jpg",
+        alt: "Botella de vidrio con yogurt rosado y trozos de fresa, con la etiqueta Delicias del Campo, sobre una mesa de madera rodeada de fresas enteras y partidas y un bol con más fresas, con el campo al fondo",
+      },
+    ],
     isExample: false,
   },
   {
@@ -243,7 +243,12 @@ export const products: Product[] = [
       "Yogurt 100% artesanal de mora, cremoso y naturalmente delicioso. Elaborado con 100% leche sin agua ni conservantes añadidos.",
     presentation: "1 litro.",
     features: [],
-    images: [],
+    images: [
+      {
+        src: "/images/productos/yogurt-artesanal-de-mora.jpg",
+        alt: "Botella de vidrio con yogurt lila y trozos de mora, con la etiqueta Delicias del Campo, sobre una mesa de madera junto a una canasta de mimbre llena de moras, con el campo al fondo",
+      },
+    ],
     isExample: false,
   },
   {
@@ -256,7 +261,12 @@ export const products: Product[] = [
       "Yogurt 100% artesanal de guanábana, cremoso y naturalmente delicioso. Elaborado con 100% leche sin agua ni conservantes añadidos.",
     presentation: "1 litro.",
     features: [],
-    images: [],
+    images: [
+      {
+        src: "/images/productos/yogurt-artesanal-de-guanabana.jpg",
+        alt: "Botella de vidrio con yogurt color crema, con la etiqueta verde de Delicias del Campo, sobre una mesa de madera entre guanábanas enteras y tajadas que dejan ver la pulpa blanca y las semillas negras, con el campo al fondo",
+      },
+    ],
     isExample: false,
   },
   {
@@ -269,7 +279,12 @@ export const products: Product[] = [
       "Yogurt 100% artesanal de frutos rojos, con arándanos, fresa y mora, cremoso y naturalmente delicioso. Elaborado con 100% leche sin agua ni conservantes añadidos.",
     presentation: "1 litro.",
     features: [],
-    images: [],
+    images: [
+      {
+        src: "/images/productos/yogurt-artesanal-de-frutos-rojos.jpg",
+        alt: "Botella de vidrio con yogurt rosado y trozos de fruta, con la etiqueta Delicias del Campo, sobre una mesa de madera junto a un bol con fresas, frambuesas, arándanos y grosellas y una lechera metálica, con el campo al fondo",
+      },
+    ],
     isExample: false,
   },
   {
