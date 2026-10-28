@@ -17,25 +17,34 @@ en [`datos-pendientes.md`](./datos-pendientes.md).
 
 ## 0. Material provisional que hay que reemplazar
 
-> **Hay 3 archivos publicados que son de relleno, no del territorio.** Están conectados
-> y se ven en la página, pero **ninguno es definitivo**. Esta es la lista para no
-> olvidarlos.
+> **Hay 5 archivos publicados que todavía no son definitivos.** Están conectados y se
+> ven en la página, pero ninguno cumple del todo. Esta es la lista para no olvidarlos.
 
 | Archivo | Por qué es provisional |
 | --- | --- |
 | `public/video/inicio-portada.mp4` | Material de archivo. Técnicamente cumple (4,08 MB, 20 s, sin sonido), pero no muestra Bogotá ni Cundinamarca |
 | `public/images/inicio/portada.jpg` | Un camino de tierra entre cultivos al atardecer. No aparece ninguna mujer y el paisaje no es el andino del territorio |
 | `public/images/productos/mermelada-campesina.jpg` | De archivo · 451 × 338 px, falta resolución |
+| `public/images/productos/yogurt-griego.jpg` | Lleva la marca de Red Mujer, pero son 588 × 440 px y falta resolución. Además la etiqueta dice **150 g** y el dato de la página dice 1 litro (ver `datos-pendientes.md`) |
+| `public/images/productos/queso-campesino.jpg` | Lleva la marca de Red Mujer y los 500 g coinciden, pero son 588 × 440 px y falta resolución |
 
 **Cómo se reemplazan: solo hay que sobrescribir el archivo, con el mismo nombre y en la
 misma carpeta.** No hay que avisar a nadie ni tocar el código. Por eso los nombres
 importan tanto.
 
-La foto de la mermelada está muy por debajo del ancho que pide esta guía (1600 px). En
-la página del producto la foto se muestra a unos 720 px de ancho, que en una pantalla
-moderna son 1440 px reales: una imagen de 451 px se estira tres veces y se ve borrosa.
-Como pesa unos 50 KB, hay muchísimo margen para subirla más grande sin acercarse al
-límite de 250 KB.
+Las tres fotos de producto están muy por debajo del ancho que pide esta guía (1600 px).
+En la página del producto la foto se muestra a unos 720 px de ancho, que en una pantalla
+moderna son 1440 px reales: una imagen de 588 px se estira dos veces y media y se ve
+borrosa. Como pesan entre 44 y 78 KB, hay muchísimo margen para subirlas más grandes sin
+acercarse al límite de 250 KB.
+
+> **Cuatro fotos entregadas quedaron SIN publicar.** Son las de los yogures de fresa,
+> mora, guanábana y frutos rojos. Los archivos están en `public/images/productos/` con
+> el nombre correcto, pero la botella que se ve en las cuatro lleva impresa la marca
+> **"Delicias del Campo"**, no la de Red Mujer. Hasta saber si esa es la marca comercial
+> de Red Mujer o si son fotos de otra empresa, los cuatro productos siguen mostrando
+> "Foto próximamente". Ya hubo que borrar una foto de yogures por este mismo motivo
+> (ver la sección 10).
 
 Cuando se reemplace la portada o el video, hay que avisar: **la frase que describe la
 portada para los lectores de pantalla está escrita a la medida de la foto actual** y hay
@@ -214,10 +223,10 @@ producto, en su página propia y como miniatura en los resultados del buscador.
 > que ver ese queso y no un yogurt. Mientras falte la foto, el producto muestra el
 > cartel "Foto próximamente": es mejor eso que mostrar un producto que no es.
 
-> **Los seis productos nuevos de Red Mujer no tienen ninguna foto todavía.** Son los
-> cinco yogures y el queso campesino: hoy los seis salen con el cartel "Foto
-> próximamente". Es lo más urgente de esta guía, porque son los únicos productos
-> propios de la red que están publicados.
+> **Estado de los seis productos de Red Mujer:** el yogurt griego y el queso campesino
+> ya tienen su foto publicada, con la marca de Red Mujer en la etiqueta. Los cuatro
+> yogures de fruta siguen con el cartel "Foto próximamente", porque la foto que llegó
+> lleva otra marca (ver la sección 0).
 
 **Qué debe mostrar una foto de producto.** El producto solo, bien iluminado, sobre un
 fondo sencillo que no distraiga: una mesa de madera, una tela lisa. Luz de día, nunca
@@ -229,12 +238,12 @@ de referencia. Sin logos ni teléfonos de otras marcas a la vista.
 | Producto | Nombre del archivo | Qué debe mostrar |
 | --- | --- | --- |
 | Mermelada campesina | `public/images/productos/mermelada-campesina.jpg` | El frasco de vidrio de 300 g de mermelada, si se puede con la fruta fresca al lado |
-| Yogurt artesanal de fresa | `public/images/productos/yogurt-artesanal-de-fresa.jpg` | El envase de 1 litro, con fresas frescas al lado para que se entienda el sabor de un golpe |
-| Yogurt artesanal de mora | `public/images/productos/yogurt-artesanal-de-mora.jpg` | El envase de 1 litro, con moras frescas al lado |
-| Yogurt artesanal de guanábana | `public/images/productos/yogurt-artesanal-de-guanabana.jpg` | El envase de 1 litro, con la guanábana al lado (entera o partida) |
-| Yogurt artesanal de frutos rojos | `public/images/productos/yogurt-artesanal-de-frutos-rojos.jpg` | El envase de 1 litro, con arándanos, fresas y moras al lado |
-| Yogurt griego | `public/images/productos/yogurt-griego.jpg` | El envase de 1 litro. Si se puede, una cucharada que muestre lo cremoso y espeso, que es lo que lo distingue de los otros |
-| Queso campesino | `public/images/productos/queso-campesino.jpg` | El queso de 500 g entero y, si se puede, una tajada al lado para que se vea la textura suave y firme |
+| Yogurt artesanal de fresa | `public/images/productos/yogurt-artesanal-de-fresa.jpg` | ⚠️ Entregada pero **sin publicar**: la botella lleva la marca "Delicias del Campo". Hace falta la del envase de Red Mujer, con fresas frescas al lado |
+| Yogurt artesanal de mora | `public/images/productos/yogurt-artesanal-de-mora.jpg` | ⚠️ Entregada pero **sin publicar**, mismo motivo. Hace falta la del envase de Red Mujer, con moras frescas al lado |
+| Yogurt artesanal de guanábana | `public/images/productos/yogurt-artesanal-de-guanabana.jpg` | ⚠️ Entregada pero **sin publicar**, mismo motivo. Hace falta la del envase de Red Mujer, con la guanábana al lado (entera o partida) |
+| Yogurt artesanal de frutos rojos | `public/images/productos/yogurt-artesanal-de-frutos-rojos.jpg` | ⚠️ Entregada pero **sin publicar**, mismo motivo. Hace falta la del envase de Red Mujer, con arándanos, fresas y moras al lado |
+| Yogurt griego | `public/images/productos/yogurt-griego.jpg` | ✅ Publicada. El pote blanco de Red Mujer junto a un bol de yogurt con fresas y arándanos |
+| Queso campesino | `public/images/productos/queso-campesino.jpg` | ✅ Publicada. El queso redondo de Red Mujer con los cubos cortados al lado, que dejan ver la textura |
 
 > **Ojo con los cinco yogures: los envases se parecen entre sí.** Si las cinco fotos
 > salen iguales, en la lista de productos no se va a poder distinguir un sabor de otro.
@@ -355,9 +364,15 @@ pobre.
 
 ### Ya resuelto
 
-La pantalla de bienvenida y la mermelada campesina ya tienen su archivo en la carpeta
-correcta y con el nombre correcto, y están conectados a la página. Siguen siendo
-provisionales: la lista está en la sección 0.
+La pantalla de bienvenida, la mermelada campesina, el yogurt griego y el queso campesino
+ya tienen su archivo en la carpeta correcta y con el nombre correcto, y están conectados
+a la página. Siguen siendo provisionales: la lista está en la sección 0.
+
+Las fotos de los cuatro yogures de fruta también están en su carpeta y con el nombre
+correcto, pero **no están conectadas ni subidas al repositorio**, porque llevan la marca
+de otra empresa. Los archivos se dejaron en el computador de quien los entregó para no
+perderlos mientras se aclara: todo lo que se copia a `public/` queda accesible en
+internet, aunque ninguna página lo muestre.
 
 Se borraron tres fotos que no se podían publicar:
 
@@ -399,9 +414,8 @@ trabajo dos veces:
 Un archivo quedó sin uso y se borrará cuando llegue su reemplazo: `hero-mujeres.jpg`,
 que era la portada anterior.
 
-Faltan por completo, sin nada que renombrar: los 6 productos de Red Mujer (los cinco
-yogures y el queso), la foto de Granja La Dorada, la noticia, los logos, el favicon y
-la imagen para compartir.
+Faltan por completo, sin nada que renombrar: los 4 yogures de fruta, la foto de Granja
+La Dorada, la noticia, los logos, el favicon y la imagen para compartir.
 
 ---
 
@@ -430,6 +444,12 @@ la foto, y que si la foto no carga por mala señal, al menos se lea la descripci
 Lo más fácil es mandar un archivo de texto o una hoja de cálculo con dos columnas:
 nombre del archivo y descripción.
 
+**Dónde queda escrita esa frase.** Cada foto de producto guarda la suya al lado de la
+imagen, en `data/data.ts`. Si llega una foto nueva sin su frase, quien la suba tiene que
+escribirla mirando la imagen: una foto sin descripción deja por fuera a quien usa lector
+de pantalla. Y si se reemplaza una foto por otra distinta, **hay que reescribir la
+frase**, porque la vieja ya no describe lo que se ve.
+
 ---
 
 ## 12. Lista de chequeo
@@ -452,12 +472,12 @@ pendientes de reemplazo (sección 0).
 ### Productos (1600 × 1200, máx. 250 KB cada una)
 
 - [x] 🟡 `productos/mermelada-campesina.jpg` — 451 × 338, falta resolución
-- [ ] `productos/yogurt-artesanal-de-fresa.jpg`
-- [ ] `productos/yogurt-artesanal-de-mora.jpg`
-- [ ] `productos/yogurt-artesanal-de-guanabana.jpg`
-- [ ] `productos/yogurt-artesanal-de-frutos-rojos.jpg`
-- [ ] `productos/yogurt-griego.jpg`
-- [ ] `productos/queso-campesino.jpg`
+- [ ] `productos/yogurt-artesanal-de-fresa.jpg` — ⚠️ entregada con otra marca, sin publicar
+- [ ] `productos/yogurt-artesanal-de-mora.jpg` — ⚠️ entregada con otra marca, sin publicar
+- [ ] `productos/yogurt-artesanal-de-guanabana.jpg` — ⚠️ entregada con otra marca, sin publicar
+- [ ] `productos/yogurt-artesanal-de-frutos-rojos.jpg` — ⚠️ entregada con otra marca, sin publicar
+- [x] 🟡 `productos/yogurt-griego.jpg` — 588 × 440, falta resolución; la etiqueta dice 150 g
+- [x] 🟡 `productos/queso-campesino.jpg` — 588 × 440, falta resolución
 
 ### Eventos (1200 × 675, máx. 200 KB cada una)
 
@@ -498,14 +518,14 @@ pendientes de reemplazo (sección 0).
 | --- | --- | --- |
 | Video de bienvenida | 1 | Publicado, **provisional** |
 | Foto de bienvenida | 1 | Publicada, **provisional** |
-| Productos | 7 | Falta 1 por entregar y 6 faltan por completo (los 5 yogures y el queso). La mermelada está publicada, **provisional** y en baja resolución |
+| Productos | 7 | 3 publicadas, **provisionales** y en baja resolución. Faltan las de los 4 yogures de fruta: llegaron, pero con la marca de otra empresa |
 | Comunidades | 4 | Faltan. Hay 3 de archivo sin renombrar |
 | Eventos | 2 | Faltan. Hay 2 de archivo, una compartida con la noticia |
 | Noticias | 1 | Falta |
 | Logos | 3 | Faltan |
 | Favicon e iconos | 3 | Falta. Es el de la plantilla |
 | Imagen para compartir | 1 | Falta |
-| **Total** | **23 archivos** | **3 publicados (provisionales), 20 por entregar** |
+| **Total** | **23 archivos** | **5 publicados (provisionales), 18 por entregar** |
 
 Mientras falten, la página **no se ve rota**: donde no hay foto aparece un recuadro
 discreto con el icono de la categoría y el texto "Foto próximamente". Se pueden ir

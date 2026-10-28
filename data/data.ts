@@ -203,9 +203,23 @@ export const products: Product[] = [
       "Sin conservantes artificiales",
     ],
     availability: "Disponible",
-    images: ["/images/productos/mermelada-campesina.jpg"],
+    images: [
+      {
+        src: "/images/productos/mermelada-campesina.jpg",
+        alt: "Cinco frascos de vidrio con mermeladas de distintos colores, sobre rodajas de tronco, rodeados de higos, durazno, moras, frambuesas y hojas de fresa",
+      },
+    ],
     isExample: true,
   },
+  // SIN CONECTAR, PENDIENTE DE CONFIRMAR (los cuatro yogures de fruta que siguen):
+  // en public/images/productos/ ya están los archivos yogurt-artesanal-de-fresa.jpg,
+  // -de-mora.jpg, -de-guanabana.jpg y -de-frutos-rojos.jpg, pero la botella que se ve en
+  // las cuatro lleva impresa la marca "Delicias del Campo", no la de Red Mujer, y dice
+  // "Yogur Artesanal" donde el dato dice "Yogurt artesanal". No se publican hasta saber
+  // si esa es la marca comercial de Red Mujer o si son fotos de otra empresa, porque ya
+  // hubo que borrar una foto de yogures por traer la marca de un tercero (ver la sección
+  // 10 de docs/guia-material.md). Mientras tanto sale "Foto próximamente", que es
+  // preferible a publicar la marca de alguien más.
   {
     id: "yogurt-artesanal-de-fresa",
     slug: "yogurt-artesanal-de-fresa",
@@ -268,7 +282,12 @@ export const products: Product[] = [
       "Yogurt griego 100% artesanal, cremoso y naturalmente delicioso. Elaborado con 100% leche sin agua ni conservantes añadidos.",
     presentation: "1 litro.",
     features: [],
-    images: [],
+    images: [
+      {
+        src: "/images/productos/yogurt-griego.jpg",
+        alt: "Pote blanco de yogurt griego natural de Red Mujer sobre una mesa de madera, junto a un bol de yogurt con fresas y arándanos, con el campo al fondo",
+      },
+    ],
     isExample: false,
   },
   {
@@ -281,7 +300,12 @@ export const products: Product[] = [
       "El auténtico sabor del campo en cada bocado. Nuestro queso campesino natural, elaborado artesanalmente con leche fresca, ofrece una textura suave y firme, con el toque justo de sal. Fresco, versátil e ideal para disfrutar en cualquier momento del día.",
     presentation: "500 gramos.",
     features: [],
-    images: [],
+    images: [
+      {
+        src: "/images/productos/queso-campesino.jpg",
+        alt: "Queso campesino redondo con la etiqueta de Red Mujer, sobre una tabla de madera junto a cubos de queso cortados y una jarra de leche, con el campo al fondo",
+      },
+    ],
     isExample: false,
   },
 ];

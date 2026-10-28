@@ -66,8 +66,8 @@ export default async function PaginaProducto({ params }: Props) {
           <div className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-start">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl bg-rosa-palido">
               <Foto
-                src={producto.images[0]}
-                alt={`Foto del producto ${producto.name}`}
+                src={producto.images[0]?.src}
+                alt={producto.images[0]?.alt ?? `Foto del producto ${producto.name}`}
                 icon={Icono}
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 priority

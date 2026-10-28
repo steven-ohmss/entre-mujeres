@@ -158,7 +158,7 @@ export function buscar(consulta: string, porGrupo = 5): GrupoResultados[] {
           titulo: producto.name,
           detalle: comunidad ? `${producto.type} · ${comunidad.name}` : producto.type,
           href: hrefProducto(producto.slug),
-          imagen: producto.images[0] ?? null,
+          imagen: producto.images[0]?.src ?? null,
           categoria: producto.type,
         },
       });

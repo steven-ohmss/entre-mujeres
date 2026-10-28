@@ -16,6 +16,18 @@ export type ProductType =
 /** Disponibilidad de un producto o servicio (4.4.3). */
 export type Availability = "Disponible" | "Por encargo" | "Por temporada";
 
+/** Una foto de producto, con la frase que la describe. */
+export interface ProductImage {
+  /** Ruta dentro de public/, por ejemplo "/images/productos/queso-campesino.jpg". */
+  src: string;
+  /**
+   * Lo que de verdad se ve en la foto, no el nombre del producto (11.2 de
+   * docs/guia-material.md). Es lo que oye quien usa lector de pantalla y lo que se lee
+   * si la foto no carga por mala señal, así que se reescribe junto con la imagen.
+   */
+  alt: string;
+}
+
 export type EventType =
   | "Feria"
   | "Taller"
@@ -85,11 +97,12 @@ export interface Product {
   /** Se omite mientras la comunidad no la confirme; la interfaz no muestra la etiqueta. */
   availability?: Availability;
   /**
-   * Fotos propias de ESTE producto. Nunca se repiten entre productos distintos: si
-   * todavía no hay foto real se deja el arreglo vacío y la interfaz muestra el
-   * placeholder con el icono de la categoría y "Foto próximamente" (4.4.6).
+   * Fotos propias de ESTE producto, cada una con su descripción. Nunca se repiten entre
+   * productos distintos: si todavía no hay foto real se deja el arreglo vacío y la
+   * interfaz muestra el placeholder con el icono de la categoría y
+   * "Foto próximamente" (4.4.6).
    */
-  images: string[];
+  images: ProductImage[];
   /** Catálogo o portafolio donde se ve este producto, si existe. */
   catalogUrl?: string;
   isExample: boolean;

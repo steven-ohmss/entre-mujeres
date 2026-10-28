@@ -22,8 +22,8 @@ export default function ProductCard({ product, community }: ProductCardProps) {
       >
         <div className="relative h-48 w-full bg-rosa-palido">
           <Foto
-            src={product.images[0]}
-            alt={`Foto del producto ${product.name}`}
+            src={product.images[0]?.src}
+            alt={product.images[0]?.alt ?? `Foto del producto ${product.name}`}
             icon={ICONO_PRODUCTO[product.type]}
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           />
