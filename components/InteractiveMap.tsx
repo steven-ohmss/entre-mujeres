@@ -1,9 +1,12 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import { MapPinOff } from "lucide-react";
 import MapFilters from "./MapFilters";
 import CommunityMapCard from "./CommunityMapCard";
+import LimiteDeError from "./LimiteDeError";
 import type { MapMarkerWithCommunity } from "./CommunityLeafletMap";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import type {
@@ -33,6 +36,43 @@ export default function InteractiveMap({
   productos,
 }: InteractiveMapProps) {
   const isDesktop = useMediaQuery("(min-width: 1280px)");
+
+  /**
+   * El mapa solo existe mientras esta página se está viendo.
+   *
+   * Desde que el proyecto usa Cache Components, Next no desmonta la ruta anterior al
+   * navegar: la deja montada pero oculta (React Activity) y vuelve a ejecutar sus
+   * efectos al mostrarla. Las refs, en cambio, no se limpian. Leaflet no sobrevive a esa
+   * combinación: al ocultarse destruye su mapa en la limpieza de un efecto, pero su
+   * referencia al nodo sigue viva, así que al volver sus hijos añaden capas y controles
+   * a un mapa ya muerto:
+   *
+   *   TypeError: Cannot read properties of undefined (reading 'appendChild')
+   *   TypeError: Cannot read properties of undefined (reading 'topright')
+   *
+   * Eso tumbaba la página entera al volver al inicio desde el menú, con "Inicio" y con
+   * "Mapa", porque los dos llevan a "/".
+   *
+   * La solución es no pelear con Leaflet: cuando la ruta se oculta, este efecto se
+   * limpia y el mapa se desmonta de verdad; cuando se vuelve a mostrar, se monta uno
+   * nuevo desde cero, que es el único camino que Leaflet maneja bien.
+   *
+   * Dos intentos anteriores no sirvieron, y vale la pena dejarlo escrito:
+   *
+   * - Subir un contador desde un efecto para usarlo de `key` llega tarde: los efectos de
+   *   los hijos corren antes que los del padre, así que ya habían reventado.
+   * - `bfcacheId` como `key` arregla las llegadas por enlace, pero a propósito NO cambia
+   *   en atrás/adelante del navegador, y ahí el mapa seguía rompiéndose.
+   */
+  // Montar y desmontar el mapa junto con la visibilidad de la ruta es exactamente el
+  // sistema externo que este efecto tiene que sincronizar, así que el render de más es
+  // el mecanismo y no un descuido.
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setVisible(true);
+    return () => setVisible(false);
+  }, []);
 
   const markersWithCommunity = useMemo<MapMarkerWithCommunity[]>(
     () =>
@@ -122,17 +162,41 @@ export default function InteractiveMap({
             aria-label="Mapa interactivo de Bogotá y Cundinamarca con las comunidades de mujeres"
             className="relative h-[420px] w-full overflow-hidden rounded-3xl border border-texto/10 xl:h-[clamp(560px,80vh,720px)]"
           >
-            <CommunityLeafletMap
-              markers={filteredMarkers}
-              selectedMarkerId={effectiveSelectedId}
-              onSelectMarker={setSelectedMarkerId}
-              onClosePopup={(markerId) =>
-                setSelectedMarkerId((current) => (current === markerId ? null : current))
+            {/* Si el mapa falla, que falte el mapa y no la página entera: debajo están
+                el calendario, las noticias y el contacto, que siguen sirviendo. */}
+            <LimiteDeError
+              nombre="el mapa"
+              respaldo={
+                <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-crema px-6 text-center">
+                  <MapPinOff size={34} strokeWidth={1.5} className="text-texto-suave" aria-hidden="true" />
+                  <p className="text-base text-texto-suave">
+                    El mapa no se pudo mostrar. Puedes ver las mismas comunidades en{" "}
+                    <Link href="/productos" className="font-semibold text-rosa-oscuro hover:underline">
+                      la página de productos
+                    </Link>
+                    .
+                  </p>
+                </div>
               }
-              localidad={localidad}
-              isDesktop={isDesktop}
-              panelRef={filtersPanelRef}
-            />
+            >
+              {visible ? (
+                <CommunityLeafletMap
+                  markers={filteredMarkers}
+                  selectedMarkerId={effectiveSelectedId}
+                  onSelectMarker={setSelectedMarkerId}
+                  onClosePopup={(markerId) =>
+                    setSelectedMarkerId((current) => (current === markerId ? null : current))
+                  }
+                  localidad={localidad}
+                  isDesktop={isDesktop}
+                  panelRef={filtersPanelRef}
+                />
+              ) : (
+                // Mientras no se está viendo esta página (o en el primer render), el
+                // mismo fondo que usa el cargador: así no hay salto al aparecer.
+                <div className="h-full w-full bg-rosa-palido/40" />
+              )}
+            </LimiteDeError>
 
             <div className="pointer-events-none absolute bottom-7 right-2 z-[1000] flex items-center gap-4 rounded-lg bg-crema/95 px-3 py-2 text-xs text-texto shadow-sm">
               <span className="flex items-center gap-2">

@@ -25,27 +25,54 @@ export default function AccesoCuenta({ variante, onNavegar }: { variante: Varian
   const router = useRouter();
   const [correo, setCorreo] = useState<string | null>(null);
 
+  /**
+   * Nada de aquí puede tumbar la página.
+   *
+   * Esto vive en la barra de navegación, o sea en todas las páginas del sitio. Si
+   * lanzara, se llevaría por delante la página entera y el visitante vería la pantalla
+   * de error por no poder saber si hay una sesión abierta, que es un dato que no
+   * necesita para leer el sitio. Si algo falla, el enlace se queda en "Iniciar sesión",
+   * que es lo que ve quien no ha entrado: lo correcto para casi todo el mundo.
+   */
   useEffect(() => {
-    const supabase = clienteNavegador();
     let vigente = true;
+    let desuscribir: (() => void) | undefined;
 
-    supabase.auth.getUser().then(({ data }) => {
-      if (vigente) setCorreo(data.user?.email ?? null);
-    });
+    try {
+      const supabase = clienteNavegador();
 
-    // Mantiene el enlace al día si la persona entra o sale en otra pestaña.
-    const { data: suscripcion } = supabase.auth.onAuthStateChange((_evento, sesion) => {
-      setCorreo(sesion?.user?.email ?? null);
-    });
+      supabase.auth
+        .getUser()
+        .then(({ data }) => {
+          if (vigente) setCorreo(data.user?.email ?? null);
+        })
+        .catch(() => {
+          // Sin red o sin sesión válida: se queda como "Iniciar sesión".
+        });
+
+      // Mantiene el enlace al día si la persona entra o sale en otra pestaña.
+      const { data: suscripcion } = supabase.auth.onAuthStateChange((_evento, sesion) => {
+        setCorreo(sesion?.user?.email ?? null);
+      });
+      desuscribir = () => suscripcion.subscription.unsubscribe();
+    } catch {
+      // Falta la configuración de Supabase, o el navegador bloquea el almacenamiento.
+    }
 
     return () => {
       vigente = false;
-      suscripcion.subscription.unsubscribe();
+      desuscribir?.();
     };
   }, []);
 
   const salir = async () => {
-    await clienteNavegador().auth.signOut();
+    try {
+      await clienteNavegador().auth.signOut();
+    } catch {
+      // Aunque falle el cierre en el servidor, conviene seguir: el router recarga y la
+      // sesión local ya quedó limpia.
+    }
+    setCorreo(null);
     onNavegar?.();
     router.refresh();
   };

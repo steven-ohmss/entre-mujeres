@@ -384,6 +384,7 @@ export default function CommunityLeafletMap({
   const [hint, setHint] = useState<string | null>(null);
   const hintTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+
   const showHint = useCallback((message: string) => {
     setHint(message);
     if (hintTimer.current) clearTimeout(hintTimer.current);

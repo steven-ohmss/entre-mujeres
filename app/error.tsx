@@ -21,7 +21,14 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Entre mujeres: fallo al cargar la página", error);
+    // Con detalle y por separado: cuando esto se reportó, el mensaje venía envuelto y
+    // costó llegar a la causa (era Leaflet, no la página). El `digest` es el código que
+    // el servidor pone en sus registros, y es lo que permite cruzar lo que ve una
+    // persona con lo que quedó anotado del lado del servidor.
+    console.error(
+      ["Entre mujeres: fallo al cargar la página", `  mensaje: ${error.message}`, `  digest:  ${error.digest ?? "(ninguno)"}`, `  ruta:    ${typeof window !== "undefined" ? window.location.pathname + window.location.hash : ""}`].join("\n")
+    );
+    console.error(error);
   }, [error]);
 
   return (
