@@ -18,15 +18,15 @@ export const instant = false;
  *
  * Vive fuera de /admin a propósito. Si el aviso se dibujara dentro del layout del panel,
  * Next renderizaría igualmente la página de adentro en paralelo —aunque no se viera— y
- * su contenido viajaría en la respuesta. Hoy eso solo serían cuatro títulos, pero en el
- * paso 5 el panel va a mostrar datos reales, y entonces sería una filtración. Sacando el
- * aviso aquí, el layout redirige y lo de adentro no llega a ejecutarse.
+ * el contenido del panel viajaría en la respuesta.
+ *
+ * Quién puede ver esta pantalla lo decide proxy.ts antes de renderizarla. Lo de abajo es
+ * la segunda línea, por si algún día cambia el matcher.
  */
 export default async function PaginaSinAcceso() {
   const usuario = await usuarioActual();
   if (!usuario) redirect("/iniciar-sesion");
 
-  // Si en el entretanto sí le dieron acceso, que entre en vez de quedarse atascada aquí.
   if (await esAdmin()) redirect("/admin");
 
   return (

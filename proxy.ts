@@ -53,12 +53,39 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
+  const ruta = request.nextUrl.pathname;
+
+  const irA = (pathname: string, parametros?: Record<string, string>) => {
     const destino = request.nextUrl.clone();
-    destino.pathname = "/iniciar-sesion";
-    // Para devolverla a donde iba después de entrar.
-    destino.searchParams.set("volver", request.nextUrl.pathname);
+    destino.pathname = pathname;
+    destino.search = "";
+    for (const [k, v] of Object.entries(parametros ?? {})) destino.searchParams.set(k, v);
     return NextResponse.redirect(destino);
+  };
+
+  // --- Definir la contraseña: hace falta una sesión, cualquiera ---------------
+  //
+  // La sesión la crea /auth/confirm al canjear el enlace del correo. Quien llegue por su
+  // cuenta y sin sesión no tiene a quién cambiarle la contraseña.
+  if (ruta === "/definir-contrasena") {
+    if (!user) return irA("/iniciar-sesion", { error: "sin-sesion" });
+    return respuesta;
+  }
+
+  // --- El aviso de "no tienes acceso" ----------------------------------------
+  if (ruta === "/sin-acceso") {
+    if (!user) return irA("/iniciar-sesion");
+    // Si en el entretanto sí le dieron permiso, que entre en vez de quedarse atascada.
+    const { data: yaEsAdmin } = await supabase.rpc("is_admin");
+    if (yaEsAdmin === true) return irA("/admin");
+    return respuesta;
+  }
+
+  // --- El panel ---------------------------------------------------------------
+
+  if (!user) {
+    // Con "volver" para devolverla a donde iba después de entrar.
+    return irA("/iniciar-sesion", { volver: ruta });
   }
 
   // Hay sesión, pero ¿tiene permiso? Lo responde la base con is_admin(), que devuelve sí
@@ -66,18 +93,23 @@ export async function proxy(request: NextRequest) {
   // panel, y vale la pena: es lo que evita que el panel se arme para quien no debe verlo.
   const { data: esAdmin } = await supabase.rpc("is_admin");
 
-  if (esAdmin !== true) {
-    const destino = request.nextUrl.clone();
-    destino.pathname = "/sin-acceso";
-    destino.search = "";
-    return NextResponse.redirect(destino);
-  }
+  if (esAdmin !== true) return irA("/sin-acceso");
 
   return respuesta;
 }
 
 export const config = {
-  // Solo el panel. Las páginas públicas no pasan por aquí: son estáticas y no deben
-  // volverse dinámicas por mirar una cookie que no necesitan.
-  matcher: ["/admin/:path*"],
+  /**
+   * Las tres rutas cuyo contenido depende de quién entra.
+   *
+   * Van aquí y no dentro de sus páginas porque con el render parcial de esta versión el
+   * HTML empieza a enviarse antes de que un `redirect()` de página alcance a actuar: la
+   * respuesta salía con 200 y el encabezado ya puesto, y quien no debía verlo alcanzaba a
+   * leer un parpadeo antes de que el navegador lo sacara. Desde aquí es una redirección
+   * de verdad, antes de renderizar nada.
+   *
+   * Las páginas públicas siguen fuera: son estáticas y no deben volverse dinámicas por
+   * mirar una cookie que no necesitan.
+   */
+  matcher: ["/admin/:path*", "/definir-contrasena", "/sin-acceso"],
 };

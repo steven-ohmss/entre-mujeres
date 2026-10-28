@@ -14,8 +14,11 @@ export const instant = false;
 
 /**
  * Solo se llega aquí con una sesión abierta, que es la que crea /auth/confirm al canjear
- * el enlace del correo. Quien entre por su cuenta y sin sesión se va a iniciar sesión:
- * sin sesión no hay a quién cambiarle la contraseña.
+ * el enlace del correo.
+ *
+ * De eso se encarga proxy.ts, antes de que esto se renderice. La comprobación de abajo
+ * es la segunda línea: aquí llegaría tarde para impedir que la página se envíe, pero
+ * mantiene la página correcta por sí sola y le dice a TypeScript que hay usuario.
  */
 export default async function PaginaDefinirContrasena() {
   const usuario = await usuarioActual();
