@@ -148,11 +148,16 @@ export default function Navbar() {
         </div>
 
         <div className="hidden xl:flex xl:items-center xl:gap-3">
-          <div className="hidden 2xl:block 2xl:w-60">
+          {/* La caja de búsqueda completa solo cuando de verdad cabe.
+              Estaba atada a 2xl (1536 px), pero ahí todavía no hay sitio: entre 1536 y
+              1700 el menú, el buscador y "Sé parte" no caben juntos y el botón quedaba
+              cortado contra el borde. Hasta 1700 el buscador es el icono, que abre el
+              mismo campo en un desplegable. De 1700 en adelante nada cambia. */}
+          <div className="hidden min-[1700px]:block min-[1700px]:w-60">
             <SearchBar tono="oscuro" />
           </div>
 
-          <div className="relative 2xl:hidden">
+          <div className="relative min-[1700px]:hidden">
             <button
               type="button"
               onClick={() => setIsSearchOpen((v) => !v)}
